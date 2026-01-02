@@ -1,0 +1,36 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Новый заказ{% endblock %}
+
+{% block content %}
+<h2>У вас новый заказ!</h2>
+
+<p>Поступил новый заказ на ваши товары:</p>
+
+<div class="info">
+    <p><strong>Номер группы заказов:</strong> {{ order_group }}</p>
+</div>
+
+<ul>
+    {% for item in order_items %}
+    <li><strong>{{ item.product_name }}</strong> — {{ item.quantity }} шт.</li>
+    {% endfor %}
+</ul>
+
+<div class="total">
+    <p>
+        <strong>Общая сумма заказа: {{ total_sum|floatformat:2 }} сом</strong>
+    </p>
+</div>
+
+<p>Покупатель: {{ buyer_name }}<br>
+Телефон: {{ buyer_phone }}</p>
+
+<p>Детали заказа и управление им доступны в вашем личном кабинете продавца.</p>
+
+<div style="text-align: center;">
+    <a href="{{ client_url }}/seller/orders?_to={{ order_group }}" class="button">Перейти к заказам</a>
+</div>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

@@ -1,0 +1,236 @@
+.createStoreContainer {
+	--card-min-width: 38dvw;
+	--card-max-width: 38dvw;
+	--form-padding: 2.25rem 1.75rem;
+	--image-size: 11.125rem;
+	--upload-padding: 1rem 1.25rem;
+	--gap-size: 1rem;
+	--input-padding: 0.75rem 1rem;
+	--input-font-size: 1rem;
+	--policy-size: 1.5rem;
+
+	@media (max-width: 899px) {
+		--padding: var(--input-padding);
+		--font-size: var(--input-font-size);
+		--margin-bottom: 0.3rem;
+		--border-radius: 0.5rem;
+		--policy-size: 1.25rem;
+		--policy-radius: 0.3rem;
+	}
+
+	@media (max-width: 62em) {
+		--input-padding: 0.5rem 0.8rem;
+		--margin-bottom: 0rem;
+		--font-size: 0.8rem;
+	}
+
+	@media (max-width: 48em) {
+		--input-padding: 0.4rem 0.6rem;
+	}
+
+	.headerTitle {
+		font-size: 1.5rem;
+		font-weight: 500;
+		@media (max-width: 62em) {
+			font-size: 1rem;
+		}
+	}
+
+	.createStoreCard {
+		min-width: var(--card-min-width);
+		max-width: var(--card-max-width);
+	}
+
+	.form {
+		padding: var(--form-padding);
+		display: flex;
+		flex-direction: column;
+		gap: var(--gap-size);
+		max-height: 90vh;
+		overflow-y: auto;
+	}
+
+	.policySection {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-top: 0.425rem;
+		--size: var(--policy-size);
+		--radius: var(--policy-radius);
+		@media (max-width: 899px) {
+			gap: 0.6rem;
+			.policyLabel,
+			.policyLink {
+				font-size: 14px;
+			}
+		}
+		@media (max-width: 62em) {
+			.policyLabel,
+			.policyLink {
+				font-size: 12px;
+			}
+		}
+	}
+
+	.policyLabel {
+		font-size: 1rem;
+		color: #555;
+		font-weight: 400;
+		line-height: 1.5;
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
+	}
+
+	.policyLink {
+		color: var(--primary);
+		text-decoration: underline;
+		margin-left: 0.3rem;
+		font-weight: 500;
+		transition: color 0.2s;
+		&:hover {
+			color: var(--secondary);
+		}
+	}
+
+	.imageSection {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+	}
+
+	.imageContainer {
+		min-width: var(--image-size);
+		min-height: var(--image-size);
+		max-width: var(--image-size);
+		max-height: var(--image-size);
+		border-radius: 0.5rem;
+		background-color: #f5f5f5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 0.75rem;
+		color: #6c757d;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 0.5rem;
+		}
+	}
+
+	.uploadPhotoButton {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: var(--upload-padding);
+		background-color: #f6f6f6;
+		border-radius: 1rem;
+		margin-bottom: 1rem;
+		width: 100%;
+		gap: 2.25rem;
+
+		span {
+			color: #8d8d8d;
+			font-weight: 400;
+			font-size: 1rem;
+			line-height: 1.25rem;
+		}
+
+		&:hover {
+			background-color: #f1f1f1;
+		}
+	}
+
+	.buttonGroup {
+		display: flex;
+		gap: 0.75rem;
+		button {
+			--padding: var(--input-padding);
+			--font-size: var(--input-font-size);
+		}
+	}
+
+	.backButton {
+		flex: 1;
+	}
+
+	.saveButton {
+		flex: 2;
+		background-color: var(--primary);
+		color: white;
+	}
+}
+
+@media (max-width: 75em) {
+	// 1200px
+	.createStoreContainer {
+		--card-min-width: 45dvw;
+		--card-max-width: 45dvw;
+		--form-padding: 1.75rem 2.25rem;
+		--image-size: 10rem;
+	}
+}
+
+@media (max-width: 62em) {
+	// 992px
+	.createStoreContainer {
+		--card-min-width: 38dvw;
+		--card-max-width: 38dvw;
+		--form-padding: 1.5rem 2rem;
+		--image-size: 9rem;
+		--upload-padding: 1rem 1.5rem;
+	}
+}
+
+@media (max-width: 48em) {
+	// 768px
+	.createStoreContainer {
+		--form-padding: 1.5rem 2rem;
+		--image-size: 8rem;
+		--gap-size: 0.875rem;
+	}
+}
+
+@media (max-width: 36em) {
+	// 576px
+	.createStoreContainer {
+		--card-min-width: 95dvw;
+		--card-max-width: 95dvw;
+		--form-padding: 1.25rem 1.75rem;
+		--image-size: 7rem;
+		--upload-padding: 0.875rem 1.25rem;
+		--gap-size: 0.75rem;
+	}
+}
+
+@media (max-width: 30em) {
+	// 480px
+	.createStoreContainer {
+		--form-padding: 1rem 1.25rem;
+		--image-size: 6rem;
+		--upload-padding: 0.75rem 1rem;
+		--gap-size: 0.625rem;
+
+		.policyLabel,
+		.uploadPhotoButton span {
+			font-size: 0.875rem;
+		}
+	}
+}
+
+@media (max-width: 24em) {
+	// 384px
+	.createStoreContainer {
+		--form-padding: 1rem 0.75rem;
+		--image-size: 5rem;
+		--upload-padding: 0.625rem 0.875rem;
+		--gap-size: 0.5rem;
+
+		.policyLabel,
+		.uploadPhotoButton span {
+			font-size: 0.75rem;
+		}
+	}
+}

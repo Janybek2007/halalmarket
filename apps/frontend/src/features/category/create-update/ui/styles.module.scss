@@ -1,0 +1,47 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	background: var(--white);
+	padding: 1.25rem;
+	border-radius: 0.8rem;
+	min-width: 500px;
+	max-width: 600px;
+
+	.headerTitle {
+		font-size: 1.5rem;
+		font-weight: 500;
+		@media (max-width: 62em) {
+			font-size: 1rem;
+		}
+	}
+
+	h2 {
+		font-size: 1.25rem;
+		margin-bottom: 6px;
+		font-weight: 600;
+		text-align: left;
+	}
+	[data-input-wrapper],
+	[data-select-wrapper] {
+		--font-size: 0.9rem;
+		--padding: 0.5rem 0.8rem;
+		--border-radius: 0.5rem;
+	}
+	[data-label] {
+		--font-size: 0.8rem;
+		--margin-bottom: 0.2rem;
+	}
+	[data-button] {
+		--font-size: 0.8rem;
+		--padding: 0.4rem 0.8rem;
+		--border-radius: 0.5rem;
+	}
+}
+
+.formActions {
+	display: flex;
+	gap: 12px;
+	margin-top: 8px;
+	justify-content: flex-end;
+}

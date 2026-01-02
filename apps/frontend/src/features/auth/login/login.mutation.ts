@@ -1,0 +1,60 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { USER_PROFILE_KEY } from '~/entities/user';
+import { http } from '~/shared/api/http';
+import { useQueryString } from '~/shared/hooks';
+import { queryClient } from '~/shared/libs/tanstack';
+import { RoutePaths } from '~/shared/router';
+import { TokenUtils } from '~/shared/utils/token.client';
+import { AuthResponse } from '../types';
+import { LoginDto, LoginSchema } from './login.contract';
+
+export const useLoginMutation = () => {
+	const form = useForm<LoginDto>({ resolver: zodResolver(LoginSchema) });
+	const [redirectVal] = useQueryString('redirect', RoutePaths.Guest.Home);
+	const router = useRouter();
+	const {
+		mutateAsync,
+		error: apiError,
+		isPending
+	} = useMutation({
+		mutationKey: ['auth-login'],
+		mutationFn: (parsedBody: LoginDto) =>
+			http.post<AuthResponse>('auth/login/', parsedBody),
+		onSuccess(data) {
+			TokenUtils.Save(data.tokens);
+			setTimeout(() => {
+				queryClient.refetchQueries({
+					queryKey: USER_PROFILE_KEY
+				});
+			}, 200);
+		}
+	});
+
+	const onSubmit = React.useCallback(
+		async (data: LoginDto) => {
+			toast.promise(
+				async () => {
+					const r = await mutateAsync(data);
+					if (r?.user_id) {
+						setTimeout(() => {
+							router.push(redirectVal!);
+						}, 300);
+					}
+				},
+				{ loading: 'Вход...', success: 'Вы успешно вошли в систему' }
+			);
+		},
+		[mutateAsync, redirectVal]
+	);
+	return {
+		onsubmit: form.handleSubmit(onSubmit),
+		apiError,
+		isPending,
+		form
+	};
+};

@@ -1,0 +1,22 @@
+[project]
+name = "halalmarket-backend"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "celery>=5.6.1",
+    "django>=6.0",
+    "django-celery-beat>=2.1.0",
+    "django-cors-headers>=4.9.0",
+    "djangorestframework>=3.16.1",
+    "pillow>=12.0.0",
+    "psycopg2-binary>=2.9.11",
+    "pyjwt>=2.10.1",
+    "python-dotenv>=1.2.1",
+    "python-slugify>=8.0.4",
+    "pywebpush>=2.1.2",
+    "pyyaml>=6.0.3",
+    "redis>=7.1.0",
+    "transliterate>=1.10.2",
+    "uvicorn>=0.40.0",
+]

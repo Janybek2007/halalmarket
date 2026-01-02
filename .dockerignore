@@ -1,0 +1,98 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env*
+README.md
+.vscode
+.idea
+*.log
+coverage
+build
+dist
+.DS_Store
+
+staticfiles/
+media/
+
+
+# Git
+.git
+.gitignore
+
+# Docker
+.docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.env
+.venv
+venv/
+ENV/
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Local development settings
+local_settings.py
+
+# Media and static files in development
+media/
+static/
+
+# Database
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Documentation
+docs/
+
+# Vapid keys
+vapid_keys/
+
+
+.react-router
+build
+node_modules
+README.md

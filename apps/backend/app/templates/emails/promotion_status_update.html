@@ -1,0 +1,42 @@
+{% extends "emails/base.html" %}
+
+{% block title %}{{ "Акция одобрена" if status == "approved" else "Акция отклонена" }}{% endblock %}
+
+{% block content %}
+<h2>{{ "Акция одобрена" if status == "approved" else "Акция отклонена" }}</h2>
+
+<p>Уважаемый продавец,</p>
+
+<p>Администратор {{ "одобрил" if status == "approved" else "отклонил" }} вашу заявку на акцию:</p>
+
+<div class="promotion-info" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px;">
+    <h4>Акция: {{ promotion.name }}</h4>
+    
+    <div class="details">
+        <p><strong>Скидка:</strong> {{ promotion.discount }}%</p>
+        {% if promotion.expires_at %}
+        <p><strong>Действует до:</strong> {{ promotion.expires_at|date:"d.m.Y H:i" }}</p>
+        {% endif %}
+        <p><strong>Дата обновления:</strong> {% now "d.m.Y H:i" %}</p>
+    </div>
+
+    {% if status == "approved" %}
+    <div style="margin-top: 15px;">
+        <p>Ваша акция успешно опубликована и теперь доступна покупателям!</p>
+    </div>
+    {% elif status == "rejected" %}
+    <div style="margin-top: 15px;">
+        <p>К сожалению, ваша заявка на акцию была отклонена. Вы можете создать новую заявку с учетом требований платформы.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div style="text-align: center">
+    <a href="{{ client_url }}/seller/promotions" class="button">Все акции</a>
+</div>
+
+<p>Если у вас есть вопросы или вам нужна помощь, пожалуйста, свяжитесь с нами.</p>
+
+<p>С уважением,<br>
+Команда Halal Market</p>
+{% endblock %}

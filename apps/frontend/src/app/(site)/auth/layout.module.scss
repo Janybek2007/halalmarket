@@ -1,0 +1,63 @@
+.backButton {
+  // Variables
+  --back-button-top: 1rem;
+  --back-button-left: 1rem;
+  --back-button-gap: 0.5rem;
+  --back-button-padding: 0.5rem 1rem;
+  --back-button-radius: 10px;
+  --back-button-bg: #f5f5f5;
+  --back-button-hover-bg: rgba(255, 255, 255, 0.2);
+  --back-button-font-size: 0.9rem;
+  --back-button-icon-size: 1.25rem;
+  --back-button-blur: blur(25px);
+
+  // Styles
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: var(--back-button-top);
+  left: var(--back-button-left);
+  gap: var(--back-button-gap);
+  padding: var(--back-button-padding);
+  border-radius: var(--back-button-radius);
+  background-color: var(--back-button-bg);
+  backdrop-filter: var(--back-button-blur);
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: var(--back-button-font-size);
+  z-index: 100;
+
+  svg {
+    width: var(--back-button-icon-size);
+    height: var(--back-button-icon-size);
+    fill: currentColor;
+  }
+
+  &:hover {
+    background-color: var(--back-button-hover-bg);
+  }
+}
+
+@media (max-width: 48em) { // 768px
+  .backButton {
+    --back-button-top: 0.75rem;
+    --back-button-left: 0.75rem;
+    --back-button-padding: 0.4rem 0.8rem;
+    --back-button-font-size: 0.85rem;
+    --back-button-icon-size: 1.1rem;
+  }
+}
+
+@media (max-width: 30em) { // 576px
+  .backButton {
+    --back-button-top: 0.5rem;
+    --back-button-left: 0.5rem;
+    --back-button-padding: 0.3rem 0.6rem;
+    --back-button-font-size: 0.8rem;
+    --back-button-icon-size: 1rem;
+    --back-button-radius: 8px;
+    --back-button-blur: blur(20px);
+  }
+}

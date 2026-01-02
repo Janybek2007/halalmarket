@@ -1,0 +1,40 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Результат модерации продукта{% endblock %}
+
+{% block content %}
+<h2>Результат модерации продукта на Halal Market</h2>
+
+<p>Уважаемый продавец,</p>
+
+<p>Ваш продукт <strong>{{ product.name }}</strong> был проверен администратором и {{ status }}.</p>
+
+<div class="info">
+    <p><strong>Название продукта:</strong> {{ product.name }}</p>
+    <p><strong>Статус модерации:</strong> {{ status }}</p>
+    <p><strong>Дата модерации:</strong> {% now "d.m.Y H:i" %}</p>
+    
+    {% if status == "отклонен" and product.moderation_notes %}
+    <p><strong>Причина отклонения:</strong> {{ product.moderation_notes }}</p>
+    {% endif %}
+</div>
+
+{% if status == "одобрен" %}
+<p>Поздравляем! Ваш продукт теперь доступен для покупателей на платформе Halal Market.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <a href="{{ client_url }}/seller/products?to={{ product.slug }}" class="button">Просмотреть продукт</a>
+</div>
+
+{% else %}
+<p>Пожалуйста, внесите необходимые изменения и отправьте продукт на повторную проверку.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <a href="{{ client_url }}/seller/products/edit/{{ product.slug }}" class="button">Редактировать продукт</a>
+</div>
+{% endif %}
+
+<p>Если у вас возникли вопросы по модерации, пожалуйста, свяжитесь с нашей службой поддержки продавцов.</p>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

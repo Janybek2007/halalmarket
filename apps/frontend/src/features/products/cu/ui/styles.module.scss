@@ -1,0 +1,216 @@
+.drawer {
+	/* ========= VARIABLES ========= */
+	--card-width: 40rem;
+	--card-padding-x: 1.5rem;
+	--card-padding-y: 0.5rem;
+	--card-gap: 1rem;
+	--image-size: 7rem;
+	--upload-button-gap: 2.25rem;
+	--button-group-gap: 0.75rem;
+	--button-group-margin: 0.5rem;
+	--input-padding: 0.75rem 1rem;
+	--input-font-size: 1rem;
+
+	@media (max-width: 899px) {
+		--padding: var(--input-padding);
+		--font-size: var(--input-font-size);
+	}
+
+	@media (max-width: 62em) {
+		--card-width: 83vw;
+	}
+
+	@media (max-width: 48em) {
+		--card-width: 90vw;
+		--input-padding: 0.5rem 0.8rem;
+		--upload-button-gap: 1.5rem;
+	}
+
+	@media (max-width: 36em) {
+		--card-width: 93vw;
+	}
+
+	/* ========= HEADER ========= */
+	.headerTitle {
+		font-size: 1.5rem;
+		font-weight: 500;
+
+		@media (max-width: 62em) {
+			font-size: 1rem;
+		}
+	}
+
+	/* ========= CONTENT / FORM ========= */
+	.content {
+		min-width: var(--card-width);
+		max-width: var(--card-width);
+		width: 100%;
+		background-color: var(--white);
+	}
+
+	.form {
+		padding: var(--card-padding-y) var(--card-padding-x);
+		display: flex;
+		flex-direction: column;
+		gap: var(--card-gap);
+		max-height: 90vh;
+		overflow-y: auto;
+
+		&::-webkit-scrollbar {
+			width: 0;
+		}
+
+		@media (max-width: 48em) {
+			--card-padding-y: 2rem;
+			--card-padding-x: 1.5rem;
+		}
+		@media (max-width: 36em) {
+			--card-padding-y: 1.5rem;
+			--card-padding-x: 1.25rem;
+		}
+	}
+
+	/* ========= TEXTAREA ========= */
+	.textarea textarea {
+		min-height: 10rem;
+		max-height: 20rem;
+
+		&::-webkit-scrollbar {
+			width: 0;
+		}
+	}
+
+	/* ========= IMAGE SECTION ========= */
+	.imageSection {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+
+		@media (min-width: 36em) {
+			flex-direction: row;
+			align-items: center;
+		}
+	}
+
+	.imagesContainer {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		padding: 0.25rem;
+		margin-bottom: 0.75rem;
+		border-radius: 0.6rem;
+		background-color: #f5f5f5;
+
+		&.empty {
+			min-height: 6rem;
+			position: relative;
+
+			&::before {
+				content: 'Загрузите фото';
+				color: var(--gray-500);
+				font-size: 1rem;
+				width: 100%;
+				text-align: center;
+				line-height: 6rem;
+			}
+		}
+
+		.imageWrapper {
+			position: relative;
+
+			&:hover .deleteButton {
+				opacity: 1;
+			}
+		}
+
+		.deleteButton {
+			position: absolute;
+			top: 0.2rem;
+			right: 0.2rem;
+			background: var(--secondary);
+			color: var(--white);
+			border-radius: 6px;
+			transition: 0.2s;
+			padding: 4px;
+			opacity: 0;
+		}
+
+		.image {
+			width: var(--image-size);
+			height: var(--image-size);
+			object-fit: cover;
+			border-radius: 0.5rem;
+
+			@media (max-width: 36em) {
+				width: 100%;
+				aspect-ratio: 1;
+			}
+		}
+	}
+
+	/* ========= BUTTON UPLOAD ========= */
+	.uploadPhotoButton {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: var(--input-padding);
+		width: 100%;
+		border-radius: 1rem;
+		background-color: #f6f6f6;
+		gap: var(--upload-button-gap);
+		transition: background-color 0.2s;
+
+		&:hover {
+			background-color: #f1f1f1;
+		}
+
+		span {
+			font-size: 1rem;
+			color: #8d8d8d;
+		}
+	}
+
+	/* ========= BUTTON GROUP ========= */
+	.buttonGroup {
+		display: flex;
+		flex-direction: column;
+		gap: var(--button-group-gap);
+		margin-top: var(--button-group-margin);
+
+		@media (min-width: 36em) {
+			flex-direction: row;
+		}
+
+		button {
+			--padding: 8px 0;
+			--border-radius: 12px;
+			--font-size: 1.2rem;
+			width: 100%;
+		}
+	}
+
+	.saveButton {
+		flex: 2;
+		background-color: var(--primary);
+		color: white;
+
+		&:hover {
+			background-color: var(--primary-hover);
+		}
+	}
+
+	.imageGroup {
+		display: flex;
+		flex-direction: column;
+		.error {
+			font-size: calc(0.875rem * 0.95);
+			color: var(--secondary);
+			margin-top: calc(0.5rem * 0.95);
+			font-weight: 500;
+		}
+	}
+
+	.backButton {
+		flex: 1;
+	}
+}

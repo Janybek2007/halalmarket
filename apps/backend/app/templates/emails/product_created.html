@@ -1,0 +1,26 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Новый продукт ожидает модерации{% endblock %}
+
+{% block content %}
+<h2>Новый продукт ожидает модерации</h2>
+
+<p>Уважаемый администратор,</p>
+
+<p>Продавец <strong>{{ product.seller }}</strong> добавил новый продукт <strong>{{ product.name }}</strong> в магазин <strong>{{ product.store }}</strong>, который ожидает вашей модерации.</p>
+
+<div class="info">
+    <p><strong>Название продукта:</strong> {{ product.name }}</p>
+    <p><strong>Магазин:</strong> {{ product.store }}</p>
+    <p><strong>Продавец:</strong> {{ product.seller }}</p>
+    <p><strong>Дата создания:</strong> {% now "d.m.Y H:i" %}</p>
+</div>
+
+<p>Пожалуйста, проверьте информацию о продукте и примите решение о его публикации.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <a href="{{ admin_url }}" class="button">Перейти к модерации</a>
+</div>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

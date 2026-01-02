@@ -1,0 +1,16 @@
+.main {
+	margin-bottom: 6.25rem;
+}
+
+.datePicker {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	margin-bottom: 25px;
+}
+
+.ordersList {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}

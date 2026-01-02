@@ -1,0 +1,30 @@
+.breadcrumb {
+	display: block;
+	@media (max-width: 899px) {
+		display: none;
+	}
+}
+
+.v1 {
+	display: none;
+
+	@media (max-width: 899px) {
+		display: block;
+	}
+}
+
+.productsByCategoryPage {
+	padding: 2.5rem 0 3.75rem;
+	margin-bottom: 3.75rem;
+	@media (max-width: 899px) {
+		padding-top: 1.25rem;
+	}
+}
+
+.categoryName {
+	font-weight: 500;
+	font-size: 1.05rem;
+	letter-spacing: 0.5px;
+	color: var(--primary);
+	margin: 0.85rem 0 0 0;
+}

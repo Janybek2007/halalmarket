@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестовое письмо</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Тестовое письмо от Halal Market</h1>
+        <p>Здравствуйте{{ user_email|default:"" }},</p>
+        <p>Это тестовое письмо, отправленное {{ date|default:"сегодня" }} для проверки системы отправки email.</p>
+        <p>Перейдите в <a href="{{ client_url }}{{ link|default:"/profile" }}">профиль</a> для просмотра вашего аккаунта.</p>
+        <p>Если вы получили это письмо, значит система отправки email работает корректно!</p>
+        <div class="footer">
+            <p>С уважением,<br>Команда Halal Market</p>
+            <p><a href="{{ client_url }}">{{ client_url }}</a></p>
+        </div>
+    </div>
+</body>
+</html>

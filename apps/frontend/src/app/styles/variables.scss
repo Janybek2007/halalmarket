@@ -1,0 +1,42 @@
+:root {
+  --ff: 'Open Sans', sans-serif;
+  --inter: 'Inter', sans-serif;
+  --roboto: 'Roboto', sans-serif;
+
+  --container-max-width: 80rem;
+
+  --bg: #fff;
+  --text: #3e3e3e;
+
+  --white: #fff;
+  --white-hover: #f5f5f5;
+  --white-hover2: #f0f0f0;
+
+  --black: #000;
+
+  --primary: #0a8791;
+  --primary-hover: #0b9ea7;
+  --secondary: #fe585a;
+  --secondary-hover: #fe585a;
+  --tertiary: #0ac3d1;
+
+  --color-1: #fdc818;
+  --color-2: #6cc51d;
+  --color-3: #34a853;
+  --color-4: #00c853;
+  --color-5: #1ecf30;
+
+  --gray: #868889;
+}
+
+@media (max-width: 1630px) {
+  :root {
+    --container-max-width: 90%;
+  }
+}
+
+@media (max-width: 62em) {
+  :root {
+    --container-max-width: 100%;
+  }
+}

@@ -1,0 +1,17 @@
+.promotionsPage {
+	padding: 1.5rem;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+
+	.pagination {
+		margin-top: 1.5rem;
+	}
+
+	.promotionsList {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+}

@@ -1,0 +1,50 @@
+.errorContainer {
+	--error-container-margin: 1rem;
+	--error-container-padding: 0.75rem;
+	--error-container-radius: 0.5rem;
+	--error-font-size: 0.875rem;
+	--error-message-margin: 0.25rem 0;
+	--error-dot-offset: 0.5rem;
+	margin-top: var(--error-container-margin);
+	padding: var(--error-container-padding);
+	border-radius: var(--error-container-radius);
+	background-color: rgba(254, 88, 90, 0.1);
+	border: 0.0625rem solid var(--secondary);
+	.errorMessage {
+		color: var(--secondary);
+		font-size: var(--error-font-size);
+		margin: var(--error-message-margin);
+		position: relative;
+		padding-left: 1.25rem;
+
+		&::before {
+			content: '•';
+			position: absolute;
+			left: var(--error-dot-offset);
+			top: 0;
+		}
+	}
+}
+
+@media (max-width: 36em) {
+	// 576px
+	.errorContainer {
+		--error-container-padding: 0.625rem;
+		--error-font-size: 0.8125rem;
+	}
+}
+
+@media (max-width: 30em) {
+	// 480px
+	.errorContainer {
+		--error-container-margin: 0.875rem;
+	}
+}
+
+@media (max-width: 24em) {
+	// 384px
+	.errorContainer {
+		--error-container-padding: 0.5rem;
+		--error-font-size: 0.75rem;
+	}
+}

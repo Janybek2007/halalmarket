@@ -1,0 +1,18 @@
+.tabs {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	.tab {
+		font-weight: 500;
+		font-size: 1rem;
+		line-height: 1;
+		letter-spacing: 0.0625rem;
+		color: #21272a;
+		border-bottom: 0.0625rem solid transparent;
+		padding: 1rem 0;
+		&.active {
+			color: var(--primary);
+			border-bottom-color: var(--primary);
+		}
+	}
+}

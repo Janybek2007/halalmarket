@@ -1,0 +1,25 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Приглашение стать продавцом{% endblock %}
+
+{% block content %}
+<h2>Приглашение стать продавцом Halal Market</h2>
+
+<p>Здравствуйте, {{ seller_name }}!</p>
+
+<p>Вас приглашают стать продавцом на платформе <strong>Halal Market</strong>. 
+Чтобы завершить регистрацию и создать свой профиль продавца, перейдите по ссылке ниже:</p>
+
+<div class="info">
+    <p><strong>Номер телефона:</strong> {{ seller_phone }}</p>
+    <p><strong>Срок действия ссылки:</strong> 3 дня с момента получения</p>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ invite_url }}" class="button">Создать профиль продавца</a>
+</div>
+
+<p>Если вы не ожидали этого приглашения, просто проигнорируйте это письмо.</p>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

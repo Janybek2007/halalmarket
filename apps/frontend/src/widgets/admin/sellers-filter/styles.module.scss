@@ -1,0 +1,45 @@
+.filter {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	position: relative;
+	z-index: 100;
+
+	.end {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		.actionsCellButton {
+			font-family: var(--roboto);
+			--padding: 0.5rem 0.8rem;
+			--border-radius: 0.65rem;
+			--font-size: 0.9rem;
+		}
+		.actionSelect {
+			[data-option] {
+				--padding: 0.3rem 2rem;
+				display: flex;
+			}
+			[data-options] {
+				top: 110%;
+				min-width: auto;
+			}
+		}
+	}
+
+	.input {
+		max-width: 19rem;
+		min-width: 19rem;
+		--padding: 0.5rem 0.8rem;
+		--border-radius: 0.65rem;
+		[data-input] {
+			--font-size: 0.95rem;
+			--font-weight: 400;
+		}
+		[data-start-icon] {
+			--font-size: 0.95rem;
+			--fill: #697077;
+		}
+	}
+}

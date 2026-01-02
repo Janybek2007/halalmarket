@@ -1,0 +1,33 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Новый отзыв на продукт{% endblock %}
+
+{% block content %}
+<h2>Новый отзыв на ваш продукт</h2>
+
+<p>Уважаемый продавец,</p>
+
+<p>Пользователь оставил новый отзыв на ваш продукт на платформе Halal Market.</p>
+
+<div class="info">
+    <p><strong>Продукт:</strong> {{ product_name }}</p>
+    <p><strong>Оценка:</strong> {{ review_rating }}/5</p>
+    <p><strong>Пользователь:</strong> {{ user_email }}</p>
+    <p><strong>Дата отзыва:</strong> {% now "d.m.Y H:i" %}</p>
+</div>
+
+<div class="order-details">
+    <p><strong>Текст отзыва:</strong></p>
+    <p>{{ review_text }}</p>
+</div>
+
+<p>Вы можете ответить на этот отзыв, перейдя по ссылке ниже:</p>
+
+<div style="text-align: center;">
+    <a href="{{ seller_url }}" class="button">Ответить на отзыв</a>
+</div>
+
+<p>Помните, что качественные ответы на отзывы помогают улучшить доверие покупателей к вашему магазину.</p>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

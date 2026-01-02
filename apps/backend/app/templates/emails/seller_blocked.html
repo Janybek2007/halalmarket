@@ -1,0 +1,19 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Аккаунт заблокирован{% endblock %}
+
+{% block content %}
+<h2>Ваш аккаунт заблокирован</h2>
+
+<p>Здравствуйте, {{ full_name }}!</p>
+
+<p>Ваш аккаунт продавца в Halal Market был заблокирован администрацией. Для уточнения причин свяжитесь с поддержкой.</p>
+
+<p>Телефон: {{ phone }}</p>
+
+<div style="text-align: center;">
+    <a href="{{ client_url }}/contacts" class="button">Связаться с поддержкой</a>
+</div>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

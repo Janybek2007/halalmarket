@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+# --- Публичные страницы ---
+Allow: /categories
+Allow: /category/
+Allow: /category/*
+Allow: /products/c/
+Allow: /products/c/*
+Allow: /products/d/
+Allow: /products/d/*
+Allow: /auth/login
+Allow: /auth/register
+Allow: /auth/forgot
+Allow: /auth/reset-password
+
+# --- Запрет приватных разделов ---
+Disallow: /profile
+Disallow: /profile/*
+Disallow: /cart
+Disallow: /cart/*
+Disallow: /order/d
+Disallow: /order/d/*
+Disallow: /seller
+Disallow: /seller/*
+Disallow: /admin
+Disallow: /admin/*
+
+# --- Sitemap ---
+Sitemap: https://halalmarket.kg/sitemap.xml

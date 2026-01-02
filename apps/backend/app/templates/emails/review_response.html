@@ -1,0 +1,31 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Ответ на ваш отзыв{% endblock %}
+
+{% block content %}
+<h2>Продавец ответил на ваш отзыв</h2>
+
+<p>Здравствуйте!</p>
+
+<p>Продавец ответил на ваш отзыв о продукте <strong>{{ product_name }}</strong> на платформе Halal Market.</p>
+
+<div class="info">
+    <p><strong>Ваш отзыв:</strong></p>
+    <p>{{ review_text }}</p>
+</div>
+
+<div class="order-details">
+    <p><strong>Ответ продавца:</strong></p>
+    <p>{{ seller_response }}</p>
+</div>
+
+<p>Вы можете просмотреть ответ продавца, перейдя на страницу продукта:</p>
+
+<div style="text-align: center;">
+    <a href="{{ product_url }}" class="button">Перейти к продукту</a>
+</div>
+
+<p>Спасибо за использование нашей платформы!</p>
+
+<p>С уважением,<br>Команда Halal Market</p>
+{% endblock %}

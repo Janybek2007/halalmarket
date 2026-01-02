@@ -1,0 +1,147 @@
+.update {
+		.header {
+			display: flex;
+			gap: var(--header-gap);
+			margin-bottom: var(--header-margin-bottom);
+
+			.logoContainer {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.changeButton {
+				background: var(--primary);
+				color: var(--white);
+				padding: var(--button-padding);
+				font-size: var(--button-font-size);
+				border-radius: 0.55rem;
+				transition: all 0.3s ease;
+				cursor: pointer;
+				display: none;
+				@media (max-width: 899px) {
+					display: block;
+				}
+
+				&:hover {
+					background: var(--primary-hover);
+				}
+			}
+
+			.logo {
+				border-radius: 0.5rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				position: relative;
+				overflow: hidden;
+
+				img {
+					width: var(--logo-size);
+					height: var(--logo-size);
+					object-fit: cover;
+				}
+
+				@media (min-width: 899px) {
+					&::after {
+						content: 'Изменить';
+						position: absolute;
+						inset: 0;
+						background: rgba(0, 0, 0, 0.5);
+						backdrop-filter: blur(4px);
+						border-radius: 0.5rem;
+						color: var(--white);
+						font-size: var(--logo-text-size);
+						font-weight: 500;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						opacity: 0;
+						transition: all 0.3s ease;
+					}
+					&:is(.hasLogo):hover::after {
+						opacity: 1;
+					}
+				}
+
+				&:is(.hasLogo) {
+					border: 0.125rem solid #cbd5e1;
+				}
+
+				&:not(.hasLogo) {
+					border: 2px dashed var(--gray);
+
+					&:hover {
+						background: var(--white-hover);
+					}
+
+					.text {
+						margin-top: 0.5rem;
+						color: var(--text);
+						font-family: var(--inter);
+						font-size: var(--logo-text-size);
+					}
+				}
+			}
+
+			.formField {
+				max-width: var(--form-field-max-width);
+				--padding: var(--form-field-padding);
+
+				@media (max-width: 899px) {
+					max-width: 100%;
+					--margin-bottom: 0.3rem;
+				}
+			}
+		}
+
+		.saveButton {
+			--padding: var(--button-padding);
+			--font-size: var(--button-font-size);
+			--border-radius: 0.55rem;
+			background-color: var(--primary);
+			color: var(--white);
+		}
+
+		.errorContainer {
+			background-color: #fff8f8;
+			border: 0.0625rem solid #ffcdd2;
+			border-radius: 0.25rem;
+			padding: 0.75rem;
+			margin-top: 0.5rem;
+
+			.errorMessage {
+				color: var(--secondary);
+				font-size: 0.875rem;
+				margin: 0.25rem 0;
+			}
+		}
+
+		.danger {
+			margin-top: var(--danger-margin-top);
+			padding-top: var(--danger-padding-top);
+			border-top: 1px solid var(--white-hover2);
+
+			.title {
+				color: var(--text);
+				font-family: var(--inter);
+				font-size: var(--danger-title-size);
+				margin-bottom: var(--danger-title-margin);
+			}
+
+			.delete {
+				background: var(--secondary);
+				--padding: var(--button-padding);
+				--font-size: var(--button-font-size);
+				--font-weight: 500;
+				--border-radius: 0.55rem;
+
+				&:hover {
+					background: var(--secondary-hover);
+				}
+			}
+		}
+	}

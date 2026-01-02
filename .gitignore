@@ -1,0 +1,68 @@
+.DS_Store
+node_modules/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# Django
+*.log
+*.pot
+*.pyc
+*.py[co]
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# Environments
+.venv/
+venv/
+ENV/
+.env
+.env.docker
+config/.env
+# Docker
+*.log
+docker-compose.override.yml
+docker-compose.override.yml
+static/
+media/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Python
+*.py[cod]
+*.py[cod].cover
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyo
+__pycache__/
+
+# Test coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# MacOS
+.DS_Store
+
+# Miscellaneous
+*.swp
+
+commit.txt

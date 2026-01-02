@@ -1,0 +1,67 @@
+* {
+	margin: 0;
+	padding: 0;
+	margin-block: 0;
+	margin-inline: 0;
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+}
+
+figure {
+	display: flex;
+}
+
+img {
+	object-fit: cover;
+}
+
+button {
+	background: transparent;
+	cursor: pointer;
+	border: none;
+	outline: none;
+}
+
+label {
+	border: none;
+	outline: none;
+	background: transparent;
+}
+
+input:not([type='button']),
+textarea,
+select {
+	outline: none;
+	border: none;
+	background: transparent;
+}
+
+hr {
+	border: 0;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: var(--text);
+	transition: background-color 5000s ease-in-out 0s;
+	box-shadow: inset 0 0 1.4rem 1.4rem transparent;
+}
+
+*:not(._toaster *) > svg {
+	display: flex;
+	align-items: center;
+	fill: inherit;
+	stroke: inherit;
+}

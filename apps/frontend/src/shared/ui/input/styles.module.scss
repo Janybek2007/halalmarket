@@ -1,0 +1,75 @@
+.inputWrapper {
+	display: flex;
+	flex-direction: column;
+	padding: var(--padding, 0.75rem 1rem);
+	border-radius: var(--border-radius, 0.5rem);
+	width: var(--width, 100%);
+
+	&--fullWidth {
+		width: 100%;
+	}
+	svg path {
+		fill: var(--fill, var(--primary));
+	}
+
+	svg {
+		font-size: calc(var(--font-size, 1rem) * 1.3);
+	}
+
+	.input {
+		font-weight: var(--font-weight, 400);
+		font-size: var(--font-size, 1rem);
+		line-height: var(--line-height, 1.5rem);
+		font-family: var(--font-family, var(--ff));
+		vertical-align: middle;
+		width: var(--width, 100%);
+
+		&::placeholder {
+			color: #8b8b8b;
+		}
+	}
+	.startIcon,
+	.endIcon {
+		font-size: var(--font-size, 1.25rem);
+	}
+
+	.inputContainer {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	&--default {
+		border: 1px solid #dde2eb;
+	}
+
+	&--filled {
+		background-color: #f4f4f4;
+		border: 1px solid transparent;
+	}
+
+	&--outlined {
+		border: 1px solid var(--primary);
+		background-color: transparent;
+		color: var(--gray);
+	}
+
+	&--error {
+		.inputContainer {
+			color: var(--secondary);
+		}
+	}
+
+	&--disabled {
+		opacity: 0.6;
+
+		.inputContainer {
+			background-color: #f5f5f5;
+			cursor: not-allowed;
+		}
+
+		.input {
+			cursor: not-allowed;
+		}
+	}
+}

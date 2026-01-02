@@ -1,0 +1,17 @@
+import Link from 'next/link';
+import { ForgotForm } from '~/features/auth/forgot';
+import { RoutePaths } from '~/shared/router';
+
+export default function ForgotPage() {
+	return (
+		<div className='forms container'>
+			<div data-container>
+				<h1 data-title>Восстановление пароля!</h1>
+				<ForgotForm />
+				<div data-link-actions>
+					<Link href={RoutePaths.Auth.Login}>Вернуться к входу</Link>
+				</div>
+			</div>
+		</div>
+	);
+}

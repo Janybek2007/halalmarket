@@ -1,0 +1,14 @@
+.productDetail {
+	padding: 1.5rem 0;
+	margin-bottom: 6.25rem;
+	@media (max-width: 500px) {
+		padding: 1rem 0;
+	}
+}
+
+.productSearch {
+	display: none;
+	@media (max-width: 899px) {
+		display: block;
+	}
+}

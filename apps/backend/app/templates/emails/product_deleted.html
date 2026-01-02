@@ -1,0 +1,22 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Удаление продукта{% endblock %}
+
+{% block content %}
+<h2>Ваш продукт был удален</h2>
+
+<p>Уважаемый продавец,</p>
+
+<p>Мы хотим сообщить вам, что ваш продукт <strong>{{ product.name }}</strong> был удален администратором магазина.</p>
+
+<div class="info">
+    <p><strong>Название продукта:</strong> {{ product.name }}</p>
+    <p><strong>Ссылка на магазин:</strong> <a href="{{ client_url }}/seller/products">Мои продукты</a></p>
+    <p><strong>Дата удаления:</strong> {% now "d.m.Y H:i" %}</p>
+</div>
+
+<p>Если у вас есть вопросы или вам нужна помощь, пожалуйста, свяжитесь с нами.</p>
+
+<p>С уважением,<br>
+Команда Halal Market</p>
+{% endblock %}

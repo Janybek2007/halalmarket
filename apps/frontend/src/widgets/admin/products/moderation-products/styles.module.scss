@@ -1,0 +1,40 @@
+.moderationProducts {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+	margin-top: 18px;
+	overflow-y: auto;
+	padding-bottom: 25px;
+	max-height: 70vh;
+
+	.actions {
+		display: flex;
+		gap: 0.625rem;
+		margin-top: 2.25rem;
+		.actionButton {
+			--border-radius: 0.5rem;
+			&.pass {
+				background: var(--color-2);
+			}
+			&.approved {
+				background: var(--primary);
+				opacity: 0.9;
+			}
+			&.pass,
+			&.notPass,
+			&.approved {
+				--padding: 0.625rem 1.5rem;
+				--font-weight: 500;
+				--font-size: 0.875rem;
+				--line-height: 100%;
+			}
+			&.notPass,
+			&.delete {
+				background: var(--secondary);
+			}
+			&.delete {
+				--padding: 0.5rem 0.625rem;
+			}
+		}
+	}
+}

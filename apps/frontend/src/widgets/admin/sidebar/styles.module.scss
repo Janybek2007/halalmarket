@@ -1,0 +1,153 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  max-width: 15rem;
+  min-width: 15rem;
+  height: 100vh;
+  padding: 1.5rem 1rem;
+  border-right: 1px solid #dde1e6;
+  * {
+    font-family: var(--roboto);
+  }
+  .menuLink svg path {
+    fill: var(--primary);
+  }
+
+  .logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 1.25rem;
+    padding: 0 1.25rem;
+  }
+
+  .halalText {
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 110.00000000000001%;
+    color: var(--primary);
+  }
+
+  .userInfo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.875rem;
+  }
+
+  .avatar {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #dde1e6;
+    --placeholder-color: var(--text);
+    --font-size: 1.4rem;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .notification {
+    width: 3rem;
+    height: 3rem;
+    color: var(--text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 2px solid white;
+    position: relative;
+
+    svg {
+      font-size: 1.5rem;
+    }
+
+    span {
+      position: absolute;
+      top: 0.3125rem;
+      right: 0.25rem;
+      background-color: var(--secondary);
+      color: white;
+      border-radius: 50%;
+      width: 1.125rem;
+      height: 1.125rem;
+      font-weight: 400;
+      font-size: 0.75rem;
+      line-height: 0;
+    }
+  }
+
+  .navigation {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menuItem {
+    margin-bottom: 0.3125rem;
+    img {
+      width: 1.25rem;
+      height: 1.25rem;
+      object-fit: contain;
+    }
+
+    &.active {
+      .menuLink {
+        background-color: #e6f7f8;
+      }
+    }
+  }
+
+  .menuLink {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 100%;
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #21272a;
+    border-radius: 0.5rem;
+    width: 100%;
+
+    &:hover {
+      background-color: rgba(0, 163, 137, 0.1);
+    }
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    color: #64748b;
+  }
+
+  .bottomMenu {
+    margin-top: auto;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 0.9375rem;
+    padding-bottom: 4.5625rem;
+  }
+}

@@ -1,0 +1,104 @@
+.drawer {
+	--card-width: 30rem;
+	--card-padding-x: 1.5rem;
+	--card-padding-y: 1rem;
+	--card-gap: 1rem;
+	--button-group-gap: 0.75rem;
+	--button-group-margin: 0.5rem;
+
+	@media (max-width: 62em) {
+		--card-width: 45rem;
+	}
+
+	@media (max-width: 48em) {
+		--card-width: 90vw;
+	}
+
+	.headerTitle {
+		font-size: 1.5rem;
+		font-weight: 500;
+		@media (max-width: 62em) {
+			font-size: 1rem;
+		}
+	}
+
+	.content {
+		min-width: var(--card-width);
+		max-width: var(--card-width);
+		width: 100%;
+		background-color: var(--white);
+	}
+
+	.form {
+		padding: var(--card-padding-y) var(--card-padding-x);
+		display: flex;
+		flex-direction: column;
+		gap: var(--card-gap);
+		max-height: 90vh;
+		overflow-y: auto;
+
+		&::-webkit-scrollbar {
+			width: 0;
+			height: 0;
+		}
+
+		@media (max-width: 48em) {
+			--card-padding-y: 2rem;
+			--card-padding-x: 1.5rem;
+		}
+
+		@media (max-width: 36em) {
+			--card-padding-y: 1.5rem;
+			--card-padding-x: 1.25rem;
+		}
+	}
+
+	.showPasswordButton {
+		font-size: 0.875rem;
+		color: var(--text);
+		border-radius: 0.25rem;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.formField {
+		svg path {
+			fill: none;
+		}
+	}
+
+	.buttonGroup {
+		display: flex;
+		flex-direction: column;
+		gap: var(--button-group-gap);
+		margin-top: var(--button-group-margin);
+
+		@media (min-width: 36em) {
+			flex-direction: row;
+		}
+
+		button {
+			width: 100%;
+		}
+	}
+	.formField {
+		--padding: 0.75rem 1rem;
+		--font-size: 1rem;
+	}
+
+	.saveButton {
+		background-color: var(--primary);
+		color: white;
+		--padding: 0.75rem 1rem;
+		--font-size: 1rem;
+		--border-radius: 0.6rem;
+		@media (max-width: 899px) {
+			--border-radius: 100px;
+		}
+
+		&:hover {
+			background-color: var(--primary-hover);
+		}
+	}
+}

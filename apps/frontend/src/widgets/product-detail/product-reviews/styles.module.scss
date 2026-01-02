@@ -1,0 +1,149 @@
+.productReviews {
+	--title-font-size: 1.5rem;
+	--title-color: #009688;
+	--count-font-size: 1.25rem;
+	--count-color: #a2a2a2;
+	--star-size: 2rem;
+	--rating-font-size: 1.25rem;
+	--rating-color: #525252;
+	--button-padding: .6rem 3rem;
+	--button-font-size: 1rem;
+	--margin-top: 2.5rem;
+	--margin-bottom: 1.5rem;
+
+	margin-top: var(--margin-top);
+
+	.star {
+		font-size: var(--star-size);
+		transition: color 0.2s;
+		color: #ccc;
+
+		&.activeStar {
+			color: var(--color-1);
+		}
+	}
+
+	.reviewsList {
+		padding-top: 1.5rem;
+	}
+
+	.reviewsHeader {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: var(--margin-bottom);
+	}
+
+	.reviewsTitle {
+		font-size: var(--title-font-size);
+		font-weight: 500;
+		color: var(--title-color);
+		margin: 0;
+		display: flex;
+		align-items: center;
+	}
+
+	.reviewsCount {
+		margin-left: 0.69rem;
+		color: var(--count-color);
+		font-weight: 500;
+		font-size: var(--count-font-size);
+		line-height: 100%;
+	}
+
+	.overallRating {
+		display: flex;
+		align-items: center;
+		margin-left: 1.13rem;
+	}
+
+	.ratingValue {
+		font-weight: 400;
+		font-size: var(--rating-font-size);
+		line-height: 140%;
+		color: var(--rating-color);
+	}
+
+	.loadReviewsButton {
+		margin: 0 auto;
+		margin-top: 2.25rem;
+		display: flex;
+		--padding: var(--button-padding);
+		--font-size: var(--button-font-size);
+		--font-weight: 500;
+	}
+
+	@media (max-width: 62em) {
+		// 992px
+		--title-font-size: 1.375rem;
+		--count-font-size: 1.125rem;
+		--star-size: 1.75rem;
+		--rating-font-size: 1.125rem;
+	}
+
+	@media (max-width: 48em) {
+		// 768px
+		--title-font-size: 1.25rem;
+		--count-font-size: 1rem;
+		--star-size: 1.5rem;
+		--rating-font-size: 1rem;
+		--button-padding: 0.875rem 2rem;
+		--button-font-size: 0.9375rem;
+		--margin-top: 2rem;
+		--margin-bottom: 1.25rem;
+
+		.reviewsHeader {
+			gap: 0.75rem;
+			margin-bottom: 1.25rem;
+		}
+
+		.reviewsCount {
+			margin-left: 0.5rem;
+		}
+
+		.overallRating {
+			margin-left: 0.5rem;
+		}
+	}
+
+	@media (max-width: 36em) {
+		// 576px
+		--title-font-size: 1.125rem;
+		--count-font-size: 0.9375rem;
+		--star-size: 1.375rem;
+		--rating-font-size: 0.9375rem;
+		--button-padding: 0.75rem 1.5rem;
+		--button-font-size: 0.875rem;
+		--margin-top: 1rem;
+
+		.reviewsHeader {
+			gap: 0.5rem;
+		}
+
+		.reviewsTitle {
+			width: 100%;
+		}
+
+		.overallRating {
+			margin-left: 0;
+		}
+	}
+
+	@media (max-width: 30em) {
+		// 480px
+		--title-font-size: 1rem;
+		--count-font-size: 0.875rem;
+		--star-size: 1.4rem;
+		--rating-font-size: 0.9rem;
+		--button-padding: 0.625rem 1.25rem;
+		--margin-top: 0.5rem;
+
+		.reviewsCount {
+			margin-left: 0.4rem;
+		}
+
+		.loadReviewsButton {
+			width: 100%;
+		}
+	}
+}

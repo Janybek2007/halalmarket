@@ -1,0 +1,64 @@
+.formField {
+	display: flex;
+	flex-direction: column;
+
+	.select {
+		background-color: #f4f4f4;
+		padding: var(--padding, 1rem 1.375rem);
+		border-radius: var(--border-radius, 0.5rem);
+		font-weight: var(--font-weight-600);
+		font-size: var(--font-size-16);
+		line-height: var(--line-height-24);
+		vertical-align: middle;
+		width: var(--width, 100%);
+		option {
+			color: var(--text);
+		}
+	}
+
+	.error {
+		font-size: calc(var(--font-size, 0.875rem) * 0.95);
+		color: var(--secondary);
+		margin-top: calc(var(--margin-top, 0.5rem) * 0.95);
+		font-weight: 500;
+	}
+
+	&--fullWidth {
+		width: 100%;
+	}
+	&--error {
+		[data-input-wrapper] {
+			border-color: var(--secondary);
+			color: var(--secondary);
+			svg path {
+				--fill: var(--secondary);
+			}
+			input::placeholder {
+				color: var(--secondary);
+			}
+		}
+	}
+
+	.label {
+		font-weight: var(--font-weight, 400);
+		font-size: var(--font-size, 1.125rem);
+		line-height: var(--line-height, 1.5rem);
+		letter-spacing: 0%;
+		vertical-align: middle;
+		color: #8b8b8b;
+		margin-bottom: var(--margin-bottom, 0.5rem);
+	}
+
+	.hint {
+		--minimize: 0.95;
+		font-size: calc(var(--font-size, 0.875rem) * var(--minimize));
+		font-weight: 500;
+		margin-top: calc(var(--margin-top, 0.5rem) * var(--minimize));
+		@media (max-width: 600px) {
+			--minimize: 0.8;
+		}
+		@media (max-width: 480px) {
+			--minimize: 0.7;
+		}
+	}
+}

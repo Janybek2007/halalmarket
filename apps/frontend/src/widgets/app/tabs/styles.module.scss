@@ -1,0 +1,49 @@
+.tabsWrapper {
+	display: none;
+	@media (max-width: 899px) {
+		display: flex;
+	}
+}
+
+.tabs {
+	background: var(--primary);
+	padding: 19px 40px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	z-index: 20;
+	@media (max-width: 400px) {
+		padding: 16px 28px;
+	}
+
+	.tab {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		padding: 5px;
+
+		@media (max-width: 400px) {
+			padding: 3px;
+		}
+		img {
+			width: 24px;
+			height: 24px;
+			object-fit: contain;
+			@media (max-width: 400px) {
+				width: 16px;
+				height: 16px;
+			}
+		}
+		span {
+			font-weight: 400;
+			font-size: 10px;
+			line-height: 100%;
+			letter-spacing: 0.5px;
+			color: var(--white);
+		}
+	}
+}
