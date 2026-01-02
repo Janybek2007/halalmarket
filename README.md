@@ -166,7 +166,7 @@ Requires=postgresql.service redis.service
 
 [Service]
 WorkingDirectory=/www/apps/backend
-ExecStart=/bin/bash -c '/usr/bin/make runserver_g'
+ExecStart=/bin/bash -c '/usr/bin/make runserver_u'
 User=$USER
 Restart=always
 
