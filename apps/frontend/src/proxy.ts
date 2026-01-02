@@ -15,7 +15,6 @@ async function getUser(req: NextRequest): Promise<IUser | null> {
 		if (!token) return null;
 		return await UserService.GetUserProfile(token);
 	} catch (err: any) {
-		if ([401, 403].includes(err?.status)) return null;
 		return null;
 	}
 }
@@ -23,8 +22,11 @@ async function getUser(req: NextRequest): Promise<IUser | null> {
 export async function proxy(req: NextRequest) {
 	const url = req.nextUrl.clone();
 	const path = req.nextUrl.pathname;
+	let user = null;
 
-	const user = await getUser(req);
+	try {
+		user = await getUser(req);
+	} catch {}
 
 	if (user) {
 		// Если пользователь авторизован и находится на странице аутентификации, перенаправляем на первую страницу для его роли
@@ -61,6 +63,6 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
 	matcher: [
-		'/((?!_next/static|_next/image|favicon.ico|service-worker.js|sitemap.xml|manifest.webmanifest).*)'
+		'/((?!_next/static|_next/image|_next/data|api/|seo/|service-worker.js|sitemap.xml|manifest.webmanifest|robots.txt|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|ico|css|js|woff|woff2|ttf|eot)).*)'
 	]
 };
