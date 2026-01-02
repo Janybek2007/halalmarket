@@ -37,11 +37,11 @@ endif
 # ========================
 
 ifeq ($(OS),Windows_NT)
-	VENV_PYTHON := $(VENV)/Scripts/python.exe
-	VENV_PIP := $(VENV)/Scripts/pip.exe
+	VENV_PYTHON := ../$(VENV)/Scripts/python.exe
+	VENV_PIP := ../$(VENV)/Scripts/pip.exe
 else
-	VENV_PYTHON := $(VENV)/bin/python
-	VENV_PIP := $(VENV)/bin/pip
+	VENV_PYTHON := ../$(VENV)/bin/python
+	VENV_PIP := ../$(VENV)/bin/pip
 endif
 
 
