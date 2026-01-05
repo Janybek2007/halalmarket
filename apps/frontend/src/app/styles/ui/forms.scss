@@ -155,7 +155,7 @@
 @media (max-width: 36em) {
 	/* 576px */
 	.forms {
-		padding: 0 1rem;
+		padding: 0 3rem;
 		--title-font-size: 2rem;
 		--title-margin-bottom: 2rem;
 		--container-min-width: 100%;
@@ -177,6 +177,7 @@
 @media (max-width: 30em) {
 	/* 480px */
 	.forms {
+		padding: 0 2.5rem;
 		--title-font-size: 1.75rem;
 		--title-margin-bottom: 0.875rem;
 		--form-gap: 0.65rem;
@@ -201,6 +202,7 @@
 @media (max-width: 24em) {
 	/* 384px */
 	.forms {
+		padding: 0 2rem;
 		--title-font-size: 1.5rem;
 		--title-margin-bottom: 0.9rem;
 		--info-font-size: 0.75rem;

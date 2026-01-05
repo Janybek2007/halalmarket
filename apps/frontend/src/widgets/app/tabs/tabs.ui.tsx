@@ -3,20 +3,20 @@ import clsx from 'clsx';
 import React from 'react';
 
 import Link from 'next/link';
+import { useSession } from '~/app/providers/session';
 import { Assets } from '~/shared/assets';
 import { RoutePaths } from '~/shared/router';
 import s from './styles.module.scss';
-import { useSession } from '~/app/providers/session'
+
+const toProfile = {
+	seller: RoutePaths.Seller.Products,
+	admin: RoutePaths.Admin.Products,
+	user: RoutePaths.User.Profile,
+	guest: RoutePaths.Guest.Home
+};
 
 const AppTabs = React.memo(() => {
 	const { user: profile } = useSession();
-
-	const toProfile = {
-		seller: RoutePaths.Seller.Products,
-		admin: RoutePaths.Admin.Products,
-		user: RoutePaths.User.Profile,
-		guest: RoutePaths.Guest.Home
-	};
 
 	const items = React.useMemo(
 		() => [
