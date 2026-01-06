@@ -20,7 +20,7 @@ export const RoutePaths = {
 		Favorites: '/profile/favorites',
 		MyPurchases: '/profile/my_purchases',
 		Cart: '/cart',
-		OrderDetail: (orderId: number, isSeller = false) =>
+		OrderDetail: (orderId: number|string, isSeller = false) =>
 			`/order/d/${orderId}${isSeller ? '?is_seller=true' : ''}`
 	},
 	Seller: {
@@ -31,8 +31,7 @@ export const RoutePaths = {
 		AnalyticsRedeemed: '/seller/analytics/redeemed',
 		AnalyticsOrdered: '/seller/analytics/ordered',
 		Settings: '/seller/settings',
-		StoreCreate: '/store/create',
-		StorePolicy: '/store/policy',
+		Policy: '/seller/policy',
 		Promotions: '/seller/promotions',
 		//
 		Request: '/seller/request',
@@ -55,7 +54,7 @@ export const RouteGroups: Record<TUserRole | 'guest' | 'auth', string[]> = {
 	auth: Object.values(RoutePaths.Auth),
 	user: [
 		...Object.values(RoutePaths.User).map(r =>
-			typeof r === 'function' ? r(0) : r
+			typeof r === 'function' ? r('*') : r
 		),
 		...Object.values(RoutePaths.Guest).map(r =>
 			typeof r === 'function' ? r('*') : r

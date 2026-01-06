@@ -29,7 +29,8 @@ export type TSellerStatus = 'active' | 'blocked';
 export interface ISeller {
 	id: string;
 	user: Pick<IUser, 'full_name' | 'phone' | 'email' | 'avatar' | 'id' | 'role'>;
-	store: { name: string; id: string };
+	store_name: string;
+	store_logo: string | null;
 	status: TSellerStatus;
 	created_at: string;
 	updated_at: string;

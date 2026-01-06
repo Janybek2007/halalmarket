@@ -3,20 +3,6 @@ from django.db import models
 from modules.users.models import User
 
 
-class NOTIFICATION_TYPES(models.TextChoices):
-    # SELLER
-    PRODUCT_MODERATE = "product_moderate", "Модерация товара"
-    PRODUCT_DELETED = "product_deleted", "Удаление товара"
-    STATUS_CHANGED = "status_changed", "Изменение статуса"
-    NEW_ORDER = "new_order", "Новый заказ"
-    NEW_REVIEW = "new_review", "Новый отзыв"
-
-    # ADMIN
-    NEW_PRODUCT = "new_product", "Новый товар"
-    NEW_SELLER_REQUEST = "new_seller_request", "Заявка нового продавца"
-    NEW_PROMOTION_REQUEST = "new_promotion_request", "Новая заявка на акцию"
-
-
 class Notification(models.Model):
     id = models.AutoField(primary_key=True, verbose_name="Идентификатор")
     user = models.ForeignKey(
@@ -29,7 +15,6 @@ class Notification(models.Model):
     message = models.TextField(verbose_name="Сообщение")
     notification_type = models.CharField(
         max_length=30,
-        choices=NOTIFICATION_TYPES.choices,
         verbose_name="Тип уведомления",
     )
     is_read = models.BooleanField(default=False, verbose_name="Прочитано")

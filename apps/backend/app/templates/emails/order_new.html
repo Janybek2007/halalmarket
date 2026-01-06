@@ -1,36 +1,56 @@
-{% extends "emails/base.html" %}
-
-{% block title %}Новый заказ{% endblock %}
-
-{% block content %}
+{% extends "emails/base.html" %} {% block title %}Новый заказ{% endblock %} {%
+block content %}
 <h2>У вас новый заказ!</h2>
 
 <p>Поступил новый заказ на ваши товары:</p>
 
 <div class="info">
-    <p><strong>Номер группы заказов:</strong> {{ order_group }}</p>
+	<p><strong>Номер заказа:</strong> {{ order_id }}</p>
 </div>
 
-<ul>
-    {% for item in order_items %}
-    <li><strong>{{ item.product_name }}</strong> — {{ item.quantity }} шт.</li>
-    {% endfor %}
-</ul>
+<div class="order-items">
+	{% for item in order_items %}
+	<div
+		class="order-item"
+		style="
+			margin-bottom: 15px;
+			padding: 10px;
+			border: 1px solid #eee;
+			border-radius: 5px;
+		"
+	>
+		<p><strong>{{ item.product.name }}</strong> — {{ item.quantity }} шт.</p>
+		<p>Цена за единицу: {{ item.price }} сом</p>
+		<p>Сумма: {{ item.total_price }} сом</p>
+		{% if item.product.discount %}
+		<p><small>Скидка: {{ item.product.discount }}%</small></p>
+		{% endif %}
+	</div>
+	{% endfor %}
+</div>
 
 <div class="total">
-    <p>
-        <strong>Общая сумма заказа: {{ total_sum|floatformat:2 }} сом</strong>
-    </p>
+	<p>
+		<strong>Общая сумма заказа: {{ total_sum|floatformat:2 }} сом</strong>
+	</p>
 </div>
 
-<p>Покупатель: {{ buyer_name }}<br>
-Телефон: {{ buyer_phone }}</p>
+<div class="buyer-info">
+	<h3>Информация о покупателе:</h3>
+	<p><strong>Имя:</strong> {{ buyer_name }}</p>
+	<p><strong>Телефон:</strong> {{ buyer_phone }}</p>
+	{% if delivery_address %}
+	<p><strong>Адрес доставки:</strong> {{ delivery_address }}</p>
+	{% endif %}
+</div>
 
 <p>Детали заказа и управление им доступны в вашем личном кабинете продавца.</p>
 
-<div style="text-align: center;">
-    <a href="{{ client_url }}/seller/orders?_to={{ order_group }}" class="button">Перейти к заказам</a>
+<div style="text-align: center">
+	<a href="{{ client_url }}/seller/orders?_to={{ order_id }}" class="button"
+		>Перейти к заказам</a
+	>
 </div>
 
-<p>С уважением,<br>Команда Halal Market</p>
+<p>С уважением,<br />Команда Halal Market</p>
 {% endblock %}

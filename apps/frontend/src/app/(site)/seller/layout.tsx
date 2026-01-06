@@ -20,7 +20,7 @@ export default function SellerLayout(props: React.ViewTransitionProps) {
 				<>
 					<AppHeader />
 					<SellerHead />
-					{profile.store ? (
+					{profile.seller?.store_name ? (
 						props.children
 					) : (
 						<State

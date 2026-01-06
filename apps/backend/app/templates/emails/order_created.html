@@ -1,0 +1,50 @@
+{% extends "emails/base.html" %} {% block title %}Заказ создан{% endblock %} {%
+block content %}
+<h2>Спасибо за ваш заказ!</h2>
+
+<p>Ваш заказ успешно размещен и принят к обработке.</p>
+
+<div class="info">
+	<p><strong>Номер заказа:</strong> {{ order_id }}</p>
+</div>
+
+<h3>Детали заказа:</h3>
+
+<div class="order-details">
+	{% for item in items %}
+	<div class="order-item">
+		<p><strong>{{ item.product.name }}</strong> x {{ item.quantity }}</p>
+		<p>Цена за единицу: {{ item.price }} сом</p>
+		<p>Скидка: {{ item.product.discount }}%</p>
+		<p>Итого: {{ item.total_price|floatformat:2 }} сом</p>
+		<p><small>Продавец: {{ item.seller.store_name }}</small></p>
+	</div>
+	{% endfor %}
+
+	<div class="total">
+		<p>
+			<strong>Общая сумма заказа: {{ total_price|floatformat:2 }} сом</strong>
+		</p>
+	</div>
+</div>
+
+<p>
+	Информацию о доставке и статусе заказа вы можете узнать в личном кабинете на
+	сайте.
+</p>
+
+<div style="text-align: center">
+	<a
+		href="{{ client_url }}/profile/my_purchases?_to={{ order_id }}"
+		class="button"
+		>Отслеживать заказ</a
+	>
+</div>
+
+<p>
+	Если у вас возникли вопросы по заказу, пожалуйста, свяжитесь с нашей службой
+	поддержки.
+</p>
+
+<p>С уважением,<br />Команда Halal Market</p>
+{% endblock %}

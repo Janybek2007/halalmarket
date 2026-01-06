@@ -1,7 +1,6 @@
-from django.db.models import Count
-from modules.orders.models import OrderGroup
-from modules.orders.serializers import OrderGroupSerializer
-from modules.sellers.models import Store
+from modules.orders.models import Order
+from modules.orders.serializers import OrderSerializer
+from modules.sellers.models import Seller
 from rest_framework import status
 from rest_framework.response import Response
 from shared.utils.pagination import BasePagination
@@ -26,34 +25,24 @@ class SellerOrderListView(SellerBaseView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        stores = Store.objects.filter(seller=seller)
-        order_groups = OrderGroup.objects.filter(
-            orders__product__store__in=stores
-        ).distinct()
-
-        empty_groups = order_groups.annotate(orders_count=Count("orders")).filter(
-            orders_count=0
-        )
-        empty_groups.delete()
+        orders = Order.objects.filter(items__seller=seller).distinct()
 
         start_date = request.query_params.get("start_date")
         end_date = request.query_params.get("end_date")
 
         from shared.utils.date_filters import filter_queryset_by_date
 
-        order_groups = filter_queryset_by_date(
-            order_groups, start_date, end_date, date_field="created_at"
+        orders = filter_queryset_by_date(
+            orders, start_date, end_date, date_field="created_at"
         )
 
         _to = request.query_params.get("_to")
-        order_groups, target_order = prioritize_to_parameter(
-            order_groups, _to, model_class=OrderGroup
-        )
+        orders, target_order = prioritize_to_parameter(orders, _to, model_class=Order)
 
         return get_paginated_response_with_priority(
             paginator=self.pagination_class(),
-            queryset=order_groups,
+            queryset=orders,
             request=request,
-            serializer_class=OrderGroupSerializer,
+            serializer_class=OrderSerializer,
             target_item=target_order,
         )

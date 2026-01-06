@@ -79,7 +79,6 @@ def send_promotion_request_notification(
                 data={"promotion_id": promotion.id},
                 tag="promotion_request",
                 url=f"/admin/promotions?_to={promotion.id}",
-                save_notification=True,
             )
 
         return {"success": True, "admins_notified": admin_users.count()}
@@ -136,7 +135,6 @@ def send_promotion_status_notification(seller_user_id, action, promotions_data):
             data={"total_promotions": len(promotions_data), "action": action},
             tag="promotion_status",
             url="/seller/promotions",
-            save_notification=True,
         )
 
         return {"success": True}

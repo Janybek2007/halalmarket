@@ -26,7 +26,7 @@ class ProductListView(SellerBaseView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        products = Product.objects.filter(store__seller=seller)
+        products = Product.objects.filter(seller=seller)
 
         _to = request.query_params.get("_to")
         products, target_product = prioritize_to_parameter(

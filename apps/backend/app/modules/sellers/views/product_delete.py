@@ -22,7 +22,7 @@ class ProductDeleteView(SellerBaseView):
             )
 
         try:
-            product = Product.objects.get(id=id, store__seller=seller)
+            product = Product.objects.get(id=id, seller=seller)
         except Product.DoesNotExist:
             return Response(
                 {"error": "Продукт не найден"},

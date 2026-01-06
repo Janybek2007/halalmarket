@@ -1,13 +1,13 @@
 from modules.products.models import Product, Review
 from modules.products.serializers import ReviewSerializer
-from modules.users.permissions import IsActiveSeller
+from modules.sellers.models import Seller
 from rest_framework import status
 from rest_framework.response import Response
 from shared.utils.pagination import BasePagination
 from shared.utils.priority_filter import prioritize_to_parameter
 from shared.utils.priority_pagination import get_paginated_response_with_priority
+from modules.users.permissions import IsActiveSeller
 
-from ..models import Store
 from .base import SellerBaseView
 
 
@@ -27,8 +27,7 @@ class StoreReviewsListView(SellerBaseView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        stores = Store.objects.filter(seller=seller)
-        products = Product.objects.filter(store__in=stores)
+        products = Product.objects.filter(seller=seller)
         reviews = Review.objects.filter(product__in=products).order_by("-created_at")
 
         _to = request.query_params.get("_to")

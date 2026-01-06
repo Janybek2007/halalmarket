@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
-from ..models import Store
+from ..models import Seller
 from .base import SellerBaseView
 
 
@@ -27,23 +27,25 @@ class SellerStoreCreateView(SellerBaseView):
         if error:
             return error
 
-        name = request.data.get("name")
-        logo = request.FILES.get("logo") if "logo" in request.FILES else None
+        name = request.data.get("store_name")
+        logo = (
+            request.FILES.get("store_logo") if "store_logo" in request.FILES else None
+        )
 
         if not name:
             return Response(
                 {"error": "Требуется название магазина"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        from ..serializers import StoreSerializer
+        from ..serializers import SellerSerializer
 
-        store = Store.objects.create(
-            name=name,
-            seller=seller,
-            logo=logo,
-        )
-        store_data = StoreSerializer(store).data
+        seller.store_name = name
+        if logo:
+            seller.store_logo = logo
+        seller.save()
+        seller_data = SellerSerializer(seller).data
 
         return Response(
-            {"success": True, "store_data": store_data}, status=status.HTTP_201_CREATED
+            {"success": True, "seller_data": seller_data},
+            status=status.HTTP_201_CREATED,
         )

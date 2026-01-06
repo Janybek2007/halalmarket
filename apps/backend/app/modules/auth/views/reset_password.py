@@ -13,7 +13,7 @@ class ResetPasswordView(APIView):
     def patch(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
-            token_id = request.query_params.get("token")
+            token_id = serializer.validated_data.get("token")
             if not token_id:
                 return Response(
                     {"error": "Требуется параметр token"},
@@ -22,7 +22,7 @@ class ResetPasswordView(APIView):
 
             try:
                 token = Token.objects.get(
-                    token=int(token_id), token_type=TokenType.RESET_PASSWORD
+                    token=token_id, token_type=TokenType.RESET_PASSWORD
                 )
                 if token.is_expired:
                     return Response(

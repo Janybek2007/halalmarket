@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import OrderGroup, OrderStatus
+from ..models import Order, OrderStatus
 from ..serializers import OrderSerializer
 
 
@@ -34,13 +34,19 @@ class OrderUpdateStatusView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        order_groups = (
-            OrderGroup.objects.filter(id__in=ids, user=request.user)
-            .exclude(status__in=[OrderStatus.DELIVERED, OrderStatus.CANCELLED])
-            .prefetch_related("orders__product__store__seller")
+        orders = (
+            Order.objects.filter(id__in=ids, user=request.user)
+            .exclude(
+                status__in=[
+                    OrderStatus.DELIVERED,
+                    OrderStatus.CANCELLED,
+                ]
+            )
+            .select_related("user")
+            .prefetch_related("items__product", "items__seller")
         )
 
-        if not order_groups:
+        if not orders:
             return Response(
                 {"error": "Заказы не найдены или уже обработаны"},
                 status=status.HTTP_404_NOT_FOUND,
@@ -49,22 +55,28 @@ class OrderUpdateStatusView(APIView):
         updated_ids = []
         seller_orders = {}
 
-        for group in order_groups:
-            group.status = status_value
+        for order in orders:
+            order.status = status_value
             if status_value == OrderStatus.DELIVERED:
-                group.delivery_date = timezone.now()
-            group.save()
+                order.delivery_date = timezone.now()
+            order.save()
 
-            for order in group.orders.all():
-                if order.id in ids:
-                    updated_ids.append(int(order.id))
-                    seller_id = order.product.store.seller_id
-                    if seller_id not in seller_orders:
-                        seller_orders[seller_id] = {
-                            "seller": order.product.store.seller,
-                            "store_name": order.product.store.name,
-                            "orders": [],
-                        }
+            updated_ids.append(int(order.id))
+
+            # Получаем продавцов через items
+            for item in order.items.all():
+                seller_id = item.seller.id
+                if seller_id not in seller_orders:
+                    seller_orders[seller_id] = {
+                        "seller": item.seller,
+                        "store_name": (
+                            item.seller.store_name
+                            if hasattr(item.seller, "store_name")
+                            else "Магазин"
+                        ),
+                        "orders": [],
+                    }
+                if order not in seller_orders[seller_id]["orders"]:
                     seller_orders[seller_id]["orders"].append(order)
 
         from ..tasks import send_seller_order_status_notification

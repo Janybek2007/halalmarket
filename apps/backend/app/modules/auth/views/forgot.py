@@ -26,7 +26,7 @@ class ForgotView(APIView):
                     expires_at=timezone.now() + timezone.timedelta(hours=24),
                 )
 
-                from app.modules.auth.tasks import send_password_reset_notification
+                from modules.auth.tasks import send_password_reset_notification
 
                 send_password_reset_notification.delay(
                     user_id=int(user.id), reset_token=reset_token.token

@@ -1,6 +1,5 @@
-from django.apps import apps
 from modules.products.models import Product
-from modules.users.models import Seller
+from modules.sellers.models import Seller
 from rest_framework import serializers
 
 from .models import Promotion
@@ -21,13 +20,16 @@ class SellerLimitedSerializer(serializers.ModelSerializer):
         fields = ["id", "status", "user"]
 
     def get_user(self, obj):
-        return {
-            "id": obj.user.id,
-            "full_name": obj.user.full_name,
-            "avatar": obj.user.avatar.url if obj.user.avatar else None,
-            "email": obj.user.email,
-            "phone": obj.user.phone,
-        }
+        try:
+            return {
+                "id": obj.user.id,
+                "full_name": obj.user.full_name,
+                "avatar": obj.user.avatar.url if obj.user.avatar else None,
+                "email": obj.user.email,
+                "phone": obj.user.phone,
+            }
+        except AttributeError:
+            return None
 
 
 class PromotionSerializer(serializers.ModelSerializer):

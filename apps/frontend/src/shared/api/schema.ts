@@ -8,6 +8,10 @@ export const Email = z
 	})
 	.email('Неверный адрес электронной почты');
 
+export const PasswordRequired = z
+	.string('Введите это поле')
+	.nonempty('Пароль не может быть пустым');
+
 export const Password = z
 	.string('Введите это поле')
 	.nonempty('Пароль не может быть пустым')

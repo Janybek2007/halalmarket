@@ -30,7 +30,6 @@ def send_push_notification_task(
     data=None,
     tag=None,
     url=None,
-    save_notification=True,
 ):
     try:
         User = apps.get_model(
@@ -41,17 +40,25 @@ def send_push_notification_task(
 
         user = User.objects.get(id=int(user_id))
 
-        if save_notification:
-            Notification.objects.create(
-                user=user,
-                title=title,
-                message=message,
-                notification_type=notification_type,
-                data=data,
-            )
+        notification_data = dict(data) if data else {}
+        if url:
+            notification_data["link"] = url
+
+        Notification.objects.create(
+            user=user,
+            title=title,
+            message=message,
+            notification_type=notification_type,
+            data=notification_data,
+        )
 
         result = send_web_push(
-            user=user, title=title, message=message, data=data, tag=tag, url=url
+            user=user,
+            title=title,
+            message=message,
+            data=notification_data,
+            tag=tag,
+            url=url,
         )
 
         return result

@@ -73,7 +73,7 @@ export const CreateStore: React.FC<{ onClose: VoidFunction }> = React.memo(({
 						<span className={s.policyLabel}>
 							Я соглашаюсь с
 							<Link
-								href={RoutePaths.Seller.StorePolicy}
+								href={RoutePaths.Seller.Policy}
 								target='_blank'
 								className={s.policyLink}
 							>

@@ -2,26 +2,16 @@ import re
 
 from rest_framework.exceptions import ValidationError
 
-PHONE_ERROR_MESSAGE = "Телефон должен быть в формате 996 xxx xxx xxx"
-PHONE_PATTERN = r"^(\d{3})\s*(\d{3})\s*(\d{3})\s*(\d{3})$"
+PHONE_ERROR_MESSAGE = "Телефон должен содержать 12 цифр и начинаться с 996"
 
 
-def validate_phone_format(phone):
-    """Проверяет и форматирует номер телефона
+def validate_phone_format(phone: str) -> str:
+    # Удаляем всё, кроме цифр
+    digits_only = re.sub(r"\D", "", phone)
 
-    Args:
-        phone (str): Номер телефона для проверки
-
-    Returns:
-        str: Отформатированный номер телефона
-
-    Raises:
-        ValidationError: Если номер не соответствует формату
-    """
-    pattern = re.compile(PHONE_PATTERN)
-    match = pattern.match(phone)
-
-    if not match:
+    # Проверяем формат
+    if not re.fullmatch(r"996\d{9}", digits_only):
         raise ValidationError(PHONE_ERROR_MESSAGE)
 
-    return f"{match.group(1)} {match.group(2)} {match.group(3)} {match.group(4)}"
+    # Возвращаем очищенный номер
+    return digits_only

@@ -28,7 +28,7 @@ function ProfileMyPurchasesPage() {
 
 	const finalPurcahes = React.useMemo(() => {
 		if (!data) return [];
-		return data.results.filter(p => p.orders.length > 0);
+		return data.results.filter(p => p.items.length > 0);
 	}, [data]);
 
 	if (isLoading)
@@ -55,7 +55,7 @@ function ProfileMyPurchasesPage() {
 							/>
 						) : (
 							finalPurcahes.map((purchase, i) => {
-								const isMoreThenOne = purchase.orders.length > 1;
+								const isMoreThenOne = purchase.items.length > 1;
 								return (
 									<OrderLI
 										key={`Order-${purchase.user.full_name}-${i}`}

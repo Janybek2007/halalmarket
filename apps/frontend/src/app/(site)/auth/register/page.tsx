@@ -6,9 +6,11 @@ import { RegisterForm } from '~/features/auth/register';
 import { RoutePaths } from '~/shared/router';
 
 export default () => {
-	<Suspense>
-		<RegisterPage />
-	</Suspense>;
+	return (
+		<Suspense>
+			<RegisterPage />
+		</Suspense>
+	);
 };
 
 function RegisterPage() {

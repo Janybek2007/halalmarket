@@ -75,7 +75,7 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 					? `${formatDateCustom(order.created_at, 'yyyy-MM-dd')}г`
 					: undefined
 			}
-			products={order.orders.map(order => ({
+			products={order.items.map(order => ({
 				...order.product,
 				quantity: order.quantity
 			}))}

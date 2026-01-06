@@ -2,7 +2,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from modules.users.models import Seller
+from modules.sellers.models import Seller
 from modules.users.permissions import IsAdmin
 
 

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from modules.products.models import Product
-from modules.users.models import Seller
+from modules.sellers.models import Seller
 
 
 class PromotionStatus(models.TextChoices):
@@ -40,4 +40,4 @@ class Promotion(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Акция {self.id} от {self.seller.store.name if hasattr(self.seller, 'store') else self.seller.id}"
+        return f"Акция {self.id} от {self.seller.store_name if hasattr(self.seller, 'store_name') else self.seller.id}"

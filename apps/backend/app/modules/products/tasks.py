@@ -47,7 +47,6 @@ def send_new_review_notification(
             },
             tag="new_review",
             url=f"/seller/reviews?_to={review_id}",
-            save_notification=True,
         )
 
         return {"success": True}

@@ -1,73 +1,56 @@
 from rest_framework import serializers
 
-from .models import Order, OrderGroup
+from .models import Order, OrderItem
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
     total_price = serializers.SerializerMethodField()
 
     class Meta:
-        model = Order
-        fields = [
-            "id",
-            "product",
-            "quantity",
-            "created_at",
-            "total_price",
-        ]
-        read_only_fields = ["id", "created_at", "total_price"]
+        model = OrderItem
+        fields = ["id", "product", "quantity", "price", "total_price", "seller"]
+        read_only_fields = ["id", "price", "total_price"]
 
     def get_product(self, obj):
         product = obj.product
-        images = product.images.all()
-        image_list = [{"id": img.id, "image": img.image.url} for img in images]
-
+        images = [
+            {"id": img.id, "image": img.image.url} for img in product.images.all()
+        ]
         return {
             "id": product.id,
             "name": product.name,
             "slug": product.slug,
             "price": product.price,
             "discount": product.discount or 0,
-            "images": image_list,
+            "images": images,
         }
 
     def get_total_price(self, obj):
-        """
-        Рассчитывает общую стоимость товара с учетом количества.
-        Использует тот же алгоритм расчета скидки, что и на клиенте (целочисленное значение).
-        """
-        price = obj.product.price
-        discount = obj.product.discount or 0
-        # discountedPrice: parseInt(String(price - (price * Number(discount)) / 100))
-        discounted = int(price - (price * discount) / 100)
-        return discounted * obj.quantity
+        return obj.price * obj.quantity
 
 
-class OrderGroupSerializer(serializers.ModelSerializer):
-    orders = OrderSerializer(many=True, read_only=True)
-    user = serializers.SerializerMethodField()
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
     total_price = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
 
     class Meta:
-        model = OrderGroup
+        model = Order
         fields = [
             "id",
+            "user",
             "status",
             "created_at",
             "delivery_date",
-            "orders",
-            "user",
+            "delivery_address",
+            "items",
             "total_price",
+            "payment_status",
+            "payment_method",
+            "transaction_id",
         ]
-        read_only_fields = [
-            "id",
-            "created_at",
-            "orders",
-            "user",
-            "total_price",
-            "delivery_date",
-        ]
+        read_only_fields = ["id", "created_at", "total_price"]
 
     def get_user(self, obj):
         user = obj.user
@@ -79,15 +62,4 @@ class OrderGroupSerializer(serializers.ModelSerializer):
         }
 
     def get_total_price(self, obj):
-        """
-        Рассчитывает общую стоимость всех товаров в заказе.
-        Использует тот же алгоритм расчета скидки, что и на клиенте (целочисленное значение).
-        """
-        total = 0
-        for order in obj.orders.all():
-            price = order.product.price
-            discount = getattr(order.product, "discount", 0) or 0
-            # discountedPrice: parseInt(String(price - (price * Number(discount)) / 100))
-            discounted = int(price - (price * discount) / 100)
-            total += discounted * order.quantity
-        return total
+        return sum(item.total_price for item in obj.items.all())

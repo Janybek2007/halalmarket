@@ -1,5 +1,5 @@
 from django.db.models import Prefetch
-from modules.orders.models import Order, OrderGroup, OrderStatus
+from modules.orders.models import Order, OrderItem, OrderStatus
 from modules.orders.serializers import OrderSerializer
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,7 +11,7 @@ class SellerOrderShipView(SellerBaseView):
     def post(self, request):
         user = request.user
         if not hasattr(user, "seller_profile"):
-            from modules.users.models import Seller
+            from modules.sellers.models import Seller
 
             try:
                 seller = Seller.objects.get(user=user)
@@ -30,36 +30,32 @@ class SellerOrderShipView(SellerBaseView):
                 {"error": "Не указаны ID заказов"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        order_groups = (
-            OrderGroup.objects.filter(
-                id__in=order_ids, orders__product__store__seller=seller
-            )
+        orders = (
+            Order.objects.filter(id__in=order_ids, items__seller=seller)
             .exclude(status=OrderStatus.CANCELLED)
-            .prefetch_related(
-                Prefetch(
-                    "orders", queryset=Order.objects.select_related("product__store")
-                )
-            )
             .select_related("user")
+            .prefetch_related(
+                Prefetch("items", queryset=OrderItem.objects.select_related("product"))
+            )
         )
 
-        if not order_groups:
+        if not orders:
             return Response(
                 {"error": "Заказы не найдены или нет доступа"},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
         updated_ids = []
-        for group in order_groups:
-            group.status = OrderStatus.SHIPPED
-            group.save()
-            updated_ids.extend([int(order.id )for order in group.orders.all()])
+        for order in orders:
+            order.status = OrderStatus.SHIPPED
+            order.save()
+            updated_ids.append(int(order.id))
 
         user_orders = {}
-        for group in order_groups:
-            if group.user_id not in user_orders:
-                user_orders[group.user_id] = {"user": group.user, "orders": []}
-            user_orders[group.user_id]["orders"].extend(group.orders.all())
+        for order in orders:
+            if order.user_id not in user_orders:
+                user_orders[order.user_id] = {"user": order.user, "orders": []}
+            user_orders[order.user_id]["orders"].append(order)
 
         from modules.orders.tasks import send_orders_shipped_notification
 
@@ -74,7 +70,7 @@ class SellerOrderShipView(SellerBaseView):
 
             send_orders_shipped_notification.delay(
                 user_id=int(user.id),
-                store_name=seller.store.name,
+                store_name=seller.store_name,
                 orders_data=serialized_orders,
                 total_orders=total_orders,
             )

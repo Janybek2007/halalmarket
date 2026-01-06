@@ -1,8 +1,5 @@
-{% extends "emails/base.html" %}
-
-{% block title %}Заказы отправлены{% endblock %}
-
-{% block content %}
+{% extends "emails/base.html" %} {% block title %}Заказы отправлены{% endblock
+%} {% block content %}
 <h2>Ваши заказы отправлены</h2>
 
 <p>Уважаемый клиент,</p>
@@ -10,36 +7,50 @@
 <p>Продавец {{ store_name }} отправил {{ total_orders }} заказ(ов):</p>
 
 <div class="store-orders" style="margin-bottom: 30px">
-    {% for order in orders %}
-    <div class="order-info" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px;">
-        <h4>Заказ #{{ order.order_number }}</h4>
-        
-        <div class="product-info">
-            <p><strong>Товар:</strong> {{ order.product.name }}</p>
-            <p><strong>Количество:</strong> {{ order.quantity }}</p>
-            <p><strong>Сумма:</strong> {{ order.total_price }} сом</p>
-        </div>
+	{% for order in orders %}
+	<div
+		class="order-info"
+		style="
+			margin-bottom: 20px;
+			padding: 15px;
+			border: 1px solid #eee;
+			border-radius: 5px;
+		"
+	>
+		<h4>Заказ #{{ order.id }}</h4>
 
-        <div class="tracking-info">
-            {% if order.tracking_number %}
-            <p><strong>Номер отслеживания:</strong> {{ order.tracking_number }}</p>
-            {% if order.tracking_url %}
-            <p><a href="{{ order.tracking_url }}">Отследить посылку</a></p>
-            {% endif %}
-            {% endif %}
-        </div>
+		<div class="product-info">
+			{% for item in order.items %}
+			<p><strong>Товар:</strong> {{ item.product.name }}</p>
+			<p><strong>Количество:</strong> {{ item.quantity }}</p>
+			<p><strong>Сумма:</strong> {{ item.total_price }} сом</p>
+			<p><small>Продавец: {{ item.seller.store_name }}</small></p>
+			{% endfor %}
+		</div>
 
-        <div style="text-align: center; margin-top: 10px">
-            <a href="{{ client_url }}/profile/my_purchases?_to={{ order.id }}" class="button">Просмотреть заказ</a>
-        </div>
-    </div>
-    {% endfor %}
+		<div class="tracking-info">
+			{% if order.tracking_number %}
+			<p><strong>Номер отслеживания:</strong> {{ order.tracking_number }}</p>
+			{% if order.tracking_url %}
+			<p><a href="{{ order.tracking_url }}">Отследить посылку</a></p>
+			{% endif %} {% endif %}
+		</div>
+
+		<div style="text-align: center; margin-top: 10px">
+			<a
+				href="{{ client_url }}/profile/my_purchases?_to={{ order.id }}"
+				class="button"
+				>Просмотреть заказ</a
+			>
+		</div>
+	</div>
+	{% endfor %}
 </div>
 
 <p>Вы можете просмотреть все ваши заказы в личном кабинете:</p>
 
 <div style="text-align: center">
-    <a href="{{ client_url }}/profile/my_purchases" class="button">Мои заказы</a>
+	<a href="{{ client_url }}/profile/my_purchases" class="button">Мои заказы</a>
 </div>
 
 <p>С уважением,<br />Команда Halal Market</p>

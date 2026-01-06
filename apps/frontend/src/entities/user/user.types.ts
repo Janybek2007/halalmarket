@@ -15,11 +15,8 @@ export interface IUser {
 	seller?: {
 		id: string;
 		status: TSellerStatus;
-	};
-	store?: {
-		id: number;
-		name: string;
-		logo: string;
+		store_name: string;
+		store_logo: string;
 		created_at: string;
 	};
 }

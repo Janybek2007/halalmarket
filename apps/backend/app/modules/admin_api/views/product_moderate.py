@@ -1,9 +1,9 @@
+from django.shortcuts import get_object_or_404
+from modules.products.models import ModerationType, Product
 from modules.users.permissions import IsAdmin
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
-from modules.products.models import Product, ModerationType
 
 
 class AdminProductModerateView(APIView):
@@ -38,12 +38,8 @@ class AdminProductModerateView(APIView):
         product.save()
 
         seller_id = None
-        if (
-            hasattr(product, "store")
-            and product.store
-            and hasattr(product.store, "seller")
-        ):
-            seller = product.store.seller
+        if hasattr(product, "seller") and product.seller:
+            seller = product.seller
             if seller and hasattr(seller, "id"):
                 seller_id = int(seller.id)
 

@@ -1,4 +1,4 @@
-from modules.products.models import Review as StoreReview
+from modules.products.models import Review
 from modules.users.permissions import IsActiveSeller
 from rest_framework import status
 from rest_framework.response import Response
@@ -22,10 +22,8 @@ class ReviewDeleteView(SellerBaseView):
             )
 
         try:
-            review = StoreReview.objects.get(
-                id=int(review_id), product__store__seller=seller
-            )
-        except StoreReview.DoesNotExist:
+            review = Review.objects.get(id=int(review_id), product__seller=seller)
+        except Review.DoesNotExist:
             return Response(
                 {"error": "Отзыв не найден"},
                 status=status.HTTP_404_NOT_FOUND,

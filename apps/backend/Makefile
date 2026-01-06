@@ -111,7 +111,8 @@ createsuperuser:
 
 collectstatic:
 	$(CD_APP) && $(PYTHON_RUN) collectstatic --noinput
-
+check:
+	$(CD_APP) && $(PYTHON_RUN) check
 
 # ========================
 # ASGI / WSGI через uv

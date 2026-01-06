@@ -1,6 +1,6 @@
 from modules.categories.serializers import CategorySerializer
 from modules.favorites.models import Favorite
-from modules.sellers.serializers import StoreSerializer
+from modules.sellers.serializers import SellerSerializer
 from modules.users.models import User
 from rest_framework import serializers
 from shared.utils.calculate_average_rating import calculate_average_rating
@@ -9,9 +9,14 @@ from .models import Product, ProductImage, Review, ReviewImage
 
 
 class ReviewUserSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = ["id", "full_name", "email", "avatar"]
+
+    def get_avatar(self, obj):
+        return obj.avatar.url if obj.avatar else None
 
 
 class ReviewImageSerializer(serializers.ModelSerializer):
@@ -90,7 +95,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "discount",
             "description",
-            "store",
+            "seller",
             "slug",
             "subcategory",
             "country",
@@ -105,7 +110,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "moderation_type",
             "items_in_package",
         ]
-        read_only_fields = ["id", "slug", "created_at", "store"]
+        read_only_fields = ["id", "slug", "created_at", "seller"]
 
     def _get_moderation_status(self, status):
         if not status:
@@ -129,7 +134,10 @@ class ProductSerializer(serializers.ModelSerializer):
         if user.is_anonymous:
             return False
 
-        return Favorite.objects.filter(product=obj, user=user).exists()
+        try:
+            return Favorite.objects.filter(product=obj, user=user).exists()
+        except:
+            return False
 
     def get_average_rating(self, obj):
         ratings = [review.rating for review in obj.reviews.all()]
@@ -142,8 +150,8 @@ class ProductSerializer(serializers.ModelSerializer):
         images_files = validated_data.pop("images_files", [])
         seller = self.context.get("seller")
 
-        if seller and hasattr(seller, "store"):
-            validated_data["store"] = seller.store
+        if seller and hasattr(seller, "store_name"):
+            validated_data["seller"] = seller
 
         product = super().create(validated_data)
 
@@ -155,7 +163,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     subcategory = CategorySerializer(read_only=True)
-    store = StoreSerializer(read_only=True)
+    seller = SellerSerializer(read_only=True)
     average_rating = serializers.SerializerMethodField()
     moderation_type = serializers.SerializerMethodField()
     images = ProductImageSerializer(many=True, read_only=True)
@@ -175,7 +183,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "price",
             "discount",
             "description",
-            "store",
+            "seller",
             "slug",
             "subcategory",
             "country",

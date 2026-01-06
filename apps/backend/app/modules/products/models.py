@@ -3,7 +3,7 @@ from enum import Enum
 
 from django.db import models
 from modules.categories.models import Category
-from modules.sellers.models import Store
+from modules.sellers.models import Seller
 from modules.users.models import User
 from rest_framework.fields import MaxValueValidator, MinValueValidator
 from shared.utils.to_slug import toSlug
@@ -25,11 +25,11 @@ class Product(models.Model):
         max_digits=10, decimal_places=2, default=Decimal("0.00"), verbose_name="Скидка"
     )
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
-    store = models.ForeignKey(
-        Store,
+    seller = models.ForeignKey(
+        Seller,
         on_delete=models.CASCADE,
         related_name="products",
-        verbose_name="Магазин",
+        verbose_name="Продавец",
     )
     slug = models.SlugField(max_length=255, unique=True, verbose_name="URL-ссылка")
     subcategory = models.ForeignKey(

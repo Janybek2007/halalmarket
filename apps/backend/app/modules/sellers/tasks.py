@@ -34,7 +34,7 @@ def send_product_notification_task(product_id, seller_name):
         email_context = {
             "product": {
                 "name": product.name,
-                "store": product.store.name,
+                "store": product.seller.store_name,
                 "seller": seller_name,
             },
             "admin_url": f"{settings.CLIENT_URL}/admin/products?_to={product.id}",
@@ -62,7 +62,6 @@ def send_product_notification_task(product_id, seller_name):
                 },
                 tag="new_product",
                 url=f"/admin/products?_to={product.id}",
-                save_notification=True,
             )
 
         return {"success": True, "admins_notified": admin_users.count()}
@@ -130,7 +129,6 @@ def send_seller_request_notification(phone):
             data={"phone": phone},
             tag="seller_request",
             url="/admin/sellers",
-            save_notification=True,
         )
 
     return {"success": True, "admins_notified": admin_users.count()}

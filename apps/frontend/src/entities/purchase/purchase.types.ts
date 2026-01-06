@@ -14,8 +14,9 @@ export interface IPurchaseItem {
 	id: number;
 	product: IProduct;
 	quantity: number;
+	price: string;
 	total_price: number;
-	created_at: string;
+	seller: number;
 }
 
 export interface IPurchaseResult {
@@ -23,8 +24,12 @@ export interface IPurchaseResult {
 	status: TOrderStatus;
 	created_at: string;
 	delivery_date: string;
+	delivery_address: string;
+	items: IPurchaseItem[];
 	total_price: number;
-	orders: IPurchaseItem[];
+	payment_status: '';
+	payment_method: '';
+	transaction_id: null;
 	user: Pick<IUser, 'id' | 'full_name' | 'phone' | 'email'>;
 }
 

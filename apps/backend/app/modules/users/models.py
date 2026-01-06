@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -8,14 +7,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from shared.utils.phone_validator import validate_phone_format
-
-
-class SellerStatus(models.TextChoices):
-    ACTIVE = "active", "Активен"
-    BLOCKED = "blocked", "Заблокирован"
-
-    def __str__(self):
-        return self.name.lower()
 
 
 class UserRole(models.TextChoices):
@@ -113,27 +104,3 @@ class Token(models.Model):
     def is_expired(self):
         return timezone.now() > self.expires_at
 
-
-class Seller(models.Model):
-    id = models.AutoField(primary_key=True, verbose_name="Идентификатор")
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="seller",
-        verbose_name="Пользователь",
-    )
-    status = models.CharField(
-        max_length=10,
-        choices=SellerStatus.choices,
-        default=SellerStatus.ACTIVE,
-        verbose_name="Статус",
-    )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-
-    class Meta:
-        verbose_name = "Продавец"
-        verbose_name_plural = "Продавцы"
-
-    def __str__(self):
-        return f"{self.user.full_name} - {self.status}"

@@ -1,7 +1,6 @@
-from modules.users.permissions import IsActiveSeller
-from modules.products.models import Review
-from ..models import Store
 from django.shortcuts import get_object_or_404
+from modules.products.models import Review
+from modules.users.permissions import IsActiveSeller
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -25,7 +24,7 @@ class StoreReviewResponseView(SellerBaseView):
 
         review = get_object_or_404(Review, id=int(review_id))
 
-        if not Store.objects.filter(seller=seller, products=review.product).exists():
+        if seller.id != review.product.seller.id:
             return Response(
                 {"error": "У вас нет прав для ответа на этот отзыв"},
                 status=status.HTTP_403_FORBIDDEN,

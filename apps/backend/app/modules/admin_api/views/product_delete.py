@@ -1,8 +1,8 @@
+from django.shortcuts import get_object_or_404
+from modules.products.models import Product
 from modules.users.permissions import IsAdmin
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
-from modules.products.models import Product
 
 
 class AdminProductDeleteView(APIView):
@@ -15,12 +15,8 @@ class AdminProductDeleteView(APIView):
         product_slug = product.slug
 
         seller = None
-        if (
-            hasattr(product, "store")
-            and product.store
-            and hasattr(product.store, "seller")
-        ):
-            seller = product.store.seller
+        if hasattr(product, "seller") and product.seller:
+            seller = product.seller
             if seller and hasattr(seller, "user") and seller.user:
                 from ..tasks import send_product_deleted_notification
 

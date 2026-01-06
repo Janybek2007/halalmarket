@@ -64,7 +64,7 @@ function SellerOrdersPage() {
 					) : (
 						<>
 							{data?.results.map((order, i) => {
-								const isMoreThenOne = order.orders.length > 1;
+								const isMoreThenOne = order.items.length > 1;
 
 								return (
 									<OrderLI

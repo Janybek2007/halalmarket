@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from rest_framework.request import Request
 
-from .models import Seller, SellerStatus
+from modules.sellers.models import Seller, SellerStatus
 
 
 class IsTokenAuthenticated(permissions.BasePermission):

@@ -1,24 +1,30 @@
 from modules.users.models import Token, TokenType
 from rest_framework import serializers
 
-from .models import SellerInvite, Store
+from .models import Seller
 
 
-class StoreSerializer(serializers.ModelSerializer):
-    logo = serializers.FileField(required=False, allow_null=True)
-
-    class Meta:
-        model = Store
-        fields = ["id", "name", "seller", "logo", "created_at"]
-        read_only_fields = ["id", "created_at"]
-
-
-class StoreUpdateSerializer(serializers.ModelSerializer):
-    logo = serializers.FileField(required=False, allow_null=True)
+class SellerSerializer(serializers.ModelSerializer):
+    store_logo = serializers.SerializerMethodField()
 
     class Meta:
-        model = Store
-        fields = ["name", "logo"]
+        model = Seller
+        fields = ["id", "store_name", "store_logo", "created_at", "user"]
+        read_only_fields = ["id", "created_at", "user"]
+
+    def get_store_logo(self, obj):
+        return obj.store_logo.url if obj.store_logo else None
+
+
+class SellerUpdateSerializer(serializers.ModelSerializer):
+    store_logo = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Seller
+        fields = ["store_name", "store_logo"]
+
+    def get_store_logo(self, obj):
+        return obj.store_logo.url if obj.store_logo else None
 
 
 class SellerSetProfileSerializer(serializers.Serializer):

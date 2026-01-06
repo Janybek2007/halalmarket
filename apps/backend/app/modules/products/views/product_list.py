@@ -31,7 +31,7 @@ class ProductListView(APIView):
                     products = Product.objects.filter(
                         subcategory__in=subcategories,
                         moderation_type=ModerationType.APPROVED.value,
-                    ).select_related("store", "subcategory")[:8]
+                    ).select_related("seller", "subcategory")[:8]
                 else:
                     products = Product.objects.none()
 

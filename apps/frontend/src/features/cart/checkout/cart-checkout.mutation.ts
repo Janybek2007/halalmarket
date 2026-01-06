@@ -31,8 +31,8 @@ export const useCartCheckoutMutation = (selectedItems: number[]) => {
 					async () => {
 						const r = await mutateAsync({ ids: selectedItems });
 						if (r.success) {
-							router.push(RoutePaths.User.OrderDetail(r.order_group_id));
 							queryClient.refetchQueries({ queryKey: ['cart-list'] });
+							router.push(RoutePaths.User.Orders);
 						}
 					},
 					{

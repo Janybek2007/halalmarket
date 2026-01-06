@@ -33,7 +33,6 @@ def send_product_deleted_notification(seller_user_id, product_name, product_slug
             data={"product_name": product_name},
             tag="product_deleted",
             url="/seller/products",
-            save_notification=True,
         )
 
         return {"success": True}
@@ -87,7 +86,6 @@ def send_product_moderation_notification(
             },
             tag="product_moderate",
             url=f"/seller/products?_to={product_slug}",
-            save_notification=True,
         )
 
         return {"success": True}
@@ -120,7 +118,6 @@ def send_seller_deleted_notification(user_id, user_email):
             data={},
             tag="seller_deleted",
             url="/",
-            save_notification=True,
         )
 
         return {"success": True}
@@ -153,7 +150,6 @@ def send_seller_status_notification(user_id, status_value):
                 data={},
                 tag="seller_status",
                 url="/seller/dashboard",
-                save_notification=True,
             )
         elif status_value == "blocked":
             send_email_task.delay(
@@ -171,7 +167,6 @@ def send_seller_status_notification(user_id, status_value):
                 data={},
                 tag="seller_status",
                 url="/seller/dashboard",
-                save_notification=True,
             )
 
         return {"success": True}

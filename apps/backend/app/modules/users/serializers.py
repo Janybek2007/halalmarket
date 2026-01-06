@@ -1,11 +1,12 @@
+from modules.sellers.models import Seller
 from rest_framework import serializers
 
-from .models import Seller, User
-from modules.sellers.models import Store
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    avatar = serializers.FileField(required=False, allow_null=True)
+    avatar = serializers.SerializerMethodField()
+    seller = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -18,8 +19,24 @@ class UserSerializer(serializers.ModelSerializer):
             "address",
             "role",
             "created_at",
+            "seller",
         ]
         read_only_fields = ["id", "role", "created_at"]
+
+    def get_avatar(self, obj):
+        return obj.avatar.url if obj.avatar else None
+
+    def get_seller(self, obj):
+        try:
+            seller = Seller.objects.get(user=obj)
+            return {
+                "id": seller.id,
+                "status": seller.status,
+                "store_name": seller.store_name,
+                "store_logo": seller.store_logo.url if seller.store_logo else None,
+            }
+        except Seller.DoesNotExist:
+            return None
 
 
 class SellerSerializer(serializers.ModelSerializer):
@@ -34,12 +51,3 @@ class SellerSerializer(serializers.ModelSerializer):
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
-
-
-class StoreSerializer(serializers.ModelSerializer):
-    logo = serializers.FileField(required=False, allow_null=True)
-
-    class Meta:
-        model = Store
-        fields = ["id", "name", "logo", "created_at"]
-        read_only_fields = ["id", "created_at"]

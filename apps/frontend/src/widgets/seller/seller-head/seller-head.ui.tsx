@@ -14,24 +14,24 @@ import s from './styles.module.scss';
 export const SellerHead: React.FC = React.memo(() => {
 	const [open, { toggle }] = useToggle(false);
 	const pathname = usePathname();
-	const store = useSession().user?.store;
+	const seller = useSession().user?.seller;
 
 	return (
 		<>
 			{open && <CreateStore onClose={toggle} />}
 			<div className={'container ' + s.sellerHead}>
-				{store ? (
+				{seller ? (
 					<>
 						<div className={s.storeHeader}>
 							<div className={s.storeLogo}>
-								{store.logo ? (
-									<img src={ApiMedia(store.logo)} alt='Store logo' />
+								{seller.store_logo ? (
+									<img src={ApiMedia(seller.store_logo)} alt='Store logo' />
 								) : (
 									<Icon name='carbon:store' c_size={60} />
 								)}
 							</div>
 							<div className={s.storeInfo}>
-								<h1>{store.name || 'Название магазина'}</h1>
+								<h1>{seller.store_name || 'Название магазина'}</h1>
 							</div>
 						</div>
 

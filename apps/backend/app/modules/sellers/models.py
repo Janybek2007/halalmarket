@@ -1,7 +1,14 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from modules.users.models import Seller
+
+
+class SellerStatus(models.TextChoices):
+    ACTIVE = "active", "Активен"
+    BLOCKED = "blocked", "Заблокирован"
+
+    def __str__(self):
+        return self.name.lower()
 
 
 class SellerInvite(models.Model):
@@ -30,27 +37,34 @@ class SellerInvite(models.Model):
         return f"Invite for {self.phone} (used={self.is_used})"
 
 
-class Store(models.Model):
+class Seller(models.Model):
     id = models.AutoField(primary_key=True, verbose_name="Идентификатор")
-    name = models.CharField(max_length=255, verbose_name="Название")
-    seller = models.OneToOneField(
-        Seller,
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="store",
-        verbose_name="Продавец",
+        related_name="seller",
+        verbose_name="Пользователь",
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=SellerStatus.choices,
+        default=SellerStatus.ACTIVE,
+        verbose_name="Статус",
+    )
+    store_name = models.CharField(max_length=255, verbose_name="Название магазина")
+    store_logo = models.FileField(
+        upload_to="stores/logos/",
         null=True,
         blank=True,
-    )
-    logo = models.FileField(
-        upload_to="stores/logos/", null=True, blank=True, verbose_name="Логотип"
+        verbose_name="Логотип магазина",
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
     class Meta:
-        ordering = ["-created_at"]
-        verbose_name = "Магазин"
-        verbose_name_plural = "Магазины"
+        verbose_name = "Продавец"
+        verbose_name_plural = "Продавцы"
 
     def __str__(self):
-        return self.name
+        return f"{self.user.full_name} - {self.status}"
+

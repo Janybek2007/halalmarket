@@ -1,11 +1,9 @@
-from django.shortcuts import get_object_or_404
 from modules.users.permissions import IsActiveSeller
 from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
-from ..models import Store
-from ..serializers import StoreUpdateSerializer
+from ..serializers import SellerUpdateSerializer
 from .base import SellerBaseView
 
 
@@ -25,12 +23,11 @@ class SellerStoreDetailView(SellerBaseView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        store = get_object_or_404(Store, seller=seller)
-
-        serializer = StoreUpdateSerializer(store, data=request.data, partial=True)
+        serializer = SellerUpdateSerializer(seller, data=request.data, partial=True)
         if serializer.is_valid():
-            from ..serializers import StoreSerializer
+            from ..serializers import SellerSerializer
+
             serializer.save()
-            store_data = StoreSerializer(store).data
-            return Response({"success": True, "store_data": store_data})
+            seller_data = SellerSerializer(seller).data
+            return Response({"success": True, "store_data": seller_data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

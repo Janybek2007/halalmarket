@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from shared.utils.priority_filter import prioritize_to_parameter
 from shared.utils.priority_pagination import get_paginated_response_with_priority
 
-from ..models import OrderGroup, OrderStatus
-from ..serializers import OrderGroupSerializer
+from ..models import Order, OrderStatus
+from ..serializers import OrderSerializer
 
 
 class OrderListView(APIView):
@@ -15,9 +15,7 @@ class OrderListView(APIView):
         to_id = request.query_params.get("_to")
         statuses_param = request.query_params.get("statuses")
 
-        OrderGroup.objects.filter(user=request.user, orders__isnull=True).delete()
-
-        queryset = OrderGroup.objects.filter(user=request.user)
+        queryset = Order.objects.filter(user=request.user)
 
         if statuses_param:
             statuses = statuses_param.split(",")
@@ -38,6 +36,6 @@ class OrderListView(APIView):
             paginator=paginator,
             queryset=queryset,
             request=request,
-            serializer_class=OrderGroupSerializer,
+            serializer_class=OrderSerializer,
             target_item=target_order,
         )

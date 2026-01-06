@@ -69,6 +69,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.UUIDField(required=True)
     new_password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
 

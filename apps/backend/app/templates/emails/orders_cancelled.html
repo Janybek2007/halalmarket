@@ -1,0 +1,54 @@
+{% extends "emails/base.html" %} {% block title %}Заказы отменены - {{
+store_name }}{% endblock %} {% block content %}
+<h2>Заказы отменены</h2>
+
+<p>
+	Покупатель отменил {{ total_orders }} заказ(ов) из вашего магазина "{{
+	store_name }}".
+</p>
+
+<div class="info">
+	<h3>Информация об отмене:</h3>
+	<p><strong>Магазин:</strong> {{ store_name }}</p>
+	<p><strong>Количество отмененных заказов:</strong> {{ total_orders }}</p>
+</div>
+
+<div class="order-details">
+	<h3>Отмененные заказы:</h3>
+
+	{% for order in orders %}
+	<div class="order-item">
+		<p><strong>Заказ №{{ order.id }}</strong></p>
+		{% for item in order.items %}
+		<p><strong>Товар:</strong> {{ item.product.name }}</p>
+		<p><strong>Количество:</strong> {{ item.quantity }} шт.</p>
+		<p><strong>Сумма:</strong> {{ item.total_price }} сом.</p>
+		<p><small>Продавец: {{ item.seller.store_name }}</small></p>
+		{% endfor %}
+		<p><strong>Покупатель:</strong> {{ order.user.full_name }}</p>
+	</div>
+	{% endfor %}
+</div>
+
+<div class="info">
+	<h3>Что произошло?</h3>
+	<ul>
+		<li>Покупатель отменил заказ(ы)</li>
+		<li>Товары будут возвращены в доступные для продажи</li>
+		<li>Никаких комиссий за отмену не взимается</li>
+	</ul>
+</div>
+
+<p style="text-align: center">
+	<a href="{{ client_url }}/seller/orders" class="button">
+		Перейти к заказам
+	</a>
+</p>
+
+<p>
+	Если у вас есть вопросы по отмене заказов, пожалуйста, свяжитесь с нашей
+	службой поддержки.
+</p>
+
+<p>С уважением,<br />Команда Halal Market</p>
+{% endblock %}

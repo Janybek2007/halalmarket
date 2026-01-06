@@ -27,12 +27,8 @@ class ProductReviewCreateView(APIView):
             for file in files:
                 ReviewImage.objects.create(review=review, image=file)
 
-        if (
-            hasattr(product, "store")
-            and product.store
-            and hasattr(product.store, "seller")
-        ):
-            seller = product.store.seller
+        if hasattr(product, "seller") and product.seller:
+            seller = product.seller
             if seller and hasattr(seller, "id"):
                 from ..tasks import send_new_review_notification
 

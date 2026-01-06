@@ -47,8 +47,7 @@ export const isSellerVRSPath = (pathname: string, user?: IUser | null) =>
 export const isSellerOnlyOutlet = (pathname: string): boolean => {
 	return [
 		RoutePaths.Seller.Request,
-		RoutePaths.Seller.StoreCreate,
-		RoutePaths.Seller.StorePolicy,
+		RoutePaths.Seller.Policy,
 		RoutePaths.Seller.SetProfile
 	].includes(pathname);
 };

@@ -251,5 +251,5 @@ sudo mkdir -p /app/pg_backups
 sudo chown postgres:postgres /app/pg_backups
 
 # Создание бэкапа
-pg_dump -U postgres -h localhost halalmarket > /app/pg_backups/backup_$(date +%F_%H-%M-%S).sql
+sudo -u postgres pg_dump -U postgres -h localhost halalmarket | sudo tee /app/pg_backups/backup_$(date +%F_%H-%M-%S).sql > /dev/null
 ```

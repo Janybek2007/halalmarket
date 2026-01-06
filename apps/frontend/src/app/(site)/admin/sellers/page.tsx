@@ -129,11 +129,11 @@ function AdminSellersPage() {
 				size: 120
 			},
 			{
-				accessorKey: 'store.name',
+				accessorKey: 'store_name',
 				header: 'Магазин',
 				cell: ({ row }) => (
 					<span className={s.rowValue}>
-						{row.original.store?.name || 'Нет'}
+						{row.original.store_name || 'Нет'}
 					</span>
 				),
 				size: 80

@@ -5,36 +5,37 @@ from modules.notifications.tasks import send_email_task, send_push_notification_
 
 
 @app.task(name="modules.orders.tasks.send_order_created_notification")
-def send_order_created_notification(user_id, order_group_id, orders_data, total_sum):
+def send_order_created_notification(user_id, order_id, orders_data, total_sum):
     User = apps.get_model(
         settings.AUTH_USER_MODEL.split(".")[0], settings.AUTH_USER_MODEL.split(".")[1]
     )
 
     try:
         user = User.objects.get(id=int(user_id))
+        order_data = orders_data[0] if orders_data else {}
+
         email_context = {
-            "order_group": order_group_id,
-            "orders": orders_data,
-            "total_sum": total_sum,
+            "order_id": order_id,
+            "items": order_data.get("items", []),
+            "total_price": total_sum,
             "client_url": settings.CLIENT_URL,
         }
 
         send_email_task.delay(
             recipient_email=user.email,
-            subject="Заказ(ы) успешно создан(ы) - Halal Market",
+            subject="Заказ успешно создан - Halal Market",
             template_name="order_created",
             context=email_context,
         )
 
         send_push_notification_task.delay(
             user_id=int(user.id),
-            title="Заказ(ы) успешно создан(ы)",
+            title="Заказ успешно создан",
             message=f"Ваш заказ на сумму {total_sum} сом успешно оформлен",
             notification_type="order_created",
-            data={"order_group_id": int(order_group_id), "total_sum": str(total_sum)},
+            data={"order_id": int(order_id), "total_sum": str(total_sum)},
             tag="order_created",
             url="/profile/my_purchases",
-            save_notification=True,
         )
 
         return {"success": True}
@@ -45,7 +46,7 @@ def send_order_created_notification(user_id, order_group_id, orders_data, total_
 @app.task(name="modules.orders.tasks.send_seller_new_order_notification")
 def send_seller_new_order_notification(
     seller_user_id,
-    order_group_id,
+    order_id,
     orders_data,
     order_items,
     buyer_name,
@@ -58,14 +59,16 @@ def send_seller_new_order_notification(
 
     try:
         seller_user = User.objects.get(id=int(seller_user_id))
+        order_data = orders_data[0] if orders_data else {}
+
         email_context = {
-            "order_group": int(order_group_id),
-            "orders": orders_data,
+            "order_id": int(order_id),
             "order_items": order_items,
             "buyer_name": buyer_name,
             "buyer_phone": buyer_phone,
             "total_sum": total_sum,
             "client_url": settings.CLIENT_URL,
+            "delivery_address": order_data.get("delivery_address"),
         }
 
         send_email_task.delay(
@@ -81,13 +84,12 @@ def send_seller_new_order_notification(
             message="Поступил новый заказ на ваши товары.",
             notification_type="new_order",
             data={
-                "order_group_id": int(order_group_id),
+                "order_id": int(order_id),
                 "total_sum": str(total_sum),
                 "buyer_name": buyer_name,
             },
             tag="seller_orders",
-            url=f"/seller/orders?_to={int(order_group_id)}",
-            save_notification=True,
+            url=f"/seller/orders?_to={int(order_id)}",
         )
 
         return {"success": True}
@@ -113,17 +115,29 @@ def send_order_status_notification(user_id, status_value, orders_data, total_ord
             },
             "cancelled": {
                 "title": "Заказы отменены",
-                "message": f"Вы отменили {total_orders} заказ(ов)",
+                "message": f"Заказы отменены {total_orders} заказ(ов)",
                 "subject": "Заказы отменены - Halal Market",
                 "template": "order_cancelled",
             },
         }
 
         status_info = status_messages.get(status_value, status_messages["delivered"])
+
+        # Обрабатываем данные для шаблона
+        processed_orders = []
+        for order_data in orders_data:
+            processed_order = {
+                "id": order_data.get("id"),
+                "items": order_data.get("items", []),
+                "user": order_data.get("user", {}),
+            }
+            processed_orders.append(processed_order)
+
         email_context = {
-            "orders": orders_data,
+            "orders": processed_orders,
             "total_orders": total_orders,
             "status": status_value,
+            "client_url": settings.CLIENT_URL,
         }
 
         send_email_task.delay(
@@ -139,9 +153,8 @@ def send_order_status_notification(user_id, status_value, orders_data, total_ord
             message=status_info["message"],
             notification_type=f"order_{status_value}",
             data={"total_orders": total_orders, "status": status_value},
-            tag="order_status",
+            tag=f"order_{status_value}",
             url="/profile/my_purchases",
-            save_notification=True,
         )
 
         return {"success": True}
@@ -165,22 +178,33 @@ def send_seller_order_status_notification(
                 "title": "Заказы доставлены",
                 "message": f"Покупатель подтвердил получение {total_orders} заказ(ов)",
                 "subject": f"Заказы доставлены - {store_name}",
-                "template": "seller_order_delivered",
+                "template": "orders_delivered",
             },
             "cancelled": {
                 "title": "Заказы отменены",
-                "message": f"Покупатель отменил {total_orders} заказ(ов)",
+                "message": f"Заказы отменены {total_orders} заказ(ов)",
                 "subject": f"Заказы отменены - {store_name}",
-                "template": "seller_order_cancelled",
+                "template": "orders_cancelled",
             },
         }
 
         status_info = status_messages.get(status_value, status_messages["delivered"])
+
+        processed_orders = []
+        for order_data in orders_data:
+            processed_order = {
+                "id": order_data.get("id"),
+                "items": order_data.get("items", []),
+                "user": order_data.get("user", {}),
+            }
+            processed_orders.append(processed_order)
+
         email_context = {
             "store_name": store_name,
-            "orders": orders_data,
+            "orders": processed_orders,
             "total_orders": total_orders,
             "status": status_value,
+            "client_url": settings.CLIENT_URL,
         }
 
         send_email_task.delay(
@@ -202,7 +226,6 @@ def send_seller_order_status_notification(
             },
             tag="seller_order_status",
             url="/seller/orders",
-            save_notification=True,
         )
 
         return {"success": True}
@@ -218,10 +241,23 @@ def send_orders_shipped_notification(user_id, store_name, orders_data, total_ord
 
     try:
         user = User.objects.get(id=int(user_id))
+
+        # Обрабатываем данные для шаблона
+        processed_orders = []
+        for order_data in orders_data:
+            processed_order = {
+                "id": order_data.get("id"),
+                "items": order_data.get("items", []),
+                "tracking_number": order_data.get("tracking_number"),
+                "tracking_url": order_data.get("tracking_url"),
+            }
+            processed_orders.append(processed_order)
+
         email_context = {
             "store_name": store_name,
-            "orders": orders_data,
+            "orders": processed_orders,
             "total_orders": total_orders,
+            "client_url": settings.CLIENT_URL,
         }
 
         send_email_task.delay(
@@ -239,7 +275,6 @@ def send_orders_shipped_notification(user_id, store_name, orders_data, total_ord
             data={"store_name": store_name, "total_orders": total_orders},
             tag="orders_shipped",
             url="/profile/my_purchases",
-            save_notification=True,
         )
 
         return {"success": True}

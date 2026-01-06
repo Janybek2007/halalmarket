@@ -1,10 +1,11 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { OrderQuery } from '~/entities/order';
 import { State } from '~/shared/components/state/state.ui';
 import { formatDateCustom } from '~/shared/utils/date';
+import { getOrderStatus } from '~/shared/utils/get-status';
 import { priceFormat } from '~/shared/utils/price';
 import s from './page.module.scss';
 
@@ -14,7 +15,7 @@ export default function GuestOrderDetail() {
 	const { data: order, isLoading } = useQuery(
 		OrderQuery.GetOrderQuery({ id: orderId })
 	);
-	const isSeller = useSearchParams().get('is_seller') === 'true';
+
 	if (isLoading)
 		return (
 			<State
@@ -46,21 +47,39 @@ export default function GuestOrderDetail() {
 
 							<div className={`${s.info} ${s.dateInfo}`}>
 								<div className={s.dateRow}>
-									<span className={s.dateLabel}>Дата покупки</span>
+									<span className={s.dateLabel}>Статус: </span>
+									<span
+										className={`${s.dateValue} ${s.badge} ${s[order.status]}`}
+									>
+										{getOrderStatus(order.status)}
+									</span>
+								</div>
+								<div className={s.dateRow}>
+									<span className={s.dateLabel}>Дата создание: </span>
 									<span className={s.dateValue}>
 										{formatDateCustom(order?.created_at, 'yyyy-MM-dd')}{' '}
 									</span>
 								</div>
-								<div className={s.dateRow}>
-									<span className={s.dateLabel}>Дата доставки</span>
-									<span className={s.dateValue}>
-										{formatDateCustom(order?.delivery_date, 'yyyy-MM-dd')}{' '}
-									</span>
-								</div>
+								{order.delivery_date && (
+									<div className={s.dateRow}>
+										<span className={s.dateLabel}>Дата доставки: </span>
+										<span className={s.dateValue}>
+											{formatDateCustom(order?.delivery_date, 'yyyy-MM-dd')}{' '}
+										</span>
+									</div>
+								)}
+								{order.delivery_address && (
+									<div className={s.dateRow}>
+										<span className={s.dateLabel}>Адресс доставки: </span>
+										<span className={s.dateValue}>
+											{order.delivery_address}
+										</span>
+									</div>
+								)}
 							</div>
 
 							<div className={s.items}>
-								{order.orders.map((order) => (
+								{order.items.map(order => (
 									<div key={order.id} className={s.item}>
 										<span
 											className={s.itemName}
@@ -82,27 +101,6 @@ export default function GuestOrderDetail() {
 							<div className={s.total}>
 								<span>Итого: {priceFormat(order.total_price)}</span>
 							</div>
-
-							{isSeller && (
-								<div className={s.customerInfo}>
-									<div className={s.infoRow}>
-										<span className={s.infoLabel}>Доставка:</span>
-										<span className={s.infoValue}>Бесплатно</span>
-									</div>
-									<div className={s.infoRow}>
-										<span className={s.infoLabel}>ФИО покупателя:</span>
-										<span className={s.infoValue}>{order.user.full_name}</span>
-									</div>
-									<div className={s.infoRow}>
-										<span className={s.infoLabel}>Электронный адрес:</span>
-										<span className={s.infoValue}>{order.user?.email}</span>
-									</div>
-									<div className={s.infoRow}>
-										<span className={s.infoLabel}>Телефон:</span>
-										<span className={s.infoValue}>{order.user.phone}</span>
-									</div>
-								</div>
-							)}
 						</div>
 					</div>
 				</div>

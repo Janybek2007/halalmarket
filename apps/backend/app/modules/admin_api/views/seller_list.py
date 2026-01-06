@@ -1,5 +1,5 @@
 from django.db.models import Q
-from modules.users.models import Seller
+from modules.sellers.models import Seller
 from modules.users.permissions import IsAdmin
 from rest_framework.views import APIView
 from shared.utils.pagination import BasePagination

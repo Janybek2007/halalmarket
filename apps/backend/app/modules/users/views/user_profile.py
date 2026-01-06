@@ -1,8 +1,8 @@
+from modules.sellers.models import Seller
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import Seller
 from ..permissions import IsTokenAuthenticated
 from ..serializers import UserSerializer
 
@@ -26,23 +26,17 @@ class UserProfileView(APIView):
 
         if user_data["role"] == "seller":
             try:
-                from modules.sellers.models import Store
-
-                from ..serializers import StoreSerializer
+                from modules.sellers.models import Seller
 
                 seller = Seller.objects.get(user=request.user)
                 data["seller"] = {
                     "id": seller.id,
                     "status": seller.status,
+                    "store_name": seller.store_name,
+                    "store_logo": seller.store_logo.url if seller.store_logo else None,
                 }
-                store = Store.objects.filter(seller=seller).first()
-                if store:
-                    data["store"] = StoreSerializer(store).data
-                else:
-                    data["store"] = None
             except Seller.DoesNotExist:
                 data["seller"] = None
-                data["store"] = None
 
         return Response(data)
 

@@ -1,4 +1,4 @@
-from modules.users.models import Seller, SellerStatus
+from modules.sellers.models import Seller, SellerStatus
 from modules.users.permissions import IsActiveSeller
 from rest_framework import status
 from rest_framework.response import Response

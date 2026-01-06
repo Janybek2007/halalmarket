@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from modules.users.models import Seller, SellerStatus
+from modules.sellers.models import Seller, SellerStatus
 from modules.users.permissions import IsAdmin
 
 

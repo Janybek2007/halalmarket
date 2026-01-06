@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { IUser, UserService } from './entities/user';
-import { ACCESS_TOKEN_KEY } from './shared/constants';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from './shared/constants';
 import { RoutePaths } from './shared/router';
 import {
 	getFirstAllowedPage,
@@ -9,12 +9,20 @@ import {
 	isSellerVRSPath
 } from './shared/utils/access-allowed';
 
+function deleteAuthCookies(response: NextResponse) {
+	response.cookies.set(ACCESS_TOKEN_KEY, '', { maxAge: 0 });
+	response.cookies.set(REFRESH_TOKEN_KEY, '', { maxAge: 0 });
+}
+
 async function getUser(req: NextRequest): Promise<IUser | null> {
 	try {
 		const token = req.cookies.get(ACCESS_TOKEN_KEY)?.value;
 		if (!token) return null;
-		return await UserService.GetUserProfile(token);
+
+		const user = await UserService.GetUserProfile(token);
+		return user;
 	} catch (err: any) {
+		console.warn('Ошибка получения пользователя', err);
 		return null;
 	}
 }
@@ -22,43 +30,41 @@ async function getUser(req: NextRequest): Promise<IUser | null> {
 export async function proxy(req: NextRequest) {
 	const url = req.nextUrl.clone();
 	const path = req.nextUrl.pathname;
-	let user = null;
-
-	try {
-		user = await getUser(req);
-	} catch {}
+	const user = await getUser(req);
 
 	if (user) {
-		// Если пользователь авторизован и находится на странице аутентификации, перенаправляем на первую страницу для его роли
 		if (isAuthPath(path)) {
 			url.pathname = getFirstAllowedPage(user.role);
-			return NextResponse.redirect(url);
+			const response = NextResponse.redirect(url);
+			return response;
 		}
 
-		// Если пользователь пытается зайти не на свои страницы, перенаправляем на первую страницу роли
-		if (user && !isPathAllowed(path, user.role)) {
+		if (!isPathAllowed(path, user.role)) {
 			url.pathname = getFirstAllowedPage(user.role);
-			return NextResponse.redirect(url);
+			const response = NextResponse.redirect(url);
+			return response;
 		}
 
-		// Для других случаев (например, user или если путь разрешен), продолжаем
-		return NextResponse.next();
-	} else {
-		// Если пользователя нет и путь требует аутентификации (не guest/auth), перенаправляем на login
-		if (!isPathAllowed(path, null)) {
-			url.pathname = RoutePaths.Auth.Login;
-			url.searchParams.set('redirect', path);
-			return NextResponse.redirect(url);
-		}
-
-		// Исключения для страниц, доступных без авторизации (seller VRS paths)
-		if (!isSellerVRSPath(path, user)) {
-			return NextResponse.next();
-		}
-
-		// Для гостевых путей, продолжаем
 		return NextResponse.next();
 	}
+
+	if (!isPathAllowed(path, null)) {
+		url.pathname = RoutePaths.Auth.Login;
+		url.searchParams.set('redirect', path);
+		const response = NextResponse.redirect(url);
+		deleteAuthCookies(response);
+		return response;
+	}
+
+	if (!isSellerVRSPath(path, user)) {
+		const response = NextResponse.next();
+		deleteAuthCookies(response);
+		return response;
+	}
+
+	const response = NextResponse.next();
+	deleteAuthCookies(response);
+	return response;
 }
 
 export const config = {
