@@ -15,4 +15,4 @@ export const StoreCreateSchema = z.object({
 	})
 });
 
-export type StoreCreateDto = z.infer<typeof StoreCreateSchema>
+export type StoreCreateDto = z.infer<typeof StoreCreateSchema>;

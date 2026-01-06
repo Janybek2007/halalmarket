@@ -26,7 +26,7 @@ export const useStoreCreateMutation = (onClose: VoidFunction) => {
 	} = useMutation({
 		mutationKey: ['store-create'],
 		mutationFn: (parsedBody: StoreCreateDto) =>
-			http.post<SuccessResponse & { store_data: IUser['store'] }>(
+			http.post<SuccessResponse & { seller_data: IUser['seller'] }>(
 				'store/create/',
 				buildFormData(parsedBody)
 			)
@@ -38,9 +38,9 @@ export const useStoreCreateMutation = (onClose: VoidFunction) => {
 				async () => {
 					const r = await mutateAsync(data);
 					if (r.success) {
-						if (r.store_data) {
+						if (r.seller_data) {
 							queryClient.setQueryData<IUser>(USER_PROFILE_KEY, prev => {
-								return { ...prev, store: r.store_data } as IUser;
+								return { ...prev, seller: r.seller_data } as IUser;
 							});
 						}
 						toast.success('Магазин создан');
