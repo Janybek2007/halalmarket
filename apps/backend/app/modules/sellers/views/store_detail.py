@@ -25,9 +25,18 @@ class SellerStoreDetailView(SellerBaseView):
 
         serializer = SellerUpdateSerializer(seller, data=request.data, partial=True)
         if serializer.is_valid():
-            from ..serializers import SellerSerializer
-
             serializer.save()
-            seller_data = SellerSerializer(seller).data
+            try:
+                from modules.sellers.models import Seller
+
+                seller = Seller.objects.get(user=request.user)
+                seller_data = {
+                    "id": seller.id,
+                    "status": seller.status,
+                    "store_name": seller.store_name,
+                    "store_logo": seller.store_logo.url if seller.store_logo else None,
+                }
+            except Seller.DoesNotExist:
+                seller_data = None
             return Response({"success": True, "store_data": seller_data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

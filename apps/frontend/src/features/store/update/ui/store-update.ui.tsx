@@ -21,17 +21,17 @@ export const StoreUpdate: React.FC = React.memo(() => {
 				<div className={s.logoContainer}>
 					<label
 						className={clsx(s.logo, {
-							[s.hasLogo]: user?.store?.logo || form.watch('logo')
+							[s.hasLogo]: user?.seller?.store_logo || form.watch('logo')
 						})}
 					>
-						{user?.store?.logo || form.watch('logo') ? (
+						{user?.seller?.store_logo || form.watch('logo') ? (
 							<img
 								src={
 									form.watch('logo')
 										? URL.createObjectURL(form.watch('logo') as File)
-										: ApiMedia(user?.store?.logo || '')
+										: ApiMedia(user?.seller?.store_logo || '')
 								}
-								alt={user?.store?.name || 'Логотип'}
+								alt={user?.seller?.store_name || 'Логотип'}
 							/>
 						) : (
 							<span className={s.text}>Выберите логотип</span>
@@ -67,7 +67,7 @@ export const StoreUpdate: React.FC = React.memo(() => {
 				loading={isPending}
 				disabled={
 					isPending ||
-					(form.watch('name') === user?.store?.name && !form.watch('logo'))
+					(form.watch('name') === user?.seller?.store_name && !form.watch('logo'))
 				}
 				loadingText='Сохранение...'
 			>

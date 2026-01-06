@@ -16,7 +16,7 @@ export const useStoreUpdateMutation = () => {
 	const form = useForm<UpdateStoreDto>({
 		resolver: zodResolver(UpdateStoreSchema),
 		defaultValues: {
-			name: user?.store?.name || '',
+			name: user?.seller?.store_name || '',
 			logo: null
 		}
 	});
@@ -27,7 +27,7 @@ export const useStoreUpdateMutation = () => {
 	} = useMutation({
 		mutationKey: ['update-store'],
 		mutationFn: (parsedBody: UpdateStoreDto) =>
-			http.patch<SuccessResponse & { store_data: IUser['store'] }>(
+			http.patch<SuccessResponse & { seller_data: IUser['seller'] }>(
 				'store/',
 				buildFormData(parsedBody)
 			)
@@ -47,9 +47,9 @@ export const useStoreUpdateMutation = () => {
 				async () => {
 					const r = await updateStore(data);
 					if (r.success) {
-						if (r.store_data) {
+						if (r.seller_data) {
 							queryClient.setQueryData<IUser>(USER_PROFILE_KEY, prev => {
-								return { ...prev, store: r.store_data } as IUser;
+								return { ...prev, seller: r.seller_data } as IUser;
 							});
 						}
 						toast.success('Магазин обновлен');
