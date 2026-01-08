@@ -5,8 +5,7 @@ import { RoutePaths } from './shared/router';
 import {
 	getFirstAllowedPage,
 	isAuthPath,
-	isPathAllowed,
-	isSellerVRSPath
+	isPathAllowed
 } from './shared/utils/access-allowed';
 
 function deleteAuthCookies(response: NextResponse) {
@@ -52,12 +51,6 @@ export async function proxy(req: NextRequest) {
 		url.pathname = RoutePaths.Auth.Login;
 		url.searchParams.set('redirect', path);
 		const response = NextResponse.redirect(url);
-		deleteAuthCookies(response);
-		return response;
-	}
-
-	if (!isSellerVRSPath(path, user)) {
-		const response = NextResponse.next();
 		deleteAuthCookies(response);
 		return response;
 	}

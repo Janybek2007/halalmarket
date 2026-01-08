@@ -1,4 +1,4 @@
-import { IUser, TUserRole } from '~/entities/user';
+import { TUserRole } from '~/entities/user';
 import { RouteGroups, RoutePaths } from '../router';
 
 function matchesPath(pathname: string, pattern: string): boolean {
@@ -35,14 +35,6 @@ export function isPathAllowed(
 
 export const isAuthPath = (pathname: string) =>
 	RouteGroups.auth.some(p => pathname.startsWith(p));
-
-// is seller (request, set-profile) paths
-export const isSellerVRSPath = (pathname: string, user?: IUser | null) =>
-	user?.role === 'seller' &&
-	user?.seller &&
-	[RoutePaths.Seller.SetProfile, RoutePaths.Seller.Request].some(p =>
-		pathname.startsWith(p)
-	);
 
 export const isSellerOnlyOutlet = (pathname: string): boolean => {
 	return [
