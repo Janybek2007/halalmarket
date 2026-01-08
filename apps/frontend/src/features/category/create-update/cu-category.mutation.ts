@@ -45,9 +45,7 @@ export const useCUCategoryMutation = (
 				Object.entries(parsedBody).forEach(([key, value]) => {
 					if (value) fd.append(key, value as any);
 				});
-				return http.post<SuccessResponse>(`categories/create/`, {
-					body: fd
-				});
+				return http.post<SuccessResponse>(`categories/create/`, fd);
 			} else {
 				if (!parsedBody.slug) {
 					throw new Error('Slug is required');
@@ -58,7 +56,7 @@ export const useCUCategoryMutation = (
 				});
 				return http.patch<SuccessResponse>(
 					`categories/${parsedBody.slug}/update/`,
-					{ body: fd }
+					fd
 				);
 			}
 		}
