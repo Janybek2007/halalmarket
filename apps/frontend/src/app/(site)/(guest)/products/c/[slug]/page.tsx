@@ -47,9 +47,9 @@ export default async (
 ) => {
 	const params = await props.params;
 	const sp = await props.searchParams;
-	let queryData: any = { results: [], category: null };
+	let results: any = { results: [], category: null };
 	try {
-		queryData = await ProductService.GetProducts({
+		results = await ProductService.GetProducts({
 			category: params.slug,
 			page: sp.page,
 			per_pages: 12
@@ -58,5 +58,5 @@ export default async (
 		console.log('Ошибка при получении продуктов', err);
 	}
 
-	return <ProductsByCategoryPage slug={params.slug} queryData={queryData} />;
+	return <ProductsByCategoryPage slug={params.slug} results={results} />;
 };

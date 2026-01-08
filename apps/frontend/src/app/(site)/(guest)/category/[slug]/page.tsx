@@ -51,9 +51,8 @@ export default async (props: CPageProps<{ slug: string }>) => {
 		notFound();
 	}
 
-	const parentCategory = categories?.[0]?.parent;
 
 	return (
-		<CategoryPage categories={categories} parentCategory={parentCategory} />
+		<CategoryPage categories={categories} slug={params.slug}  />
 	);
 };

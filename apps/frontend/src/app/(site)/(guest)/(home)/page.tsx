@@ -1,12 +1,11 @@
-import clsx from 'clsx';
-import { ProductService } from '~/entities/products';
-import { ProductSearch } from '~/shared/components/product-search/product-search.ui';
+import {
+	ProductService,
+	TGetProductsWithCategoriesResult
+} from '~/entities/products';
 import { $Meta } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { GetAccessToken } from '~/shared/utils/token.server';
-import { Categories } from '~/widgets/categories';
-import { CategoryProductList } from '~/widgets/category-product-list';
-import s from './page.module.scss';
+import { HomePage } from './page.ui';
 
 export const metadata = $Meta({
 	title: 'Главная',
@@ -15,33 +14,15 @@ export const metadata = $Meta({
 	url: RoutePaths.Guest.Home
 });
 
-export default async function Home() {
-	const token = await GetAccessToken();
-	const cProducts = await ProductService.GetProductsWithCategories(
-		{ per_pages: 8 },
-		token
-	);
+export default async () => {
+	let cProducts: TGetProductsWithCategoriesResult = [];
+	try {
+		const token = await GetAccessToken();
+		cProducts = await ProductService.GetProductsWithCategories(
+			{ per_pages: 8 },
+			token
+		);
+	} catch {}
 
-	return (
-		<main className={s.main}>
-			<div className={clsx('container', s.container)}>
-				<ProductSearch />
-			</div>
-			<Categories categories={cProducts} />
-			<div className='container'>
-				{cProducts
-					.filter(category => category.products.length > 0)
-					?.map(category => {
-						return (
-							<CategoryProductList
-								key={category.id}
-								products={category.products}
-								title={category.name}
-								slug={category.slug}
-							/>
-						);
-					})}
-			</div>
-		</main>
-	);
-}
+	return <HomePage cProducts={cProducts} />;
+};

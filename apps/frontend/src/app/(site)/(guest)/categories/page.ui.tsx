@@ -8,11 +8,7 @@ import { ApiMedia } from '~/shared/constants';
 import { RoutePaths } from '~/shared/router';
 import s from './page.module.scss';
 
-export function CategoriesPage({
-	iCategories
-}: {
-	iCategories: TGetCategories;
-}) {
+export function CategoriesPage(props: { categories: TGetCategories }) {
 	const { data: categories } = useQuery({
 		queryKey: ['get-categories_'],
 		queryFn: () =>
@@ -20,8 +16,9 @@ export function CategoriesPage({
 				is_null_parent: 'true',
 				get_childs: 'true'
 			}),
-		initialData: iCategories
+		initialData: props.categories
 	});
+
 	return (
 		<main className={s.categoriesPage}>
 			<div className={clsx('container', s.container)}>

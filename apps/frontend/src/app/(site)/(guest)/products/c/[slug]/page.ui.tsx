@@ -1,23 +1,30 @@
 'use client';
-import { TGetProductsResult } from '~/entities/products';
+import { queryOptions } from '@tanstack/react-query';
+import { ProductService, TGetProductsResult } from '~/entities/products';
 import { Pagination } from '~/shared/components/pagination/pagination.ui';
 import { ProductSearch } from '~/shared/components/product-search/product-search.ui';
 import { State } from '~/shared/components/state/state.ui';
-import { usePage } from '~/shared/libs/pagination/use-page';
-import { usePagination } from '~/shared/libs/pagination/use-pagination';
+import { usePaginatedQuery } from '~/shared/libs/pagination';
 import { BreadcrumbItem } from '~/shared/ui/breadcrumb/breadcrumb.types';
 import Breadcrumb from '~/shared/ui/breadcrumb/breadcrumb.ui';
 import { CategoryProductList } from '~/widgets/category-product-list';
 import s from './page.module.scss';
 
 export function ProductsByCategoryPage(props: {
-	queryData: TGetProductsResult;
+	results: TGetProductsResult;
 	slug: string;
 }) {
-	const page = usePage({ per_pages: 12 });
-	const pagination = usePagination({ ...page, total: props.queryData.count });
-	const findCategory = props.queryData?.category;
-	const results = props.queryData?.results || [];
+	const { pagination, data: queryData } = usePaginatedQuery(
+		(params) =>
+			queryOptions({
+				queryKey: ['get-products', props.slug],
+				queryFn: () => ProductService.GetProducts(params),
+				initialData: props.results
+			}),
+		{ per_pages: 12, category: props.slug }
+	);
+	const findCategory = queryData?.category;
+	const results = queryData?.results || [];
 
 	return (
 		<main className={s.productsByCategoryPage}>
@@ -60,7 +67,7 @@ export function ProductsByCategoryPage(props: {
 						products={results || []}
 					/>
 				)}
-				{(props.queryData?.count || 0) > 3 && (
+				{(queryData?.count || 0) > 3 && (
 					<Pagination className={s.pagination} {...pagination} />
 				)}
 			</div>

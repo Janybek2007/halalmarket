@@ -1,6 +1,7 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { TGetCategories } from '~/entities/categories';
+import { CategoriesService, TGetCategories } from '~/entities/categories';
 import { Assets } from '~/shared/assets';
 import { State } from '~/shared/components/state/state.ui';
 import { ApiMedia } from '~/shared/constants';
@@ -10,9 +11,16 @@ import s from './page.module.scss';
 
 export function CategoryPage(props: {
 	categories: TGetCategories;
-	parentCategory: any;
+	slug: string;
 }) {
-	if (!props.categories || props.categories.length === 0) {
+	const { data: categories } = useQuery({
+		queryKey: ['get-categories-with-parent', props.slug],
+		queryFn: () => CategoriesService.GetCategories({ parent: props.slug }),
+		initialData: props.categories
+	});
+	const parentCategory = categories?.[0]?.parent;
+
+	if (!categories || categories.length === 0) {
 		return (
 			<div className='container'>
 				<State
@@ -25,9 +33,7 @@ export function CategoryPage(props: {
 
 	return (
 		<main className={s.categoryPage}>
-			<h1 className={`${s.title} ${s.t1}`}>
-				{props.parentCategory?.name || ''}
-			</h1>
+			<h1 className={`${s.title} ${s.t1}`}>{parentCategory?.name || ''}</h1>
 			<div className='container'>
 				<Breadcrumb
 					className={s.breadcrumb}
@@ -38,19 +44,17 @@ export function CategoryPage(props: {
 							isActive: false
 						},
 						{
-							label: props.parentCategory?.name || '',
-							path: RoutePaths.Guest.Category(props.parentCategory?.slug || ''),
+							label: parentCategory?.name || '',
+							path: RoutePaths.Guest.Category(parentCategory?.slug || ''),
 							isActive: true
 						}
 					]}
 				/>
 
-				<h1 className={`${s.title} ${s.t2}`}>
-					{props.parentCategory?.name || ''}
-				</h1>
+				<h1 className={`${s.title} ${s.t2}`}>{parentCategory?.name || ''}</h1>
 
 				<div className={s.subcategoriesGrid}>
-					{props.categories.map(category => (
+					{categories.map(category => (
 						<Link
 							key={category.id}
 							href={RoutePaths.Guest.ProductsByCategory(category.slug)}

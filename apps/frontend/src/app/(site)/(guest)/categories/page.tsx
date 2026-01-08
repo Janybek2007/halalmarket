@@ -18,5 +18,5 @@ export default async () => {
 		get_childs: 'true'
 	});
 
-	return <CategoriesPage iCategories={categories} />;
+	return <CategoriesPage categories={categories} />;
 };
