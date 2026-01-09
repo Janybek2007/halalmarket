@@ -22,22 +22,19 @@ export const useProductDeleteMutation = () => {
 			openConfirm({
 				title: 'Удаление товара',
 				text: 'Вы уверены, что хотите удалить товар?',
-				confirmCallback: () => {
-					toast.promise(
-						async () => {
-							const result = await deleteProduct({ id });
-							if (result?.success) {
-								queryClient.refetchQueries({
-									queryKey: ['get-products_admin']
-								});
-							}
-						},
-						{
-							loading: 'Удаление товара...',
-							success: 'Товар удален',
-							error: 'Ошибка удаления товара'
+				async confirmCallback() {
+					try {
+						const result = await deleteProduct({ id });
+						if (result?.success) {
+							toast.success('Товар удален');
+							await queryClient.refetchQueries({
+								queryKey: ['get-products_admin']
+							});
 						}
-					);
+					} catch (error) {
+						toast.error('Ошибка удаления товара');
+						throw error;
+					}
 				},
 				confirmText: 'Удалить',
 				cancelText: 'Отменить'

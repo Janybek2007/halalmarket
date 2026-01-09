@@ -1,6 +1,6 @@
 import { API_URL } from '../constants';
 import { HttpClient } from '../libs/http';
-import { TokenUtils } from '../utils/token.client';
+import { TokenUtils } from './token.client';
 
 let token = '';
 

@@ -26,20 +26,17 @@ export const useSellersDeleteMutation = (
 			text: 'Вы уверены, что хотите удалить продавца?',
 			confirmText: 'Удалить',
 			cancelText: 'Отменить',
-			confirmCallback: () => {
-				toast.promise(
-					async () => {
-						const r = await deleteSeller({ ids: ids.map(v => +v) });
-						if (r?.success) {
-							toast.success(`Продавец удален`);
-							callback();
-						}
-					},
-					{
-						loading: 'Удаление продавца',
-						error: 'Ошибка при удалении продавца'
+			async confirmCallback() {
+				try {
+					const result = await deleteSeller({ ids: ids.map(v => +v) });
+					if (result?.success) {
+						toast.success('Продавец удален');
+						callback();
 					}
-				);
+				} catch (error) {
+					toast.error('Ошибка при удалении продавца');
+					throw error;
+				}
 			}
 		});
 	}, [deleteSeller, openConfirm, callback, ids]);

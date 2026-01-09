@@ -3,11 +3,13 @@ export interface ConfirmContext {
 	text: string;
 	confirmText: string;
 	cancelText: string;
-	confirmCallback?: VoidFunction;
+	confirmCallback?: (args: { checked?: boolean }) => Promise<any>;
 	cancelCallback?: VoidFunction;
-	isCloseConfirm?: boolean;
+	checkBox?: boolean;
+	checkBoxText?: string;
 }
 
 export interface ConfirmContextValue {
 	openConfirm: (item: ConfirmContext) => void;
+	closeConfirm: VoidFunction;
 }

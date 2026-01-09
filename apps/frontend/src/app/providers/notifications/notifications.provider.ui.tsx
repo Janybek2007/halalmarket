@@ -25,7 +25,6 @@ export const NotificationsProvider: React.FC<
 		setIsPushSupported,
 		setSubscriptionData
 	);
-	console.log(notifications)
 
 	const unreadCount = React.useMemo(() => {
 		return notifications?.results?.filter(n => !n.is_read).length || 0;

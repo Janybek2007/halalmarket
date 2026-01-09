@@ -6,10 +6,10 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { USER_PROFILE_KEY } from '~/entities/user';
 import { http } from '~/shared/api/http';
+import { TokenUtils } from '~/shared/api/token.client';
 import { useQueryString } from '~/shared/hooks';
 import { queryClient } from '~/shared/libs/tanstack';
 import { RoutePaths } from '~/shared/router';
-import { TokenUtils } from '~/shared/utils/token.client';
 import { AuthResponse } from '../types';
 import { LoginDto, LoginSchema } from './login.contract';
 

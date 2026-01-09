@@ -1,15 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
 import React from 'react';
 import { toast } from 'sonner';
+import { PromotionsQuery } from '~/entities/promotion';
+import { SuccessResponse } from '~/global';
 import { http } from '~/shared/api/http';
 import { useConfirm } from '~/shared/libs/confirm';
+import { queryClient } from '~/shared/libs/tanstack';
 
 export const usePromotionUpdateStatusMutation = (promotionId: number) => {
 	const { openConfirm } = useConfirm();
 	const mutation = useMutation({
 		mutationKey: ['promotion-update-status', promotionId],
 		mutationFn: (parsedBody: { status: 'approve' | 'reject' }) =>
-			http.post(`promotions/update-status/`, {
+			http.post<SuccessResponse>(`promotions/update-status/`, {
 				action: parsedBody.status,
 				ids: [promotionId]
 			})
@@ -20,12 +23,19 @@ export const usePromotionUpdateStatusMutation = (promotionId: number) => {
 			text: 'Вы действительно хотите активировать эту акцию?',
 			confirmText: 'Активировать',
 			cancelText: 'Отмена',
-			confirmCallback: async () => {
-				toast.promise(mutation.mutateAsync({ status: 'approve' }), {
-					loading: 'Активация акции...',
-					success: 'Акция успешно активирована',
-					error: 'Ошибка при активации акции'
-				});
+			async confirmCallback() {
+				try {
+					const result = await mutation.mutateAsync({ status: 'approve' });
+					if (result.success) {
+						await queryClient.refetchQueries({
+							queryKey: PromotionsQuery.QueryKeys.GetPromotions({})
+						});
+						toast.success('Акция успешно активирована');
+					}
+				} catch (error) {
+					toast.error('Ошибка при активации акции');
+					throw error;
+				}
 			}
 		});
 	}, [openConfirm]);
@@ -36,12 +46,19 @@ export const usePromotionUpdateStatusMutation = (promotionId: number) => {
 			text: 'Вы действительно хотите отклонить эту акцию?',
 			confirmText: 'Отклонить',
 			cancelText: 'Отмена',
-			confirmCallback: async () => {
-				toast.promise(mutation.mutateAsync({ status: 'reject' }), {
-					loading: 'Отклонение акции...',
-					success: 'Акция успешно отклонена',
-					error: 'Ошибка при отклонении акции'
-				});
+			async confirmCallback() {
+				try {
+					const result = await mutation.mutateAsync({ status: 'reject' });
+					if (result.success) {
+						await queryClient.refetchQueries({
+							queryKey: PromotionsQuery.QueryKeys.GetPromotions({})
+						});
+						toast.success('Акция успешно отклонена');
+					}
+				} catch (error) {
+					toast.error('Ошибка при отклонении акции');
+					throw error;
+				}
 			}
 		});
 	}, [openConfirm]);

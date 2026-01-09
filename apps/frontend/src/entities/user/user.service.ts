@@ -1,5 +1,5 @@
 import { http } from '~/shared/api/http';
-import { TokenUtils } from '~/shared/utils/token.client';
+import { TokenUtils } from '~/shared/api/token.client';
 import { IUser } from './user.types';
 
 export class UserService {

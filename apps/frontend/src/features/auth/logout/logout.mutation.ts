@@ -3,9 +3,9 @@ import { useRouter } from 'next/navigation';
 import { USER_PROFILE_KEY } from '~/entities/user';
 import { SuccessResponse } from '~/global';
 import { http } from '~/shared/api/http';
+import { TokenUtils } from '~/shared/api/token.client';
 import { queryClient } from '~/shared/libs/tanstack';
 import { RoutePaths } from '~/shared/router';
-import { TokenUtils } from '~/shared/utils/token.client';
 
 export const useLogoutMutation = () => {
 	const router = useRouter();

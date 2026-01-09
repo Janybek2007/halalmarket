@@ -35,7 +35,6 @@ export default function UserCartPage() {
 						<div className={styles.selectAll}>
 							<Checkbox
 								color='color-1'
-								name='selectAll'
 								checked={(cart?.products || []).every(
 									product => product.checked
 								)}
@@ -78,7 +77,6 @@ export default function UserCartPage() {
 										checkbox={{
 											checked: item.checked,
 											onChecked: () => cart?.onCheckProduct(item.id),
-											name: `checkbox-${item.id}`
 										}}
 									>
 										<ProductQuantityControls

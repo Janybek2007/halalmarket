@@ -1,12 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 import React from 'react';
 import { toast } from 'sonner';
+import { PromotionsQuery } from '~/entities/promotion';
 import { SuccessResponse } from '~/global';
 import { http } from '~/shared/api/http';
 import { useConfirm } from '~/shared/libs/confirm';
+import { queryClient } from '~/shared/libs/tanstack';
 
 export const usePromotionDeleteMutation = (id: number) => {
-	const { mutateAsync } = useMutation({
+	const mutation = useMutation({
 		mutationKey: ['promotion-delete', id],
 		mutationFn: () => http.delete<SuccessResponse>(`promotion/${id}/delete/`)
 	});
@@ -18,14 +20,21 @@ export const usePromotionDeleteMutation = (id: number) => {
 			text: 'Вы уверены, что хотите удалить акцию?',
 			confirmText: 'Удалить',
 			cancelText: 'Отмена',
-			confirmCallback: async () => {
-				toast.promise(mutateAsync(), {
-					loading: 'Удаление акции...',
-					success: 'Акция удалена',
-					error: 'Ошибка при удалении акции'
-				});
+			async confirmCallback() {
+				try {
+					const result = await mutation.mutateAsync();
+					if (result?.success) {
+						await queryClient.refetchQueries({
+							queryKey: PromotionsQuery.QueryKeys.GetPromotions({})
+						});
+						toast.success('Акция успешно удалена');
+					}
+				} catch (error) {
+					toast.error('Ошибка при удалении акции');
+					throw error;
+				}
 			}
 		});
-	}, [id, mutateAsync, openConfirm]);
+	}, [id, mutation.mutateAsync, openConfirm]);
 	return { handleDelete };
 };

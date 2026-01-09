@@ -111,7 +111,6 @@ export const ProductListItem = <T extends IProduct>({
 						<Checkbox
 							color='color-1'
 							checked={checkbox.checked ?? false}
-							name={checkbox.name}
 							onChecked={checked => checkbox.onChecked(checked)}
 							className={styles.checkboxInput}
 						/>

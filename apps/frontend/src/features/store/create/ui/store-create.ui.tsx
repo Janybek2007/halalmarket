@@ -67,7 +67,6 @@ export const CreateStore: React.FC<{ onClose: VoidFunction }> = React.memo(({
 						<Checkbox
 							checked={!!form.watch('is_read_policy')}
 							onChecked={checked => form.setValue('is_read_policy', checked)}
-							name='is_read_policy'
 							color='color-1'
 						/>
 						<span className={s.policyLabel}>

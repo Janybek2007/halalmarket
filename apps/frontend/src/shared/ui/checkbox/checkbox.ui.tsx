@@ -6,7 +6,7 @@ import type { CheckboxProps } from './checkbox.types';
 import styles from './styles.module.scss';
 
 export const Checkbox: React.FC<CheckboxProps> = React.memo(
-  ({ checked, onChecked, className, color = 'default' }) => {
+  ({ checked, onChecked, className, color = 'default', }) => {
     return (
       <div
         className={clsx(styles.checkboxWrapper, className, styles[color])}

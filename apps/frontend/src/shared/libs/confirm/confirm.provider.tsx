@@ -22,7 +22,7 @@ export const ConfirmProvider: React.FC<React.PropsWithChildren> = props => {
 	}, [set]);
 
 	return (
-		<ConfirmContext.Provider value={{ openConfirm }}>
+		<ConfirmContext.Provider value={{ openConfirm, closeConfirm }}>
 			<ConfirmContainer
 				context={context}
 				open={open}

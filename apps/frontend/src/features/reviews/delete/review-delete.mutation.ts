@@ -24,22 +24,19 @@ export const useReviewDeleteMutation = () => {
 				text: 'Вы уверены, что хотите удалить этот отзыв?',
 				confirmText: 'Удалить',
 				cancelText: 'Отменить',
-				confirmCallback: () => {
-					toast.promise(
-						async () => {
-							const result = await reviewDelete({ reviewId });
-							if (result.success) {
-								queryClient.refetchQueries({
-									queryKey: SellersQuery.QueryKeys.GetReviews({})
-								});
-							}
-						},
-						{
-							loading: 'Удаление отзыва...',
-							success: 'Отзыв успешно удалён',
-							error: 'Ошибка при удалении отзыва'
+				async confirmCallback() {
+					try {
+						const result = await reviewDelete({ reviewId });
+						if (result?.success) {
+							toast.success('Отзыв успешно удалён');
+							await queryClient.refetchQueries({
+								queryKey: SellersQuery.QueryKeys.GetReviews({})
+							});
 						}
-					);
+					} catch (error) {
+						toast.error('Ошибка при удалении отзыва');
+						throw error;
+					}
 				}
 			});
 		},

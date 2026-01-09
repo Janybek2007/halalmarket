@@ -21,7 +21,7 @@ export const useChangePasswordMutation = (onClose: VoidFunction) => {
 	} = useMutation({
 		mutationKey: ['change-password_mutation'],
 		mutationFn: (parsedBody: ChangePasswordDto) =>
-			http.post<SuccessResponse>('user/change-password/', parsedBody)
+			http.patch<SuccessResponse>('user/change-password/', parsedBody)
 	});
 	const onSubmit = React.useCallback(
 		async (data: ChangePasswordDto) => {

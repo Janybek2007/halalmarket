@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { useCart } from '~/entities/cart';
 import { http } from '~/shared/api/http';
 import { useTimeDebounce } from '~/shared/hooks';
@@ -13,7 +14,6 @@ export const useProductChangeQuantityMutation = (hasToast: boolean = false) => {
 
 	const changeQuantityDebounced = useTimeDebounce(
 		async (cartId: number, quantity: number) => {
-			const { toast } = await import('sonner');
 			if (!hasToast)
 				return changeQuantityMutation({ cart_id: cartId, quantity });
 			toast.promise(changeQuantityMutation({ cart_id: cartId, quantity }), {

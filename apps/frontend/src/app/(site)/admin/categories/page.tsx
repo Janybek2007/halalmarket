@@ -15,15 +15,17 @@ import { Input } from '~/shared/ui/input/input.ui';
 import s from './page.module.scss';
 
 export default () => {
-	return <Suspense><AdminCategoriesPage/></Suspense>;
+	return (
+		<Suspense>
+			<AdminCategoriesPage />
+		</Suspense>
+	);
 };
 
 function AdminCategoriesPage() {
 	const [modalOpen, setModalOpen] = React.useState<boolean | ICategory>(false);
 	const [category, setCategory] = useQueryString('category');
 	const [search, setSearch] = React.useState('');
-
-	const { handleDeleteConfirm } = useCategoryDeleteMutation();
 
 	const {
 		data: categories,
@@ -38,6 +40,8 @@ function AdminCategoriesPage() {
 				parent: category
 			})
 	});
+
+	const { handleDeleteConfirm } = useCategoryDeleteMutation();
 
 	const filteredCategories = React.useMemo(() => {
 		if (!categories) return [];
@@ -145,7 +149,7 @@ function AdminCategoriesPage() {
 										</button>
 										<button
 											className={clsx(s.action, s.trash)}
-											onClick={() => handleDeleteConfirm(_category)}
+											onClick={() => handleDeleteConfirm(_category, _category.childs?.length, Boolean(_category.parent))}
 										>
 											<Icon name='lucide:trash-2' />
 										</button>

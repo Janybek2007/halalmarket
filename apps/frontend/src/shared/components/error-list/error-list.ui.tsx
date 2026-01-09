@@ -11,7 +11,7 @@ interface ErrorListProps {
 }
 
 export const ErrorList: React.FC<ErrorListProps> = React.memo(
-	({ errors, isView, className }) => {
+	({ errors, isView = true, className }) => {
 		const errorsList = getSplitedErrors(errors);
 		if (isView && errorsList.length > 0) {
 			return (

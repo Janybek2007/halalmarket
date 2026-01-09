@@ -14,12 +14,7 @@ export const useOrderUpdateStatusMutation = () => {
 	const { mutateAsync: ship, error } = useMutation({
 		mutationKey: ['order_update-status'],
 		mutationFn: (body: TIds) =>
-			http.post<SuccessResponse>('seller/orders/ship/', body),
-		onSuccess() {
-			queryClient.refetchQueries({
-				queryKey: SellersQuery.QueryKeys.GetOrders({})
-			});
-		}
+			http.post<SuccessResponse>('seller/orders/ship/', body)
 	});
 
 	const handleShip = React.useCallback(
@@ -29,12 +24,19 @@ export const useOrderUpdateStatusMutation = () => {
 				text: 'Вы уверены что хотите отправить заказ?',
 				confirmText: 'Отправить',
 				cancelText: 'Отменить',
-				confirmCallback: () => {
-					toast.promise(ship({ ids: [id] }), {
-						loading: 'Отправка...',
-						success: 'Заказ отправлен',
-						error: 'Ошибка отправки'
-					});
+				async confirmCallback() {
+					try {
+						const r = await ship({ ids: [id] });
+						if (r.success) {
+							toast.success('Заказ отправлен');
+							await queryClient.refetchQueries({
+								queryKey: SellersQuery.QueryKeys.GetOrders({})
+							});
+						}
+					} catch (error) {
+						toast.error('Ошибка при отправки');
+						throw error;
+					}
 				}
 			});
 		},

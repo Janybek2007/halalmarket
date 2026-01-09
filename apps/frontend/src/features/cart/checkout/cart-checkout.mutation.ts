@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { toast } from 'sonner';
 import { SuccessResponse } from '~/global';
 import { http } from '~/shared/api/http';
 import { useConfirm } from '~/shared/libs/confirm';
@@ -25,22 +26,18 @@ export const useCartCheckoutMutation = (selectedItems: number[]) => {
 			text: 'Вы уверены, что хотите оформить заказ?',
 			confirmText: 'Оформить',
 			cancelText: 'Отменить',
-			confirmCallback: async () => {
-				const { toast } = await import('sonner');
-				toast.promise(
-					async () => {
-						const r = await mutateAsync({ ids: selectedItems });
-						if (r.success) {
-							queryClient.refetchQueries({ queryKey: ['cart-list'] });
-							router.push(RoutePaths.User.Orders);
-						}
-					},
-					{
-						loading: 'Оформление заказа...',
-						error: 'Ошибка оформления заказа',
-						success: 'Заказ оформлен'
+			async confirmCallback() {
+				try {
+					const r = await mutateAsync({ ids: selectedItems });
+					if (r.success) {
+						toast.success('Заказ оформлен');
+						await queryClient.refetchQueries({ queryKey: ['cart-list'] });
+						router.push(RoutePaths.User.Orders);
 					}
-				);
+				} catch (error) {
+					toast.error('Ошибка оформления заказа');
+					throw error;
+				}
 			}
 		});
 	}, [openConfirm, mutateAsync, selectedItems]);

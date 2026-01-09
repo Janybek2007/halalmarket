@@ -3,8 +3,8 @@
 	--error-container-padding: 0.75rem;
 	--error-container-radius: 0.5rem;
 	--error-font-size: 0.875rem;
-	--error-message-margin: 0.25rem 0;
-	--error-dot-offset: 0.5rem;
+	--error-message-margin: 0.25rem;
+	--error-dot-offset: 0.1rem;
 	margin-top: var(--error-container-margin);
 	padding: var(--error-container-padding);
 	border-radius: var(--error-container-radius);
@@ -13,9 +13,12 @@
 	.errorMessage {
 		color: var(--secondary);
 		font-size: var(--error-font-size);
-		margin: var(--error-message-margin);
 		position: relative;
-		padding-left: 1.25rem;
+		text-align: left;
+		padding-left: 1rem;
+		&:not(&:last-child) {
+			margin-bottom: var(--error-message-margin);
+		}
 
 		&::before {
 			content: '•';

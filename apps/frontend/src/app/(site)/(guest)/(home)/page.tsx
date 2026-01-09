@@ -2,9 +2,9 @@ import {
 	ProductService,
 	TGetProductsWithCategoriesResult
 } from '~/entities/products';
+import { GetAccessToken } from '~/shared/api/token.server';
 import { $Meta } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
-import { GetAccessToken } from '~/shared/utils/token.server';
 import { HomePage } from './page.ui';
 
 export const metadata = $Meta({
