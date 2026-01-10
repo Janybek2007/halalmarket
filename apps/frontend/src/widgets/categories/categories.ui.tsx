@@ -10,15 +10,15 @@ import { Icon } from '~/shared/ui/icon/icon.ui';
 import s from './styles.module.scss';
 
 interface CategoriesProps {
-	categories: (ICategory)[];
+	categories: ICategory[];
 }
 
 const AllCategories: ICategory = {
-	id: -1000,
+	id: -1,
 	order: 0,
 	slug: 'all',
 	name: 'Все категории',
-	image: '',
+	image: '/seo/favicon.png',
 	actions: null
 };
 
@@ -32,38 +32,42 @@ export const Categories: React.FC<CategoriesProps> = React.memo(
 					</div>
 
 					<div className={`${s.list}`}>
-						{[AllCategories, ...categories].map(category => (
-							<Link
-								key={category.id}
-								href={
-									category.slug === 'all'
-										? RoutePaths.Guest.Categories
-										: RoutePaths.Guest.Category(category.slug)
-								}
-								className={`${s.category} ${category.slug == 'all' && 'allc'}`}
-							>
-								<div className={s.view1}>
-									<div className={s.imageWrapper}>
-										<img
-											src={
-												category.image
-													? ApiMedia(category.image)
-													: Assets.Placeholder
-											}
-											alt={category.name}
-											className={s.image}
-										/>
+						{[AllCategories, ...categories]
+							.sort((a, b) => a.order - b.order)
+							.map(category => (
+								<Link
+									key={category.id}
+									href={
+										category.slug === 'all'
+											? RoutePaths.Guest.Categories
+											: RoutePaths.Guest.Category(category.slug)
+									}
+									className={`${s.category} ${
+										category.slug == 'all' && s.allc
+									}`}
+								>
+									<div className={s.view1}>
+										<div className={s.imageWrapper}>
+											<img
+												src={
+													category.image
+														? ApiMedia(category.image)
+														: Assets.Placeholder
+												}
+												alt={category.name}
+												className={s.image}
+											/>
+										</div>
+										<div className={s.overlay}>
+											<span className={s.name}>{category.name}</span>
+										</div>
 									</div>
-									<div className={s.overlay}>
-										<span className={s.name}>{category.name}</span>
+									<div className={s.view2}>
+										{category.slug === 'all' && <Icon name='lucide:menu' />}
+										<div className={s.name}>{category.name}</div>
 									</div>
-								</div>
-								<div className={s.view2}>
-									{category.slug === 'all' && <Icon name='lucide:menu' />}
-									<div className={s.name}>{category.name}</div>
-								</div>
-							</Link>
-						))}
+								</Link>
+							))}
 					</div>
 				</div>
 			</section>

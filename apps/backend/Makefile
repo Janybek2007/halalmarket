@@ -5,7 +5,7 @@
 SHELL := /bin/sh
 
 APP_DIR := app
-CD_APP := cd $(APP_DIR)
+SET_PYTHONPATH := PYTHONPATH=$(APP_DIR)
 
 VENV := .venv
 
@@ -17,18 +17,18 @@ MODULES := users categories products carts orders sellers notifications favorite
 # ========================
 
 ifeq ($(OS),Windows_NT)
-	VENV_BIN := ../$(VENV)/Scripts
-	VENV_PYTHON := $(VENV_BIN)/python.exe
-	VENV_PIP := $(VENV_BIN)/pip.exe
+	VENV_BIN := $(VENV)/Scripts
 else
-	VENV_BIN := ../$(VENV)/bin
-	VENV_PYTHON := $(VENV_BIN)/python
-	VENV_PIP := $(VENV_BIN)/pip
+	VENV_BIN := $(VENV)/bin
 endif
+
+VENV_PYTHON := $(VENV_BIN)/python
+VENV_PIP := $(VENV_BIN)/pip
 
 UVICORN := $(VENV_BIN)/uvicorn
 GUNICORN := $(VENV_BIN)/gunicorn
 CELERY := $(VENV_BIN)/celery
+
 
 # ========================
 # Detect python / uv
@@ -45,7 +45,7 @@ endif
 UV := uv
 HAS_UV := $(shell command -v $(UV) >/dev/null 2>&1 && echo 1 || echo 0)
 
-PYTHON_RUN := $(VENV_PYTHON) manage.py
+PYTHON_RUN := $(SET_PYTHONPATH) $(VENV_PYTHON) $(APP_DIR)/manage.py
 
 
 # ========================
@@ -98,65 +98,50 @@ endif
 # ========================
 
 run:
-	$(CD_APP) && $(PYTHON_RUN) runserver 0.0.0.0:8000
+	$(PYTHON_RUN) runserver 0.0.0.0:8000
 
 migrate:
-	$(CD_APP) && $(PYTHON_RUN) migrate
+	$(PYTHON_RUN) migrate
 
 makemigrations:
-	$(CD_APP) && $(PYTHON_RUN) makemigrations $(MODULES)
+	$(PYTHON_RUN) makemigrations $(MODULES)
 
 createsuperuser:
-	$(CD_APP) && $(PYTHON_RUN) createsuperuser
+	$(PYTHON_RUN) createsuperuser
 
 collectstatic:
-	$(CD_APP) && $(PYTHON_RUN) collectstatic --noinput
+	$(PYTHON_RUN) collectstatic --noinput
+
 check:
-	$(CD_APP) && $(PYTHON_RUN) check
+	$(PYTHON_RUN) check
+
 
 # ========================
-# ASGI / WSGI через uv
+# ASGI / WSGI
 # ========================
 
 runserver_u:
-ifeq ($(HAS_UV),1)
-	$(CD_APP) ; $(UV) run uvicorn config.asgi:application --host 0.0.0.0 --port 8000
-else
-	$(CD_APP) && $(UVICORN) config.asgi:application \
+	$(SET_PYTHONPATH) $(UVICORN) app.config.asgi:application \
 		--host 0.0.0.0 \
 		--port 8000
-endif
 
 runserver_g:
-ifeq ($(HAS_UV),1)
-	$(CD_APP) ; $(UV) run gunicorn config.wsgi:application \
+	$(SET_PYTHONPATH) $(GUNICORN) app.config.wsgi:application \
 		--workers 4 \
 		--threads 2 \
 		--worker-class gthread \
 		--timeout 120 \
 		--bind 0.0.0.0:8000
-else
-	$(CD_APP) && $(GUNICORN) config.wsgi:application \
-		--workers 4 \
-		--threads 2 \
-		--worker-class gthread \
-		--timeout 120 \
-		--bind 0.0.0.0:8000
-endif
 
 
 # ========================
-# Celery через uv
+# Celery
 # ========================
 
 celeryrun:
-ifeq ($(HAS_UV),1)
-	$(CD_APP) ; $(UV) run celery -A config.celery worker --loglevel=info --pool=solo
-else
-	$(CD_APP) && $(CELERY) -A config.celery worker \
+	$(SET_PYTHONPATH) $(CELERY) -A app.config.celery worker \
 		--loglevel=info \
 		--pool=solo
-endif
 
 
 # ========================
@@ -164,10 +149,10 @@ endif
 # ========================
 
 cmd:
-	$(CD_APP) ; $(PYTHON_RUN) $(filter-out $@,$(MAKECMDGOALS))
+	$(PYTHON_RUN) $(filter-out $@,$(MAKECMDGOALS))
 
 
 .PHONY: \
 	bootstrap venv export install sync \
-	run migrate makemigrations createsuperuser collectstatic \
+	run migrate makemigrations createsuperuser collectstatic check \
 	runserver_u runserver_g celeryrun cmd

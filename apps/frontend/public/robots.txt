@@ -12,6 +12,7 @@ Allow: /auth/login
 Allow: /auth/register
 Allow: /auth/forgot
 Allow: /auth/reset-password
+Allow: /seller/request
 
 # --- Запрет приватных разделов ---
 Disallow: /profile
