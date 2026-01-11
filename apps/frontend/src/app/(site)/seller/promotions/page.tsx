@@ -12,6 +12,7 @@ import { ApiMedia } from '~/shared/constants';
 import { formatDateCustom } from '~/shared/utils/date';
 import { SellerPageHead } from '~/widgets/seller/seller-page-head/seller-page-head.ui';
 import s from './page.module.scss';
+import Image from 'next/image'
 
 export default function SellerPromotionsPage() {
 	const {
@@ -53,8 +54,10 @@ export default function SellerPromotionsPage() {
 						{promotions?.results?.map(promotion => (
 							<div key={promotion.id} className={s.promotionCard}>
 								<div className={s.promotionHeader}>
-									<img
-										src={ApiMedia(promotion.thumbnail) || Assets.Placeholder}
+									<Image
+										width={100}
+										height={100}
+										src={ApiMedia(promotion.thumbnail, {w:100,h:100}) || Assets.Placeholder}
 										alt='Акция'
 										className={s.thumbnail}
 									/>

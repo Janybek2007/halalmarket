@@ -13,6 +13,7 @@ import { Button } from '~/shared/ui/button/button.ui';
 import { Icon } from '~/shared/ui/icon/icon.ui';
 import { Input } from '~/shared/ui/input/input.ui';
 import s from './page.module.scss';
+import Image from 'next/image'
 
 export default () => {
 	return (
@@ -116,10 +117,12 @@ function AdminCategoriesPage() {
 						{filteredCategories.map((_category, i) => (
 							<div key={`${_category.id}-${i}-category-key`} className={s.card}>
 								<div className={s.cardHeader}>
-									<img
+									<Image
+										width={48}
+										height={48}
 										src={
 											_category.image
-												? ApiMedia(_category.image)
+												? ApiMedia(_category.image, { w: 48, h: 48 })
 												: Assets.Placeholder
 										}
 										alt={_category.name}
@@ -149,7 +152,13 @@ function AdminCategoriesPage() {
 										</button>
 										<button
 											className={clsx(s.action, s.trash)}
-											onClick={() => handleDeleteConfirm(_category, _category.childs?.length, Boolean(_category.parent))}
+											onClick={() =>
+												handleDeleteConfirm(
+													_category,
+													_category.childs?.length,
+													Boolean(_category.parent)
+												)
+											}
 										>
 											<Icon name='lucide:trash-2' />
 										</button>

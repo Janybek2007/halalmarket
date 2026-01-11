@@ -39,6 +39,7 @@ export const ProductListItemv2: React.FC<ProductListItemv2Props> = React.memo(
 							classNames={{
 								container: s.productImage
 							}}
+							mediaOpts={{ w: 166, h: 166 }}
 							images={product.images}
 							alt={product.name}
 						/>
@@ -49,7 +50,7 @@ export const ProductListItemv2: React.FC<ProductListItemv2Props> = React.memo(
 									<span>{priceFormat(product.price, 'сом')}</span>{' '}
 									{Number(product.discount) > 0 && (
 										<span style={{ color: 'gray' }}>
-											(с учетем скидки: {' '}
+											(с учетем скидки:{' '}
 											{priceFormat(
 												discountedPrice(product.price, product.discount),
 												'сом'

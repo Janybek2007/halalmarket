@@ -67,6 +67,7 @@ const AppHeader: React.FC = () => {
 										<Avatar
 											src={profile.avatar}
 											alt='profile'
+											mediaOpts={{ h: 33.6, w: 33.6 }}
 											className={s.avatar}
 											placeholder={profile.full_name[0]}
 											media
@@ -87,6 +88,7 @@ const AppHeader: React.FC = () => {
 													src={profile.avatar}
 													alt='profile'
 													className={s.avatar}
+													mediaOpts={{ h: 33.6, w: 33.6 }}
 													placeholder={profile.full_name[0]}
 													media
 												/>
@@ -125,6 +127,7 @@ const AppHeader: React.FC = () => {
 											src={profile.avatar}
 											alt='profile'
 											className={s.avatar}
+											mediaOpts={{ h: 33.6, w: 33.6 }}
 											placeholder={profile.full_name[0]}
 											media
 										/>

@@ -1,6 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import Image from 'next/image';
 import Link from 'next/link';
 import { CategoriesService, TGetCategories } from '~/entities/categories';
 import { Assets } from '~/shared/assets';
@@ -33,10 +34,12 @@ export function CategoriesPage(props: { categories: TGetCategories }) {
 								className={s.categoryCard}
 							>
 								<div className={s.imageWrapper}>
-									<img
+									<Image
+										width={128}
+										height={128}
 										src={
 											category.image
-												? ApiMedia(category.image)
+												? ApiMedia(category.image, { w: 128, h: 128 })
 												: Assets.Placeholder
 										}
 										alt={category.name}

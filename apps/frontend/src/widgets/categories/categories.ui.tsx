@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { ICategory } from '~/entities/categories';
 import { Assets } from '~/shared/assets';
@@ -48,10 +49,17 @@ export const Categories: React.FC<CategoriesProps> = React.memo(
 								>
 									<div className={s.view1}>
 										<div className={s.imageWrapper}>
-											<img
+											<Image
+												width={150}
+												height={150}
 												src={
-													category.image
-														? ApiMedia(category.image)
+													category.slug == 'all'
+														? category.image
+														: category.image
+														? ApiMedia(category.image, {
+																w: 150,
+																h: 150
+														  })
 														: Assets.Placeholder
 												}
 												alt={category.name}

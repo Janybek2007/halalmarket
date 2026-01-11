@@ -7,6 +7,8 @@ import { $Meta } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { HomePage } from './page.ui';
 
+export const revalidate = 60;
+
 export const metadata = $Meta({
 	title: 'Главная',
 	description:

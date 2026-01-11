@@ -1,5 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
 import Link from 'next/link';
 import { CategoriesService, TGetCategories } from '~/entities/categories';
 import { Assets } from '~/shared/assets';
@@ -61,10 +62,12 @@ export function CategoryPage(props: {
 							className={s.subcategoryCard}
 						>
 							<div className={s.imageWrapper}>
-								<img
+								<Image
+									width={128}
+									height={128}
 									src={
 										category.image
-											? ApiMedia(category.image)
+											? ApiMedia(category.image, { w: 128, h: 128 })
 											: Assets.Placeholder
 									}
 									alt={category.name}

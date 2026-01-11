@@ -62,8 +62,8 @@ if ! command -v fnm &> /dev/null; then
 fi
 
 # Установка Node.js 22 через fnm
-fnm install 22
-fnm default 22
+fnm install 24
+fnm default 24
 
 # Создание символических ссылок для Node.js
 sudo ln -sf ~/.local/share/fnm/aliases/default/bin/node /usr/bin/node
@@ -99,6 +99,10 @@ cp .env.example .env
 # Создание защищённого .env для бэкенда
 cd /www/apps/backend
 cp .env.example .env
+
+# Создание защищённого .env для image-server
+cd /www/apps/image-server
+cp .env.example .env
 ```
 
 ## Шаг 3: Настройка бэкенда
@@ -132,6 +136,30 @@ make collectstatic || { echo "Ошибка сбора статических ф�
 
 Соберите фронтенд на React с использованием bun.
 
+## Шаг 5: Настройка image-server
+
+Image-server - это сервис для обработки и доставки изображений с поддержкой кэширования и изменения размеров.
+
+### Команды: Настройка image-server
+
+```bash
+# Переход в каталог image-server
+cd /www/apps/image-server
+
+# Установка зависимостей
+bun install
+```
+
+Image-server работает на порту 3030 и предоставляет следующие возможности:
+
+- Обслуживание изображений из директории /app/media
+- Поддержка изменения размеров изображений через параметры запроса (?w=ширина&h=высота&q=качество)
+- Кэширование обработанных изображений
+- Автоматическая конвертация в формат WebP
+- Оптимизация изображений с помощью sharp
+
+## Шаг 7: Сборка фронтенда
+
 ### Команды: Сборка фронтенда
 
 ```bash
@@ -147,7 +175,7 @@ else
 fi
 ```
 
-## Шаг 5: Настройка systemd-сервисов
+## Шаг 8: Настройка systemd-сервисов
 
 Настройте systemd-сервисы для автоматического запуска бэкенда, фронтенда и Celery.
 
@@ -206,6 +234,23 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# Создание сервиса для image-server
+sudo tee /etc/systemd/system/halalmarket-image-server.service > /dev/null <<EOF
+[Unit]
+Description=Halal Market Image Server
+After=network.target
+Requires=network.target
+
+[Service]
+WorkingDirectory=/www/apps/image-server
+ExecStart=/usr/bin/node src/main.js
+User=$USER
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
 ```
 
 ## Шаг 6: Настройка и запуск Nginx
@@ -235,6 +280,8 @@ sudo systemctl enable halalmarket-celery.service
 sudo systemctl restart halalmarket-celery.service
 sudo systemctl enable halalmarket-frontend.service
 sudo systemctl restart halalmarket-frontend.service
+sudo systemctl enable halalmarket-image-server.service
+sudo systemctl restart halalmarket-image-server.service
 sudo systemctl enable nginx.service
 sudo systemctl restart nginx.service
 ```

@@ -45,7 +45,7 @@ endif
 UV := uv
 HAS_UV := $(shell command -v $(UV) >/dev/null 2>&1 && echo 1 || echo 0)
 
-PYTHON_RUN := $(SET_PYTHONPATH) $(VENV_PYTHON) $(APP_DIR)/manage.py
+RUN_MANAGE_PY := $(SET_PYTHONPATH) $(VENV_PYTHON) $(APP_DIR)/manage.py
 
 
 # ========================
@@ -77,8 +77,6 @@ else
 endif
 
 install:
-	@echo "→ Обновляю pip"
-	$(VENV_PIP) install --upgrade pip
 ifeq ($(HAS_UV),1)
 	$(MAKE) export
 endif
@@ -98,22 +96,22 @@ endif
 # ========================
 
 run:
-	$(PYTHON_RUN) runserver 0.0.0.0:8000
+	$(RUN_MANAGE_PY) runserver 0.0.0.0:8000
 
 migrate:
-	$(PYTHON_RUN) migrate
+	$(RUN_MANAGE_PY) migrate
 
 makemigrations:
-	$(PYTHON_RUN) makemigrations $(MODULES)
+	$(RUN_MANAGE_PY) makemigrations $(MODULES)
 
 createsuperuser:
-	$(PYTHON_RUN) createsuperuser
+	$(RUN_MANAGE_PY) createsuperuser
 
 collectstatic:
-	$(PYTHON_RUN) collectstatic --noinput
+	$(RUN_MANAGE_PY) collectstatic --noinput
 
 check:
-	$(PYTHON_RUN) check
+	$(RUN_MANAGE_PY) check
 
 
 # ========================
@@ -145,14 +143,23 @@ celeryrun:
 
 
 # ========================
-# Generic command
+# Generic commands
 # ========================
 
-cmd:
-	$(PYTHON_RUN) $(filter-out $@,$(MAKECMDGOALS))
+create_search_indexes:
+	@echo "→ Создание индексов для поиска продуктов"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py create_search_indexes
+
+test_email:
+	@echo "→ Создание индексов для поиска продуктов"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py test_email
+
+test_send_push:
+	@echo "→ Создание индексов для поиска продуктов"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py test_send_push
 
 
 .PHONY: \
 	bootstrap venv export install sync \
 	run migrate makemigrations createsuperuser collectstatic check \
-	runserver_u runserver_g celeryrun cmd
+	runserver_u runserver_g celeryrun create_search_indexes test_email test_send_push

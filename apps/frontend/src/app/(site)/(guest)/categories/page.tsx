@@ -1,4 +1,4 @@
-import { CategoriesService } from '~/entities/categories';
+import { CategoriesService, TGetCategories } from '~/entities/categories';
 import { $Meta } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { CategoriesPage } from './page.ui';
@@ -13,10 +13,13 @@ export const metadata = $Meta({
 });
 
 export default async () => {
-	const categories = await CategoriesService.GetCategories({
-		is_null_parent: 'true',
-		get_childs: 'true'
-	});
+	let categories: TGetCategories = [];
+	try {
+		categories = await CategoriesService.GetCategories({
+			is_null_parent: 'true',
+			get_childs: 'true'
+		});
+	} catch {}
 
 	return <CategoriesPage categories={categories} />;
 };

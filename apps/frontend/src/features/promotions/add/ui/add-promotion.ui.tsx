@@ -3,6 +3,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 import { SellersQuery } from '~/entities/sellers';
+import { Assets } from '~/shared/assets';
 import { ErrorList } from '~/shared/components/error-list/error-list.ui';
 import { FormField } from '~/shared/components/form-field/form-field.ui';
 import { State } from '~/shared/components/state/state.ui';
@@ -14,10 +15,10 @@ import {
 	usePromotionAddMutation
 } from '../promotion-add.mutation';
 import s from './styles.module.scss';
-import { Assets } from '~/shared/assets'
+import Image from 'next/image'
 
-export const AddPromotionDrawer: React.FC<{ onClose: VoidFunction }> = React.memo(
-	({ onClose }) => {
+export const AddPromotionDrawer: React.FC<{ onClose: VoidFunction }> =
+	React.memo(({ onClose }) => {
 		const [currentStep, setCurrentStep] = React.useState<number>(1);
 		const [selectedProduct, setSelectedProduct] =
 			React.useState<SelectedProduct | null>(null);
@@ -53,8 +54,7 @@ export const AddPromotionDrawer: React.FC<{ onClose: VoidFunction }> = React.mem
 				</div>
 			</Drawer>
 		);
-	}
-);
+	});
 
 const Step1 = React.memo<{ next: (product: SelectedProduct) => void }>(
 	({ next }) => {
@@ -104,7 +104,7 @@ const Step1 = React.memo<{ next: (product: SelectedProduct) => void }>(
 								aria-pressed={selectedProduct?.id === product.id}
 							>
 								<img
-									src={ApiMedia(product.images[0].image)}
+									src={ApiMedia(product.images[0].image, { h: 180 })}
 									alt={product.name}
 								/>
 								<h6>{product.name}</h6>
@@ -139,7 +139,12 @@ const Step2 = React.memo<Step2Props>(({ prev, product, onClose }) => {
 			{product && (
 				<div className={s.selectedProduct}>
 					<div className={s.productImage}>
-						<img src={ApiMedia(product.images[0].image)} alt={product.name} />
+						<Image
+							width={80}
+							height={80}
+							src={ApiMedia(product.images[0].image, { w: 80, h: 80 })}
+							alt={product.name}
+						/>
 					</div>
 					<div className={s.productInfo}>
 						<h6>{product.name}</h6>

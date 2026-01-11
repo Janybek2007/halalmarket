@@ -51,8 +51,5 @@ export default async (props: CPageProps<{ slug: string }>) => {
 		notFound();
 	}
 
-
-	return (
-		<CategoryPage categories={categories} slug={params.slug}  />
-	);
+	return <CategoryPage categories={categories} slug={params.slug} />;
 };

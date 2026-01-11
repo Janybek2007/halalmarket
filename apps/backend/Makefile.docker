@@ -1,0 +1,91 @@
+# ========================
+# Base
+# ========================
+
+APP_DIR := app
+SET_PYTHONPATH := PYTHONPATH=$(APP_DIR)
+MODULES := users categories products carts orders sellers notifications favorites promotions
+
+# ========================
+# Bootstrap / Dependencies
+# ========================
+
+bootstrap:
+	@echo "→ Установка зависимостей"
+	pip install --no-cache-dir -r requirements.txt
+	@echo "✔ Проект готов к работе"
+
+# ========================
+# Django
+# ========================
+
+run:
+	@echo "→ Запуск сервера разработки"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py runserver 0.0.0.0:8000
+
+migrate:
+	@echo "→ Применяю миграции"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py migrate
+
+makemigrations:
+	@echo "→ Создаю миграции"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py makemigrations $(MODULES)
+
+createsuperuser:
+	@echo "→ Создаю суперпользователя"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py createsuperuser
+
+collectstatic:
+	@echo "→ Собираю статические файлы"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py collectstatic --noinput
+
+check:
+	@echo "→ Проверяю проект"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py check
+
+# ========================
+# ASGI / WSGI
+# ========================
+
+runserver_u:
+	@echo "→ Запуск ASGI через Uvicorn"
+	$(SET_PYTHONPATH) uvicorn app.config.asgi:application --host 0.0.0.0 --port 8000
+
+runserver_g:
+	@echo "→ Запуск WSGI через Gunicorn"
+	$(SET_PYTHONPATH) gunicorn app.config.wsgi:application \
+		--workers 4 \
+		--threads 2 \
+		--worker-class gthread \
+		--timeout 120 \
+		--bind 0.0.0.0:8000
+
+# ========================
+# Celery
+# ========================
+
+celeryrun:
+	@echo "→ Запуск Celery воркера"
+	$(SET_PYTHONPATH) celery -A app.config.celery worker --loglevel=info --pool=solo
+
+# ========================
+# Generic commands
+# ========================
+
+create_search_indexes:
+	@echo "→ Создание индексов для поиска продуктов"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py create_search_indexes
+
+test_email:
+	@echo "→ Создание индексов для поиска продуктов"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py test_email
+
+test_send_push:
+	@echo "→ Создание индексов для поиска продуктов"
+	$(SET_PYTHONPATH) python $(APP_DIR)/manage.py test_send_push
+
+.PHONY: \ 
+	bootstrap run migrate makemigrations \ 
+	createsuperuser collectstatic check \ 
+	runserver_u runserver_g celeryrun \ 
+	create_search_indexes test_email test_send_push

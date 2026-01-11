@@ -65,7 +65,11 @@ export const ProductCU: React.FC<ProductCUProps> = React.memo(
 								{filteredImages.map((image, i) => (
 									<div className={s.imageWrapper} key={`image-${i}`}>
 										<img
-											src={image.file ? image.url : ApiMedia(image.url)}
+											src={
+												image.file
+													? image.url
+													: ApiMedia(image.url, { w: 112, h: 112 })
+											}
 											alt='product'
 											className={s.image}
 										/>

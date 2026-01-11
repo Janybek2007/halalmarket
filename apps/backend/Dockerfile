@@ -1,20 +1,17 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-RUN apt-get update && apt-get install -y curl netcat-openbsd gcc libpq-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl netcat-openbsd gcc make libpq-dev \
     && rm -rf /var/lib/apt/lists/*
+
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock ./
+COPY requirements.txt ./
 
-RUN poetry install --only main
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-COPY scripts /scripts
-RUN chmod +x /scripts/entrypoint.sh
-RUN chmod +x /scripts/generate_vapid.sh
-
-ENTRYPOINT ["/scripts/entrypoint.sh", "/scripts/generate_vapid.sh"]
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+COPY entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh

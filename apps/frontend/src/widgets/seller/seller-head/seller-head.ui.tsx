@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from '~/app/providers/session';
@@ -25,7 +26,12 @@ export const SellerHead: React.FC = React.memo(() => {
 						<div className={s.storeHeader}>
 							<div className={s.storeLogo}>
 								{seller.store_logo ? (
-									<img src={ApiMedia(seller.store_logo)} alt='Store logo' />
+									<Image
+										width={64}
+										height={64}
+										src={ApiMedia(seller.store_logo, { w: 64, h: 64 })}
+										alt='Store logo'
+									/>
 								) : (
 									<Icon name='carbon:store' c_size={60} />
 								)}

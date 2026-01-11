@@ -7,6 +7,7 @@ import { IProductReview } from '~/entities/products';
 import { Avatar } from '~/shared/ui/avatar/avatar.ui';
 import { Icon } from '~/shared/ui/icon/icon.ui';
 import styles from './styles.module.scss';
+import Image from 'next/image'
 
 interface IReviewItemProps {
 	review: IProductReview;
@@ -60,7 +61,12 @@ export const ReviewItem = React.memo<IReviewItemProps>(
 						<div className={styles.reviewImages}>
 							{review.images.map((image, index) => (
 								<picture className={styles.reviewImage} key={index}>
-									<img src={ApiMedia(image.image)} alt='Отзыв' />
+									<Image
+										width={100}
+										height={100}
+										src={ApiMedia(image.image, { w: 100, h: 100 })}
+										alt='Отзыв'
+									/>
 								</picture>
 							))}
 						</div>

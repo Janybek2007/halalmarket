@@ -50,6 +50,7 @@ export const ProductListItem = <T extends IProduct>({
 								container: styles.imageContainer,
 								image: styles.image
 							}}
+							mediaOpts={{ w: 170, h: 185 }}
 							images={product.images}
 							alt={product.name}
 						/>

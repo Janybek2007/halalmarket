@@ -8,6 +8,7 @@ import { Assets } from '~/shared/assets';
 import { ApiMedia } from '~/shared/constants';
 import { formatDateCustom } from '~/shared/utils/date';
 import s from './styles.module.scss';
+import Image from 'next/image'
 
 export const PromotionCard: React.FC<{ promo: IPromotion }> = React.memo(
 	({ promo: promotion }) => {
@@ -17,8 +18,13 @@ export const PromotionCard: React.FC<{ promo: IPromotion }> = React.memo(
 		return (
 			<div className={s.promotionCard}>
 				<div className={s.promotionHeader}>
-					<img
-						src={ApiMedia(promotion.thumbnail) || Assets.Placeholder}
+					<Image
+						width={100}
+						height={100}
+						src={
+							ApiMedia(promotion.thumbnail, { w: 100, h: 100 }) ||
+							Assets.Placeholder
+						}
 						alt='Акция'
 						className={s.thumbnail}
 					/>

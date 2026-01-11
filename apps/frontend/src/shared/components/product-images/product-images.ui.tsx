@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react';
 
 import { ApiMedia } from '~/shared/constants';
 
+import Image from 'next/image';
 import { Assets } from '~/shared/assets';
 import { Icon } from '~/shared/ui/icon/icon.ui';
 import type { ProductImagesProps } from './product-images.types';
@@ -12,7 +13,8 @@ import s from './styles.module.scss';
 export const ProductImages: React.FC<ProductImagesProps> = ({
 	images,
 	alt,
-	classNames
+	classNames,
+	mediaOpts = { h: 200, w: 200 }
 }) => {
 	const currentImages =
 		images.length == 0 ? [{ image: Assets.Placeholder, id: '' }] : images;
@@ -45,8 +47,10 @@ export const ProductImages: React.FC<ProductImagesProps> = ({
 			className={clsx(classNames?.container || s.imageContainer, s.h)}
 			style={{ position: 'relative' }}
 		>
-			<img
-				src={ApiMedia(currentImages[currentIndex].image)}
+			<Image
+				width={mediaOpts.w}
+				height={mediaOpts.h}
+				src={ApiMedia(currentImages[currentIndex].image, mediaOpts)}
 				alt={alt}
 				className={classNames?.image || s.productImage}
 			/>

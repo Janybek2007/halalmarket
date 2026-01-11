@@ -67,7 +67,8 @@ export const StoreUpdate: React.FC = React.memo(() => {
 				loading={isPending}
 				disabled={
 					isPending ||
-					(form.watch('name') === user?.seller?.store_name && !form.watch('logo'))
+					(form.watch('name') === user?.seller?.store_name &&
+						!form.watch('logo'))
 				}
 				loadingText='Сохранение...'
 			>
