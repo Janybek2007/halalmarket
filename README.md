@@ -244,7 +244,8 @@ Requires=network.target
 
 [Service]
 WorkingDirectory=/www/apps/image-server
-ExecStart=/usr/bin/node src/main.js
+ExecStartPre=/usr/bin/make build
+ExecStart=/usr/bin/make start
 User=$USER
 Restart=always
 
