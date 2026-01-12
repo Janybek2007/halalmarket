@@ -1,204 +1,159 @@
 import { LRUCache } from 'lru-cache';
 import { createHash } from 'node:crypto';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { Readable } from 'node:stream';
+import fs from 'fs';
+import fsp from 'fs/promises';
+import path from 'path';
+import { Readable } from 'stream';
 import sharp from 'sharp';
+import PQueue from 'p-queue';
 
 export class ImageKit {
-	constructor(mediaDir, cacheDir, cacheOptions) {
+	constructor(mediaDir, cacheDir, options) {
 		this.mediaDir = mediaDir;
 		this.cacheDir = cacheDir;
-		this.cache = new LRUCache(cacheOptions);
-		this.cleanupInterval = null;
 
+		// Level 1: Memory LRU
+		this.cache = new LRUCache({
+			maxSize: options.max || 500 * 1024 * 1024, // default 500MB
+			ttl: options.ttl || 1000 * 60 * 60, // 1h
+			sizeCalculation: value => (Buffer.isBuffer(value) ? value.length : 1)
+		});
+
+		// Queue для параллельного ресайза
+		this.queue = new PQueue({ concurrency: options.concurrency || 2 });
+
+		this.cleanupInterval = null;
 		this.startAutoCleanup();
 	}
 
+	// Генерация hash ключа
 	generateCacheKey(imagePath, params) {
-		const paramsString = JSON.stringify(params);
 		return createHash('md5')
-			.update(`${imagePath}:${paramsString}`)
+			.update(`${imagePath}:${JSON.stringify(params)}`)
 			.digest('hex');
 	}
 
-	async ensureDirectoryExists(dirPath) {
-		try {
-			await fs.mkdir(dirPath, { recursive: true });
-		} catch (error) {
-			if (error.code !== 'EEXIST') {
-				throw error;
-			}
-		}
+	// Файловый путь для кеша
+	getCacheFilePath(cacheKey) {
+		const sub1 = cacheKey.slice(0, 2);
+		const sub2 = cacheKey.slice(2, 4);
+		return path.join(this.cacheDir, sub1, sub2, `${cacheKey}.webp`);
 	}
 
-	async getCacheDirectorySize() {
+	async ensureDirectoryExists(dir) {
+		await fsp.mkdir(dir, { recursive: true });
+	}
+
+	async getFileStats(filePath) {
 		try {
-			const files = await fs.readdir(this.cacheDir);
-			let totalSize = 0;
-
-			for (const file of files) {
-				const filePath = path.join(this.cacheDir, file);
-				const stats = await fs.stat(filePath);
-				totalSize += stats.size;
-			}
-
-			return totalSize;
-		} catch (error) {
-			if (error.code === 'ENOENT') return 0;
-			throw error;
+			return await fsp.stat(filePath);
+		} catch (err) {
+			return { size: 0, mtime: new Date() };
 		}
 	}
 
 	async cleanupCache(maxAgeHours = 24) {
-		try {
-			const now = Date.now();
-			const maxAgeMs = maxAgeHours * 60 * 60 * 1000;
-
-			const files = await fs.readdir(this.cacheDir);
-			const filesWithStats = await Promise.all(
-				files.map(async file => {
-					const filePath = path.join(this.cacheDir, file);
-					const stats = await fs.stat(filePath);
-					return { file, filePath, stats };
-				})
-			);
-
-			for (const { filePath, stats } of filesWithStats) {
-				if (now - stats.atimeMs > maxAgeMs) {
-					try {
-						await fs.unlink(filePath);
-					} catch (error) {
-						console.error(`Failed to delete cache file ${filePath}:`, error);
-					}
+		const now = Date.now();
+		const maxAgeMs = maxAgeHours * 60 * 60 * 1000;
+		const walk = async dir => {
+			const entries = await fsp.readdir(dir, { withFileTypes: true });
+			for (const entry of entries) {
+				const fullPath = path.join(dir, entry.name);
+				if (entry.isDirectory()) await walk(fullPath);
+				else {
+					const stats = await fsp.stat(fullPath);
+					if (now - stats.atimeMs > maxAgeMs) await fsp.unlink(fullPath);
 				}
 			}
-		} catch (error) {
-			console.error('Error during cache cleanup by age:', error);
-		}
+		};
+		if (fs.existsSync(this.cacheDir)) await walk(this.cacheDir);
 	}
 
 	startAutoCleanup() {
-		this.cleanupInterval = setInterval(async () => {
-			try {
-				await this.cleanupCache();
-			} catch (error) {
-				console.error('Error during auto cleanup:', error);
-			}
-		}, 5 * 60 * 60 * 1000); // 5h
-
-		process.on('exit', () => {
-			if (this.cleanupInterval) {
-				clearInterval(this.cleanupInterval);
-			}
-		});
-	}
-
-	async findImageOnDisk(imagePath, params) {
-		const cacheKey = this.generateCacheKey(imagePath, params);
-		const cacheFilePath = path.join(this.cacheDir, `${cacheKey}.webp`);
-
-		try {
-			const data = await fs.readFile(cacheFilePath);
-			return data;
-		} catch (error) {
-			if (error.code === 'ENOENT') return null;
-			throw error;
-		}
-	}
-
-	async saveImageToDisk(imagePath, params, imageData) {
-		const cacheKey = this.generateCacheKey(imagePath, params);
-		const cacheFilePath = path.join(this.cacheDir, `${cacheKey}.webp`);
-
-		await this.ensureDirectoryExists(this.cacheDir);
-		try {
-			await fs.writeFile(cacheFilePath, imageData);
-		} catch (error) {
-			console.error('Failed to save image to cache:', error);
-		}
+		this.cleanupInterval = setInterval(
+			() => this.cleanupCache(),
+			5 * 60 * 60 * 1000
+		);
+		process.on('exit', () => clearInterval(this.cleanupInterval));
 	}
 
 	async findOriginalImage(imagePath) {
 		const fullPath = path.join(this.mediaDir, imagePath);
-
 		try {
-			const data = await fs.readFile(fullPath);
-			return data;
-		} catch (error) {
-			if (error.code === 'ENOENT') return null;
-			throw error;
+			return await fsp.readFile(fullPath);
+		} catch (err) {
+			return null;
 		}
 	}
 
 	async resizeImage(imageData, params) {
-		let transformer = sharp(imageData).webp();
-
-		if (params.w) transformer = transformer.resize({ width: params.w });
-		if (params.h) transformer = transformer.resize({ height: params.h });
-		if (params.q) transformer = transformer.webp({ quality: params.q });
-
-		return await transformer.toBuffer();
-	}
-
-	async getImageStream(imagePath, params) {
-		const cacheKey = this.generateCacheKey(imagePath, params);
-		let cacheHit = false;
-		let filePath = null;
-
-		// 1. LRU кэш
-		const cachedImage = this.cache.get(cacheKey);
-		if (cachedImage) {
-			cacheHit = true;
-			const stream = new Readable();
-			stream.push(cachedImage);
-			stream.push(null);
-			filePath = path.join(this.cacheDir, `${cacheKey}.webp`);
-			return { imageStream: stream, cacheHit, filePath };
-		}
-
-		// 2. Диск
-		const diskImage = await this.findImageOnDisk(imagePath, params);
-		if (diskImage) {
-			cacheHit = true;
-			this.cache.set(cacheKey, diskImage);
-			const stream = new Readable();
-			stream.push(diskImage);
-			stream.push(null);
-			filePath = path.join(this.cacheDir, `${cacheKey}.webp`);
-			return { imageStream: stream, cacheHit, filePath };
-		}
-
-		// 3. Оригинал
-		const originalImage = await this.findOriginalImage(imagePath);
-		if (!originalImage) throw new Error('Image not found');
-
-		// 4. Ресайз
-		let transformer = sharp(originalImage).webp({});
-		if (params.w) transformer = transformer.resize({ width: params.w });
-		if (params.h) transformer = transformer.resize({ height: params.h });
-		if (params.q) transformer = transformer.webp({ quality: params.q });
-
-		const resizedImage = await transformer.toBuffer();
-
-		// 5. Сохраняем и кэшируем
-		filePath = path.join(this.cacheDir, `${cacheKey}.webp`);
-		await this.saveImageToDisk(imagePath, params, resizedImage);
-		this.cache.set(cacheKey, resizedImage);
-
-		const stream = new Readable();
-		stream.push(resizedImage);
-		stream.push(null);
-		return { imageStream: stream, cacheHit, filePath };
-	}
-
-	async getImage(imagePath, params) {
-		const stream = await this.getImageStream(imagePath, params);
-		return new Promise((resolve, reject) => {
-			const chunks = [];
-			stream.on('data', chunk => chunks.push(chunk));
-			stream.on('end', () => resolve(Buffer.concat(chunks)));
-			stream.on('error', reject);
+		return this.queue.add(async () => {
+			let transformer = sharp(imageData);
+			if (params.w || params.h)
+				transformer = transformer.resize({
+					width: params.w,
+					height: params.h,
+					fit: 'inside',
+					withoutEnlargement: true
+				});
+			transformer = transformer.webp({ quality: params.q || 85 });
+			return transformer.toBuffer();
 		});
+	}
+
+	async saveImageToDisk(imagePath, params, buffer) {
+		const key = this.generateCacheKey(imagePath, params);
+		const filePath = this.getCacheFilePath(key);
+		await this.ensureDirectoryExists(path.dirname(filePath));
+		if (!fs.existsSync(filePath)) await fsp.writeFile(filePath, buffer);
+		return filePath;
+	}
+
+	/**
+	 * Получение imageStream через 3 уровня:
+	 * 1. Memory LRU
+	 * 2. Disk cache (streaming)
+	 * 3. Original + Sharp resize
+	 */
+	async getImageStream(imagePath, params) {
+		const key = this.generateCacheKey(imagePath, params);
+		let cacheHit = false;
+
+		// === Level 1: Memory LRU ===
+		const cached = this.cache.get(key);
+		if (cached) {
+			cacheHit = true;
+			return {
+				imageStream: Readable.from(cached), // small images в memory
+				cacheHit,
+				filePath: this.getCacheFilePath(key)
+			};
+		}
+
+		// === Level 2: Disk cache ===
+		const diskPath = this.getCacheFilePath(key);
+		if (fs.existsSync(diskPath)) {
+			cacheHit = true;
+			// Загружаем в memory для LRU
+			const buffer = await fsp.readFile(diskPath);
+			this.cache.set(key, buffer);
+
+			// Streaming напрямую из файла
+			const stream = fs.createReadStream(diskPath);
+			return { imageStream: stream, cacheHit, filePath: diskPath };
+		}
+
+		// === Level 3: Original + Sharp resize ===
+		const original = await this.findOriginalImage(imagePath);
+		if (!original) throw new Error('Image not found');
+
+		const resized = await this.resizeImage(original, params);
+
+		// Сохраняем на диск и в memory
+		const filePath = await this.saveImageToDisk(imagePath, params, resized);
+		this.cache.set(key, resized);
+
+		// Для маленьких файлов можно отдавать memory stream
+		return { imageStream: Readable.from(resized), cacheHit, filePath };
 	}
 }

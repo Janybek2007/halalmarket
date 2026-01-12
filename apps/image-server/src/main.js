@@ -1,7 +1,5 @@
 import 'dotenv/config';
-import { statSync } from 'node:fs';
 import { createServer } from 'node:http';
-import * as url from 'node:url';
 import { ImageKit } from './kit.js';
 
 const PORT = process.env.PORT || 3030;
@@ -9,8 +7,9 @@ const MEDIA_DIR = process.env.MEDIA_DIR || './media';
 const CACHE_DIR = process.env.CACHE_DIR || './cache';
 
 const imageKit = new ImageKit(MEDIA_DIR, CACHE_DIR, {
-	max: 4096,
-	ttl: 1000 * 60 * 30 // 30 min
+	max: 500 * 1024 * 1024, // 500MB LRU
+	ttl: 1000 * 60 * 60, // 1 час
+	concurrency: 2
 });
 
 let cacheHits = 0;
@@ -19,28 +18,17 @@ let cacheMisses = 0;
 const server = createServer(async (req, res) => {
 	try {
 		if (!req.url) {
-			res.writeHead(400, {
-				'Content-Type': 'text/plain',
-				'X-Content-Type-Options': 'nosniff',
-				'X-Frame-Options': 'DENY',
-				'X-XSS-Protection': '1; mode=block'
-			});
-			res.end('Bad Request');
-			return;
+			res.writeHead(400, { 'Content-Type': 'text/plain' });
+			return res.end('Bad Request');
 		}
 
-		const parsedUrl = url.parse(req.url, true);
+		const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 		const pathname = parsedUrl.pathname;
 
+		// Health check
 		if (pathname === '/health') {
-			res.writeHead(200, {
-				'Content-Type': 'application/json',
-				'Cache-Control': 'no-cache, no-store',
-				'X-Content-Type-Options': 'nosniff',
-				'X-Frame-Options': 'DENY',
-				'X-XSS-Protection': '1; mode=block'
-			});
-			res.end(
+			res.writeHead(200, { 'Content-Type': 'application/json' });
+			return res.end(
 				JSON.stringify({
 					status: 'healthy',
 					timestamp: new Date().toISOString(),
@@ -48,60 +36,45 @@ const server = createServer(async (req, res) => {
 					cache_misses: cacheMisses
 				})
 			);
-			return;
 		}
 
+		// Serve images
 		if (pathname && pathname.startsWith('/media/')) {
 			const imagePath = decodeURIComponent(pathname.slice('/media/'.length));
-			const queryParams = parsedUrl.query;
+			const queryParams = parsedUrl.searchParams;
 
-			const width = queryParams.w
-				? Math.min(Math.max(parseInt(queryParams.w), 1), 4096)
+			const width = queryParams.has('w')
+				? Math.min(Math.max(parseInt(queryParams.get('w')), 1), 4096)
 				: undefined;
-			const height = queryParams.h
-				? Math.min(Math.max(parseInt(queryParams.h), 1), 4096)
+
+			const height = queryParams.has('h')
+				? Math.min(Math.max(parseInt(queryParams.get('h')), 1), 4096)
 				: undefined;
-			const quality = queryParams.q
-				? Math.min(Math.max(parseInt(queryParams.q), 10), 100)
+
+			const quality = queryParams.has('q')
+				? Math.min(Math.max(parseInt(queryParams.get('q')), 10), 100)
 				: 85;
 
-			const params = {
-				w: width,
-				h: height,
-				q: quality
-			};
+			const params = { w: width, h: height, q: quality };
 
 			try {
 				const { imageStream, cacheHit, filePath } =
 					await imageKit.getImageStream(imagePath, params);
 
-				if (cacheHit) {
-					cacheHits++;
-				} else {
-					cacheMisses++;
-				}
+				if (cacheHit) cacheHits++;
+				else cacheMisses++;
 
-				let lastModified = new Date().toUTCString();
-				let etag = `"${Date.now()}"`;
+				const { size, mtime } = await imageKit.getFileStats(filePath);
+				const lastModified = mtime.toUTCString();
+				const etag = `"${size}-${mtime.getTime()}"`;
 
-				try {
-					const fileStats = statSync(filePath);
-					lastModified = fileStats.mtime.toUTCString();
-					etag = `"${fileStats.size}-${fileStats.mtime.getTime()}"`;
-				} catch (error) {
-					if (error.code !== 'ENOENT') {
-						console.warn('Error getting file stats:', error);
-					}
-				}
-
-
-				const expiresDate = new Date();
-				expiresDate.setFullYear(expiresDate.getFullYear() + 1);
+				const expires = new Date();
+				expires.setFullYear(expires.getFullYear() + 1);
 
 				const headers = {
 					'Content-Type': 'image/webp',
 					'Cache-Control': 'public, max-age=31536000, immutable',
-					Expires: expiresDate.toUTCString(),
+					Expires: expires.toUTCString(),
 					'Last-Modified': lastModified,
 					ETag: etag,
 					Vary: 'Accept-Encoding',
@@ -113,78 +86,32 @@ const server = createServer(async (req, res) => {
 					'X-XSS-Protection': '1; mode=block'
 				};
 
-
 				res.writeHead(200, headers);
-
 				imageStream.pipe(res);
-			} catch (error) {
-				if (error instanceof Error && error.message === 'Image not found') {
-					res.writeHead(404, {
-						'Content-Type': 'text/plain',
-						'X-Content-Type-Options': 'nosniff',
-						'X-Frame-Options': 'DENY',
-						'X-XSS-Protection': '1; mode=block'
-					});
+			} catch (err) {
+				if (err.message === 'Image not found') {
+					res.writeHead(404, { 'Content-Type': 'text/plain' });
 					res.end('Image not found');
 				} else {
-					console.error('Error processing image:', error);
-					res.writeHead(500, {
-						'Content-Type': 'text/plain',
-						'X-Content-Type-Options': 'nosniff',
-						'X-Frame-Options': 'DENY',
-						'X-XSS-Protection': '1; mode=block'
-					});
+					console.error('Error processing image:', err);
+					res.writeHead(500, { 'Content-Type': 'text/plain' });
 					res.end('Internal Server Error');
 				}
 			}
 			return;
 		}
 
-		if (pathname === '/') {
-			res.writeHead(200, {
-				'Content-Type': 'text/plain',
-				'X-Content-Type-Options': 'nosniff',
-				'X-Frame-Options': 'DENY',
-				'X-XSS-Protection': '1; mode=block'
-			});
-			res.end('Image Server is running');
-			return;
-		}
-
-		res.writeHead(404, {
-			'Content-Type': 'text/plain',
-			'X-Content-Type-Options': 'nosniff',
-			'X-Frame-Options': 'DENY',
-			'X-XSS-Protection': '1; mode=block'
-		});
+		res.writeHead(404, { 'Content-Type': 'text/plain' });
 		res.end('Not Found');
-	} catch (error) {
-		console.error('Server error:', error);
-		res.writeHead(500, {
-			'Content-Type': 'text/plain',
-			'X-Content-Type-Options': 'nosniff',
-			'X-Frame-Options': 'DENY',
-			'X-XSS-Protection': '1; mode=block'
-		});
+	} catch (err) {
+		console.error('Server error:', err);
+		res.writeHead(500, { 'Content-Type': 'text/plain' });
 		res.end('Internal Server Error');
 	}
 });
 
-process.on('SIGTERM', () => {
-	console.log('SIGTERM received. Shutting down gracefully...');
-	server.close(() => {
-		console.log('Server closed');
-		process.exit(0);
-	});
-});
-
-process.on('SIGINT', () => {
-	console.log('SIGINT received. Shutting down gracefully...');
-	server.close(() => {
-		console.log('Server closed');
-		process.exit(0);
-	});
-});
+process.on('SIGTERM', () => server.close(() => process.exit(0)));
+process.on('SIGINT', () => server.close(() => process.exit(0)));
 
 server.listen(PORT, () => {
 	console.log(`Image server running on port ${PORT}`);
