@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.utils import timezone
+from modules.sellers.models import SellerInvite
+from modules.users.models import User
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from modules.users.models import User
-from shared.utils.token import generate_seller_set_profile_token
-from modules.sellers.models import SellerInvite
 from shared.utils.phone_validator import validate_phone_format
+from shared.utils.token import generate_seller_set_profile_token
 
 
 class AdminSellerInviteView(APIView):
@@ -34,10 +33,15 @@ class AdminSellerInviteView(APIView):
                 {"error": "Пользователь с таким номером телефона уже зарегистрирован"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"error": "Пользователь с таким email уже зарегистрирован"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         clean_phone = phone.replace(" ", "")
         if not email:
-            email = f"{clean_phone}@halalmarket.com"
+            email = f"{clean_phone}@halalmarket.kg"
 
         user = User.objects.create(
             full_name=f"{clean_phone}",

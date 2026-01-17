@@ -8,10 +8,14 @@ import { TIds } from '~/shared/api/types';
 import { useConfirm } from '~/shared/libs/confirm';
 import { queryClient } from '~/shared/libs/tanstack';
 
+type TUpdateStatusBody = {
+	status: 'delivered' | 'cancelled' | 'cancellation_requested';
+} & TIds;
+
 export const usePurchaseUpdateStatusMutation = () => {
 	const { mutateAsync: updatePurchaseStatus } = useMutation({
 		mutationKey: ['purchase_update-status'],
-		mutationFn: (body: { status: 'delivered' | 'cancelled' } & TIds) => {
+		mutationFn: (body: TUpdateStatusBody) => {
 			return http.post<SuccessResponse>('purchases/update-status/', body);
 		},
 		onSuccess() {
@@ -21,13 +25,14 @@ export const usePurchaseUpdateStatusMutation = () => {
 		}
 	});
 	const { openConfirm } = useConfirm();
+
 	const handleCancelPurchase = React.useCallback(
 		(id: number) => {
 			openConfirm({
 				title: 'Отменить заказ',
 				text: 'Вы уверены, что хотите отменить заказ?',
 				confirmText: 'Отменить',
-				cancelText: 'Отмена',
+				cancelText: 'Назад',
 				async confirmCallback() {
 					try {
 						const result = await updatePurchaseStatus({
@@ -50,10 +55,10 @@ export const usePurchaseUpdateStatusMutation = () => {
 	const handleDeliveredPurchase = React.useCallback(
 		(id: number) => {
 			openConfirm({
-				title: 'Подтвердить получение заказа',
-				text: 'Вы уверены, что хотите подтвердить получение заказа?',
+				title: 'Подтвердить получение',
+				text: 'Вы уверены, что получили заказ?',
 				confirmText: 'Подтвердить',
-				cancelText: 'Отмена',
+				cancelText: 'Назад',
 				async confirmCallback() {
 					try {
 						const result = await updatePurchaseStatus({
@@ -61,10 +66,36 @@ export const usePurchaseUpdateStatusMutation = () => {
 							status: 'delivered'
 						});
 						if (result?.success) {
-							toast.success('Заказ успешно подтвержден');
+							toast.success('Получение подтверждено');
 						}
 					} catch (error) {
-						toast.error('Ошибка при подтверждении заказа');
+						toast.error('Ошибка при подтверждении');
+						throw error;
+					}
+				}
+			});
+		},
+		[updatePurchaseStatus, openConfirm]
+	);
+
+	const handleRequestReturn = React.useCallback(
+		(id: number) => {
+			openConfirm({
+				title: 'Запросить возврат',
+				text: 'Вы уверены, что хотите запросить возврат? Вам нужно будет вернуть товар продавцу.',
+				confirmText: 'Запросить',
+				cancelText: 'Назад',
+				async confirmCallback() {
+					try {
+						const result = await updatePurchaseStatus({
+							ids: [id],
+							status: 'cancellation_requested'
+						});
+						if (result?.success) {
+							toast.success('Запрос на возврат отправлен');
+						}
+					} catch (error) {
+						toast.error('Ошибка при запросе возврата');
 						throw error;
 					}
 				}
@@ -75,6 +106,7 @@ export const usePurchaseUpdateStatusMutation = () => {
 
 	return {
 		handleCancelPurchase,
-		handleDeliveredPurchase
+		handleDeliveredPurchase,
+		handleRequestReturn
 	};
 };

@@ -11,16 +11,15 @@ export default function SellerLayout(props: React.ViewTransitionProps) {
 	const pathname = usePathname();
 	const { user: profile } = useSession();
 	if (isSellerOnlyOutlet(pathname)) return props.children;
-	const isActive = profile?.seller?.status === 'active';
-	const isBlocked = profile?.seller?.status === 'blocked';
-
+	const isActive = !profile?.seller ? null : profile?.seller?.status === 'active';
+	const isBlocked = !profile?.seller ? null : profile?.seller?.status === 'blocked';
 	return (
 		<>
 			{isActive ? (
 				<>
 					<AppHeader />
 					<SellerHead />
-					{profile.seller?.store_name ? (
+					{profile?.seller?.store_name ? (
 						props.children
 					) : (
 						<State

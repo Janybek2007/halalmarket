@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 
 urlpatterns = [
+    path("", include("config.health")),
     path("api/", include("modules.users.urls")),
     path("api/", include("modules.auth.urls")),
     path("api/", include("modules.categories.urls")),
@@ -17,6 +18,6 @@ urlpatterns = [
     path("api/", include("modules.common.urls")),
 ]
 
-if settings.__ENV["MODE"] == "local":
+if settings.__ENV["MODE"] == "development":
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

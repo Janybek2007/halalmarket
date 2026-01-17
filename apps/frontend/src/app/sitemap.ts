@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 import { API_URL, APP_URL } from '~/shared/constants';
 import { RoutePaths } from '~/shared/router';
 
-// export const dynamic = 'force-dynamic';
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
+// export const revalidate = 60;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	if (!APP_URL) throw new Error('APP_URL не определен');

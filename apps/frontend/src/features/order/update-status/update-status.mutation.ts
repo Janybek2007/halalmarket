@@ -11,13 +11,13 @@ import { getSplitedErrors } from '~/shared/utils/get-splited-errors';
 
 export const useOrderUpdateStatusMutation = () => {
 	const { openConfirm } = useConfirm();
-	const { mutateAsync: ship, error } = useMutation({
+	const { mutateAsync, error } = useMutation({
 		mutationKey: ['order_update-status'],
-		mutationFn: (body: TIds) =>
-			http.post<SuccessResponse>('seller/orders/ship/', body)
+		mutationFn: (body: TIds & { status: 'shipped' | 'returned' }) =>
+			http.post<SuccessResponse>('seller/orders/update-status/', body)
 	});
 
-	const handleShip = React.useCallback(
+	const handleShipped = React.useCallback(
 		(id: number) => {
 			openConfirm({
 				title: 'Отправить',
@@ -26,7 +26,7 @@ export const useOrderUpdateStatusMutation = () => {
 				cancelText: 'Отменить',
 				async confirmCallback() {
 					try {
-						const r = await ship({ ids: [id] });
+						const r = await mutateAsync({ ids: [id], status: "shipped" });
 						if (r.success) {
 							toast.success('Заказ отправлен');
 							await queryClient.refetchQueries({
@@ -40,7 +40,33 @@ export const useOrderUpdateStatusMutation = () => {
 				}
 			});
 		},
-		[openConfirm, ship]
+		[openConfirm, mutateAsync]
+	);
+
+	const handleConfirmReturn = React.useCallback(
+		(id: number) => {
+			openConfirm({
+				title: 'Подтвердить возврат',
+				text: 'Вы подтверждаете, что получили возвращенный товар?',
+				confirmText: 'Подтвердить',
+				cancelText: 'Назад',
+				async confirmCallback() {
+					try {
+						const r = await mutateAsync({ ids: [id], status: "returned" });
+						if (r.success) {
+							toast.success('Возврат подтвержден');
+							await queryClient.refetchQueries({
+								queryKey: SellersQuery.QueryKeys.GetOrders({})
+							});
+						}
+					} catch (error) {
+						toast.error('Ошибка при подтверждении');
+						throw error;
+					}
+				}
+			});
+		},
+		[openConfirm, mutateAsync]
 	);
 
 	React.useEffect(() => {
@@ -51,7 +77,9 @@ export const useOrderUpdateStatusMutation = () => {
 			toast.dismiss();
 		};
 	}, [error]);
+	
 	return {
-		handleShip
+		handleShipped,
+		handleConfirmReturn
 	};
 };

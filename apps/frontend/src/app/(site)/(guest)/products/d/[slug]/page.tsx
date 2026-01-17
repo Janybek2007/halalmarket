@@ -6,8 +6,6 @@ import { $Meta, OG_IMAGE } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { ProductDetailPage } from './page.ui';
 
-export const revalidate = 60;
-
 export async function generateMetadata(
 	props: CPageProps<{ slug: string }>
 ): Promise<Metadata> {
@@ -67,7 +65,6 @@ export default async (
 			});
 		}
 	} catch (err: any) {
-		console.log('Ошибка при получении продукта', JSON.stringify(err));
 		notFound();
 	}
 

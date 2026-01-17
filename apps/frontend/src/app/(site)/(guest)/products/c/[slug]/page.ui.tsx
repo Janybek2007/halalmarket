@@ -11,15 +11,16 @@ import { CategoryProductList } from '~/widgets/category-product-list';
 import s from './page.module.scss';
 
 export function ProductsByCategoryPage(props: {
-	results: TGetProductsResult;
+	data: TGetProductsResult;
 	slug: string;
 }) {
 	const { pagination, data: queryData } = usePaginatedQuery(
-		(params) =>
+		params =>
 			queryOptions({
 				queryKey: ['get-products', props.slug],
 				queryFn: () => ProductService.GetProducts(params),
-				initialData: props.results
+				initialData:
+					props.data.results.length > 0 ? props.data : undefined
 			}),
 		{ per_pages: 12, category: props.slug }
 	);

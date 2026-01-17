@@ -20,7 +20,7 @@ export function ProductDetailPage(props: {
 	const productQuery = useQuery({
 		queryKey: ['get-product', props.slug],
 		queryFn: () => ProductService.GetProduct(props.slug),
-		initialData: props.product
+		initialData: props.product ?? undefined
 	});
 
 	if (!productQuery.data) {

@@ -15,7 +15,7 @@ export const useCartCheckoutMutation = (selectedItems: number[]) => {
 	const { mutateAsync } = useMutation({
 		mutationKey: [],
 		mutationFn: (args: { ids: number[] }) =>
-			http.post<SuccessResponse & { order_group_id: number }>('purchase/', {
+			http.post<SuccessResponse & { order_group_id: number }>('purchase/checkout/', {
 				cart_ids: args.ids
 			})
 	});

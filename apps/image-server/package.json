@@ -2,7 +2,6 @@
 	"name": "media-server",
 	"dependencies": {
 		"dotenv": "^17.2.3",
-		"lru-cache": "^11.2.4",
 		"p-queue": "^9.1.0",
 		"sharp": "^0.34.5"
 	},

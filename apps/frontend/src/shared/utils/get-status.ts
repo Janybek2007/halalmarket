@@ -2,20 +2,26 @@ import { TSellerStatus } from '~/entities/sellers';
 
 export const getOrderStatus = (status: any) => {
 	switch (status) {
-		case 'delivered':
-			return 'Доставлен';
+		case 'pending':
 		case 'processing':
-			return 'В обработке';
+			return 'Ожидание';
 		case 'shipped':
 			return 'Отправлен';
+		case 'delivered':
+			return 'Доставлен';
 		case 'cancelled':
 			return 'Отменен';
+		case 'cancellation_requested':
+		case 'return_requested':
+			return 'Запрошен возврат';
+		case 'returned':
+			return 'Возвращен';
 		default:
 			return '';
 	}
 };
 
-export const getSellerStatus = (status: TSellerStatus) => {
+export const getSellerStatus = (status: TSellerStatus) => {	
 	switch (status) {
 		case 'active':
 			return 'Активный';

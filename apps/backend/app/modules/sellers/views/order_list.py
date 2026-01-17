@@ -1,6 +1,5 @@
 from modules.orders.models import Order
-from modules.orders.serializers import OrderSerializer
-from modules.sellers.models import Seller
+from modules.orders.serializers import SellerOrderSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from shared.utils.pagination import BasePagination
@@ -25,7 +24,13 @@ class SellerOrderListView(SellerBaseView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        orders = Order.objects.filter(items__seller=seller).distinct()
+        # Заказы где есть товары этого продавца
+        orders = (
+            Order.objects.filter(sub_orders__seller=seller)
+            .distinct()
+            .prefetch_related("sub_orders__product__images", "sub_orders__seller")
+            .select_related("user")
+        )
 
         start_date = request.query_params.get("start_date")
         end_date = request.query_params.get("end_date")
@@ -39,10 +44,12 @@ class SellerOrderListView(SellerBaseView):
         _to = request.query_params.get("_to")
         orders, target_order = prioritize_to_parameter(orders, _to, model_class=Order)
 
+        # Передаем seller_id в context для фильтрации items
         return get_paginated_response_with_priority(
             paginator=self.pagination_class(),
             queryset=orders,
             request=request,
-            serializer_class=OrderSerializer,
+            serializer_class=SellerOrderSerializer,
             target_item=target_order,
+            context={"seller_id": seller.id},
         )

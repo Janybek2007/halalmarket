@@ -186,6 +186,12 @@ def send_seller_order_status_notification(
                 "subject": f"Заказы отменены - {store_name}",
                 "template": "orders_cancelled",
             },
+            "cancellation_requested": {
+                "title": "Запрос на возврат",
+                "message": f"Покупатель запросил возврат {total_orders} заказ(ов)",
+                "subject": f"Запрос на возврат - {store_name}",
+                "template": "orders_return_requested",
+            },
         }
 
         status_info = status_messages.get(status_value, status_messages["delivered"])
@@ -275,6 +281,43 @@ def send_orders_shipped_notification(user_id, store_name, orders_data, total_ord
             data={"store_name": store_name, "total_orders": total_orders},
             tag="orders_shipped",
             url="/profile/my_purchases",
+        )
+
+        return {"success": True}
+    except User.DoesNotExist:
+        return {"success": False, "error": f"User with id {user_id} not found"}
+
+
+@app.task(name="modules.orders.tasks.send_return_confirmed_notification")
+def send_return_confirmed_notification(user_id, order_id, store_name):
+    User = apps.get_model(
+        settings.AUTH_USER_MODEL.split(".")[0], settings.AUTH_USER_MODEL.split(".")[1]
+    )
+
+    try:
+        user = User.objects.get(id=int(user_id))
+
+        email_context = {
+            "order_id": order_id,
+            "store_name": store_name,
+            "client_url": settings.CLIENT_URL,
+        }
+
+        send_email_task.delay(
+            recipient_email=user.email,
+            subject="Возврат подтвержден - Halal Market",
+            template_name="return_confirmed",
+            context=email_context,
+        )
+
+        send_push_notification_task.delay(
+            user_id=int(user.id),
+            title="Возврат подтвержден",
+            message=f"Продавец {store_name} подтвердил возврат по заказу #{order_id}",
+            notification_type="return_confirmed",
+            data={"order_id": int(order_id), "store_name": store_name},
+            tag="return_confirmed",
+            url="/profile/orders",
         )
 
         return {"success": True}

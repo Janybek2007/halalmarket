@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    OrderCreateView,
+    OrderCheckoutView,
     OrderDetailView,
     OrderListView,
     OrderUpdateStatusView,
@@ -17,5 +17,5 @@ urlpatterns = [
         OrderUpdateStatusView.as_view(),
         name="order-update-status",
     ),
-    path("purchase/", OrderCreateView.as_view(), name="order-create"),
+    path("purchase/checkout/", OrderCheckoutView.as_view(), name="order-create"),
 ]

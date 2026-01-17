@@ -31,11 +31,11 @@ export const CreateStore: React.FC<{ onClose: VoidFunction }> = React.memo(({
 						<div className={s.imageContainer}>
 							<img
 								src={
-									form.watch('logo')
-										? URL.createObjectURL(form.watch('logo')!)
+									form.watch('store_logo')
+										? URL.createObjectURL(form.watch('store_logo')!)
 										: Assets.Placeholder
 								}
-								alt={form.watch('name') || 'placeholder'}
+								alt={form.watch('store_name') || 'placeholder'}
 							/>
 						</div>
 						<label htmlFor='image' className={s.uploadPhotoButton}>
@@ -47,19 +47,19 @@ export const CreateStore: React.FC<{ onClose: VoidFunction }> = React.memo(({
 							id='image'
 							hidden
 							accept='image/*'
-							onChange={e => form.setValue('logo', e.target.files?.[0]!)}
+							onChange={e => form.setValue('store_logo', e.target.files?.[0]!)}
 						/>
 					</div>
 					<FormField
 						label='Название магазина*'
 						name='name'
-						error={errors.name?.message}
+						error={errors.store_name?.message}
 						fullWidth
 						className={s.formField}
 						field={{
 							type: 'text',
 							placeholder: 'Название магазина',
-							register: form.register('name')
+							register: form.register('store_name')
 						}}
 					/>
 

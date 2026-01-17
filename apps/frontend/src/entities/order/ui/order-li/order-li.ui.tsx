@@ -28,7 +28,8 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 	isActions = true
 }) => {
 	const size = useSize();
-	const StatusBadgeRowCm = (
+
+	const StatusBadgeRowCm = (status: string) => (
 		<>
 			<div className={styles.row}>
 				<div className={styles.orderLabel}>Статус:</div>
@@ -46,7 +47,7 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 							fill='white'
 						/>
 					</svg>
-					{getOrderStatus(order.status)}
+					{getOrderStatus(status)}
 				</div>
 			</div>
 			{isActions && (
@@ -57,12 +58,19 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 							<PurchaseUpdateStatus status={order.status} id={order.id} />
 						</div>
 					)}
-					{with_role === 'seller' && order.status === 'processing' && (
+					{with_role === 'seller' && order.status === 'pending' && (
 						<div className={styles.row}>
 							<div className={styles.orderLabel}>Действия:</div>
 							<OrderUpdateStatus id={order.id} />
 						</div>
 					)}
+					{with_role === 'seller' &&
+						order.status === 'cancellation_requested' && (
+							<div className={styles.row}>
+								<div className={styles.orderLabel}>Действия:</div>
+								<OrderUpdateStatus isShipped={false} id={order.id} />
+							</div>
+						)}
 				</>
 			)}
 		</>
@@ -77,8 +85,11 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 			}
 			products={order.items.map(order => ({
 				...order.product,
+				status: order.status,
+				total_price: order.total_price,
 				quantity: order.quantity
 			}))}
+			priceKey='total_price'
 			linkEnable={with_role !== 'seller'}
 			options={
 				[
@@ -125,7 +136,7 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 									{formatDateCustom(order.created_at, 'yyyy-MM-dd')}
 								</span>
 							)}
-							{StatusBadgeRowCm}
+							{StatusBadgeRowCm(order.status)}
 						</div>
 					)}
 				</>
@@ -139,7 +150,9 @@ export const OrderLI: React.FC<IOrderLIProps> = ({
 							<div className={styles.orderValue}>{product.quantity}шт</div>
 						</div>
 
-						{!isMoreThenOne && size.width >= 560 && StatusBadgeRowCm}
+						{!isMoreThenOne &&
+							size.width >= 560 &&
+							StatusBadgeRowCm(product.status)}
 					</div>
 				</>
 			)}

@@ -27,10 +27,6 @@ export function setAuthCookies(
 	}
 }
 
-export function deleteAuthCookies(response: NextResponse) {
-	response.cookies.set(ACCESS_TOKEN_KEY, '', { maxAge: 0, path: '/' });
-	response.cookies.set(REFRESH_TOKEN_KEY, '', { maxAge: 0, path: '/' });
-}
 
 export async function refreshAccessToken(
 	refreshToken: string

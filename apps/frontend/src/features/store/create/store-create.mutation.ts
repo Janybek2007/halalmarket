@@ -14,7 +14,7 @@ export const useStoreCreateMutation = (onClose: VoidFunction) => {
 	const form = useForm<StoreCreateDto>({
 		resolver: zodResolver(StoreCreateSchema),
 		defaultValues: {
-			name: '',
+			store_name: '',
 			is_read_policy: false
 		}
 	});

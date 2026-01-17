@@ -1,12 +1,11 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { CategoriesService } from '~/entities/categories';
 import { ProductService } from '~/entities/products';
 import { CPageProps } from '~/global';
 import { $Meta, OG_IMAGE } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { ProductsByCategoryPage } from './page.ui';
-
-export const revalidate = 60;
 
 export async function generateMetadata(
 	props: CPageProps<{ slug: string }>
@@ -47,16 +46,16 @@ export default async (
 ) => {
 	const params = await props.params;
 	const sp = await props.searchParams;
-	let results: any = { results: [], category: null };
+	let data: any = { results: [], category: null };
 	try {
-		results = await ProductService.GetProducts({
+		data = await ProductService.GetProducts({
 			category: params.slug,
 			page: sp.page,
 			per_pages: 12
 		});
 	} catch (err) {
-		console.log('Ошибка при получении продуктов', err);
+		notFound();
 	}
 
-	return <ProductsByCategoryPage slug={params.slug} results={results} />;
+	return <ProductsByCategoryPage slug={params.slug} data={data} />;
 };

@@ -21,14 +21,14 @@ export const StoreUpdate: React.FC = React.memo(() => {
 				<div className={s.logoContainer}>
 					<label
 						className={clsx(s.logo, {
-							[s.hasLogo]: user?.seller?.store_logo || form.watch('logo')
+							[s.hasLogo]: user?.seller?.store_logo || form.watch('store_logo')
 						})}
 					>
-						{user?.seller?.store_logo || form.watch('logo') ? (
+						{user?.seller?.store_logo || form.watch('store_logo') ? (
 							<img
 								src={
-									form.watch('logo')
-										? URL.createObjectURL(form.watch('logo') as File)
+									form.watch('store_logo')
+										? URL.createObjectURL(form.watch('store_logo') as File)
 										: ApiMedia(user?.seller?.store_logo || '')
 								}
 								alt={user?.seller?.store_name || 'Логотип'}
@@ -51,13 +51,13 @@ export const StoreUpdate: React.FC = React.memo(() => {
 				<FormField
 					label='Название магазина'
 					name='name'
-					error={errors.name?.message}
+					error={errors.store_name?.message}
 					fullWidth
 					className={s.formField}
 					field={{
 						type: 'text',
 						placeholder: 'Введите название магазина',
-						register: form.register('name')
+						register: form.register('store_name')
 					}}
 				/>
 			</div>
@@ -67,8 +67,8 @@ export const StoreUpdate: React.FC = React.memo(() => {
 				loading={isPending}
 				disabled={
 					isPending ||
-					(form.watch('name') === user?.seller?.store_name &&
-						!form.watch('logo'))
+					(form.watch('store_name') === user?.seller?.store_name &&
+						!form.watch('store_logo'))
 				}
 				loadingText='Сохранение...'
 			>

@@ -14,7 +14,7 @@ class OrderDetailView(APIView):
     def get(self, request, id):
         order = get_object_or_404(
             Order.objects.select_related("user").prefetch_related(
-                "items__seller", "items__product"
+                "sub_orders__seller", "sub_orders__product"
             ),
             id=id,
         )
@@ -25,7 +25,7 @@ class OrderDetailView(APIView):
         elif request.user.role == "seller":
             seller = Seller.objects.get(user=request.user)
             has_seller_items = any(
-                item.seller.id == seller.id for item in order.items.all()
+                item.seller.id == seller.id for item in order.sub_orders.all()
             )
             if not has_seller_items:
                 return Response({"error": "Доступ запрещен"}, status=403)

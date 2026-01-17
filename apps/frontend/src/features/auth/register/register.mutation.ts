@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { USER_PROFILE_KEY } from '~/entities/user';
 import { http } from '~/shared/api/http';
 import { TokenUtils } from '~/shared/api/token.client';
 import { useQueryString } from '~/shared/hooks';
@@ -31,9 +30,7 @@ export const useRegisterMutation = () => {
 		onSuccess(data) {
 			TokenUtils.Save(data.tokens);
 			setTimeout(() => {
-				queryClient.refetchQueries({
-					queryKey: USER_PROFILE_KEY
-				});
+				queryClient.refetchQueries({});
 			}, 200);
 		}
 	});

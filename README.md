@@ -118,10 +118,10 @@ cd /www/apps/backend
 # Установка .venv
 make bootstrap
 
-# Создание каталога /app
-sudo mkdir -p /app
-sudo chown -R $USER:$USER /app
-sudo chmod -R 775 /app
+# Создание каталога /data
+sudo mkdir -p /data
+sudo chown -R $USER:$USER /data
+sudo chmod -R 775 /data
 
 # Создание и применение миграций
 make makemigrations || { echo "Ошибка создания миграций.";  }
@@ -152,7 +152,7 @@ bun install
 
 Image-server работает на порту 3030 и предоставляет следующие возможности:
 
-- Обслуживание изображений из директории /app/media
+- Обслуживание изображений из директории /data/media
 - Поддержка изменения размеров изображений через параметры запроса (?w=ширина&h=высота&q=качество)
 - Кэширование обработанных изображений
 - Автоматическая конвертация в формат WebP
@@ -168,7 +168,7 @@ cd /www/apps/frontend
 
 # Сборка фронтенда
 if command -v bun &> /dev/null; then
-  make install && make build || { echo "Ошибка сборки фронтенда.";  }
+  make install && make build && make copy_sp || { echo "Ошибка сборки фронтенда.";  }
 else
   echo "Ошибка: bun не установлен!"
   exit 1
@@ -295,9 +295,9 @@ sudo systemctl restart nginx.service
 
 ```bash
 # Создание каталога для бэкапов
-sudo mkdir -p /app/pg_backups
-sudo chown postgres:postgres /app/pg_backups
+sudo mkdir -p /data/pg_backups
+sudo chown postgres:postgres /data/pg_backups
 
 # Создание бэкапа
-sudo -u postgres pg_dump -U postgres -h localhost halalmarket | sudo tee /app/pg_backups/backup_$(date +%F_%H-%M-%S).sql > /dev/null
+sudo -u postgres pg_dump -U postgres -h localhost halalmarket | sudo tee /data/pg_backups/backup_$(date +%F_%H-%M-%S).sql > /dev/null
 ```

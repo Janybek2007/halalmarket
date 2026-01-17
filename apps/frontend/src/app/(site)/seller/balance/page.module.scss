@@ -1,0 +1,182 @@
+.main {
+	padding-bottom: 40px;
+}
+
+.balanceCards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+	margin-bottom: 30px;
+}
+
+.card {
+	background: var(--bg-secondary, #f5f5f5);
+	border-radius: 12px;
+	padding: 24px;
+
+	h3 {
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--text-secondary, #666);
+		margin-bottom: 8px;
+	}
+
+	small {
+		font-size: 12px;
+		color: var(--text-tertiary, #999);
+	}
+}
+
+.amount {
+	font-size: 28px;
+	font-weight: 700;
+	color: var(--text-primary, #333);
+	margin: 0;
+}
+
+.withdrawalForm {
+	background: var(--bg-secondary, #f5f5f5);
+	border-radius: 12px;
+	padding: 24px;
+	margin-bottom: 30px;
+
+	h3 {
+		font-size: 18px;
+		font-weight: 600;
+		margin-bottom: 16px;
+	}
+
+	form {
+		display: flex;
+		gap: 12px;
+		align-items: stretch;
+
+		@media (max-width: 480px) {
+			flex-direction: column;
+		}
+	}
+}
+
+.inputGroup {
+	display: flex;
+	align-items: center;
+	background: var(--bg-primary, #fff);
+	border-radius: 8px;
+	border: 1px solid var(--border-color, #ddd);
+	overflow: hidden;
+	flex: 1;
+
+	input {
+		flex: 1;
+		padding: 12px 16px;
+		border: none;
+		outline: none;
+		font-size: 16px;
+
+		&:disabled {
+			background: var(--bg-disabled, #eee);
+			cursor: not-allowed;
+		}
+	}
+}
+
+.currency {
+	padding: 12px 16px;
+	background: var(--bg-tertiary, #eee);
+	color: var(--text-secondary, #666);
+	font-size: 14px;
+}
+
+.submitBtn {
+	padding: 12px 24px;
+	background: var(--color-primary, #4CAF50);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s;
+
+	&:hover:not(:disabled) {
+		background: var(--color-primary-dark, #45a049);
+	}
+
+	&:disabled {
+		background: var(--bg-disabled, #ccc);
+		cursor: not-allowed;
+	}
+}
+
+.noFunds {
+	margin-top: 12px;
+	font-size: 14px;
+	color: var(--text-secondary, #666);
+}
+
+.withdrawalsSection {
+	h3 {
+		font-size: 18px;
+		font-weight: 600;
+		margin-bottom: 16px;
+	}
+}
+
+.withdrawalsList {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.withdrawalItem {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: var(--bg-secondary, #f5f5f5);
+	border-radius: 8px;
+	padding: 16px;
+}
+
+.withdrawalInfo {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.withdrawalAmount {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.withdrawalDate {
+	font-size: 12px;
+	color: var(--text-secondary, #666);
+}
+
+.withdrawalStatus {
+	padding: 6px 12px;
+	border-radius: 16px;
+	font-size: 12px;
+	font-weight: 500;
+
+	&[data-status='requested'] {
+		background: #fff3cd;
+		color: #856404;
+	}
+
+	&[data-status='approved'] {
+		background: #cce5ff;
+		color: #004085;
+	}
+
+	&[data-status='completed'] {
+		background: #d4edda;
+		color: #155724;
+	}
+
+	&[data-status='rejected'],
+	&[data-status='failed'] {
+		background: #f8d7da;
+		color: #721c24;
+	}
+}

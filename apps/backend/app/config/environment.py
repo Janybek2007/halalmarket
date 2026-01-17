@@ -17,20 +17,13 @@ def extract_host_from_url(url):
 
 __ENV = {
     # General settings
-    "MODE": os.getenv("MODE", "local"),
+    "MODE": os.getenv("MODE", "development"),
     "DEBUG": os.getenv("DEBUG", "False") == "True",
     "SECRET_KEY": os.getenv("SECRET_KEY"),
     # CORS and Hosts
     "ALLOWED_ORIGINS": [
         host.strip() for host in os.getenv("ALLOWED_ORIGINS", "").split(",")
     ],
-    "ALLOWED_HOSTS": list(
-        set(
-            extract_host_from_url(host)
-            for host in os.getenv("ALLOWED_ORIGINS", "").split(",")
-            if host.strip()
-        )
-    ),
     # Database settings
     "DB_NAME": os.getenv("POSTGRES_DB"),
     "DB_USER": os.getenv("POSTGRES_USER"),

@@ -1,10 +1,12 @@
 import { http } from '~/shared/api/http';
 import {
+	ISellerBalance,
 	TGetOrdersParams,
 	TGetOrdersResult,
 	TGetReviewsParams,
 	TGetReviewsResult,
 	TGetSellersParams,
+	TGetSellerWithdrawals,
 	TGetStoreProductsParams,
 	TGetStoreProductsResult,
 	TSellerGetResult
@@ -15,6 +17,14 @@ export class SellersService {
 		return http.get<TSellerGetResult>('sellers-list/', {
 			query: params
 		});
+	}
+
+	static GetSellerBalance() {
+		return http.get<ISellerBalance>('seller/balance/');
+	}
+
+	static GetSellerWithdrawals() {
+		return http.get<TGetSellerWithdrawals>('seller/withdrawals/');
 	}
 
 	static GetReviews(params: TGetReviewsParams) {

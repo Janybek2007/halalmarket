@@ -21,7 +21,7 @@ export const SellerHead: React.FC = React.memo(() => {
 		<>
 			{open && <CreateStore onClose={toggle} />}
 			<div className={'container ' + s.sellerHead}>
-				{seller ? (
+				{seller?.store_name ? (
 					<>
 						<div className={s.storeHeader}>
 							<div className={s.storeLogo}>
@@ -45,7 +45,7 @@ export const SellerHead: React.FC = React.memo(() => {
 							{[
 								{ path: RoutePaths.Seller.Products, label: 'Товары' },
 								{ path: RoutePaths.Seller.Promotions, label: 'Акции' },
-								{ path: RoutePaths.Seller.Orders, label: 'Доставки' },
+								{ path: RoutePaths.Seller.Orders, label: 'Заказы' },
 								{ path: RoutePaths.Seller.Reviews, label: 'Отзывы и вопросы' },
 								{ path: RoutePaths.Seller.Settings, label: 'Настройки' }
 							].map(({ path, label }) => (

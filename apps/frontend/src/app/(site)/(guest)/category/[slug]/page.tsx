@@ -7,8 +7,6 @@ import { CPageProps } from '~/global';
 import { $Meta, OG_IMAGE } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 
-export const revalidate = 60;
-
 export async function generateMetadata(
 	props: CPageProps<{ slug: string }>
 ): Promise<Metadata> {

@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
+import Image from 'next/image';
 import { IProduct } from '~/entities/products';
 import { Assets } from '~/shared/assets';
 import { ErrorList } from '~/shared/components/error-list/error-list.ui';
@@ -41,7 +42,6 @@ export const ProductCU: React.FC<ProductCUProps> = React.memo(
 		} = useProductCUMutation(onClose, product);
 
 		const errors = form.formState.errors;
-
 		return (
 			<Drawer
 				header={
@@ -64,15 +64,18 @@ export const ProductCU: React.FC<ProductCUProps> = React.memo(
 							>
 								{filteredImages.map((image, i) => (
 									<div className={s.imageWrapper} key={`image-${i}`}>
-										<img
-											src={
-												image.file
-													? image.url
-													: ApiMedia(image.url, { w: 112, h: 112 })
-											}
-											alt='product'
-											className={s.image}
-										/>
+										{!image.file ? (
+											<Image
+												width={112}
+												height={112}
+												src={ApiMedia(image.url, { w: 112, h: 112 })}
+												alt='product'
+												className={s.image}
+											/>
+										) : (
+											<img src={image.url} alt='product' className={s.image} />
+										)}
+
 										<button
 											type='button'
 											className={s.deleteButton}

@@ -3,7 +3,20 @@ import { TPagination } from '~/shared/api/types';
 import { IProduct } from '../products';
 import { IUser } from '../user';
 
-export type TOrderStatus = 'processing' | 'shipped' | 'delivered' | 'cancelled';
+export type TOrderStatus =
+	| 'pending'
+	| 'shipped'
+	| 'delivered'
+	| 'cancelled'
+	| 'cancellation_requested';
+
+export type TOrderItemStatus =
+	| 'pending'
+	| 'shipped'
+	| 'delivered'
+	| 'cancelled'
+	| 'return_requested'
+	| 'returned';
 
 export type TGetPurchasesParams = {
 	_to?: number;
@@ -17,19 +30,18 @@ export interface IPurchaseItem {
 	price: string;
 	total_price: number;
 	seller: number;
+	status: TOrderStatus;
 }
 
 export interface IPurchaseResult {
 	id: number;
 	status: TOrderStatus;
+	item_status: TOrderItemStatus;
 	created_at: string;
-	delivery_date: string;
+	delivery_date: null | string;
 	delivery_address: string;
 	items: IPurchaseItem[];
 	total_price: number;
-	payment_status: '';
-	payment_method: '';
-	transaction_id: null;
 	user: Pick<IUser, 'id' | 'full_name' | 'phone' | 'email'>;
 }
 

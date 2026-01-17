@@ -17,7 +17,7 @@ export function CategoriesPage(props: { categories: TGetCategories }) {
 				is_null_parent: 'true',
 				get_childs: 'true'
 			}),
-		initialData: props.categories
+		initialData: props.categories.length > 0 ? props.categories : undefined
 	});
 
 	return (

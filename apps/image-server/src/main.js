@@ -7,9 +7,8 @@ const MEDIA_DIR = process.env.MEDIA_DIR || './media';
 const CACHE_DIR = process.env.CACHE_DIR || './cache';
 
 const imageKit = new ImageKit(MEDIA_DIR, CACHE_DIR, {
-	max: 500 * 1024 * 1024, // 500MB LRU
-	ttl: 1000 * 60 * 60, // 1 час
-	concurrency: 2
+	concurrency: 2,
+	maxCacheAgeDays: 30 
 });
 
 let cacheHits = 0;

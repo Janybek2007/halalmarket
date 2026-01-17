@@ -7,8 +7,6 @@ import { $Meta } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { HomePage } from './page.ui';
 
-export const revalidate = 60;
-
 export const metadata = $Meta({
 	title: 'Главная',
 	description:
@@ -21,7 +19,7 @@ export default async () => {
 	try {
 		const token = await GetAccessToken();
 		cProducts = await ProductService.GetProductsWithCategories(
-			{ per_pages: 8 },
+			{ per_pages: 8, revalidate: 60 },
 			token
 		);
 	} catch {}

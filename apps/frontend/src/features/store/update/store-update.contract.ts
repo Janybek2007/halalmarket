@@ -5,7 +5,7 @@ export const UpdateStoreSchema = StoreCreateSchema.omit({
 	logo: true,
 	is_read_policy: true
 }).extend({
-	logo: z
+	store_logo: z
 		.instanceof(File, {
 			message: 'Логотип должен быть файлом'
 		})

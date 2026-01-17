@@ -13,10 +13,10 @@ import s from './page.module.scss';
 export function HomePage(props: {
 	cProducts: TGetProductsWithCategoriesResult;
 }) {
-	const { data: cProducts } = useQuery({
+	const { data: cProducts = [] } = useQuery({
 		queryKey: ['get-products-with-categories'],
 		queryFn: () => ProductService.GetProductsWithCategories({ per_pages: 8 }),
-		initialData: props.cProducts
+		initialData: props.cProducts.length > 0 ? props.cProducts : undefined
 	});
 
 	return (

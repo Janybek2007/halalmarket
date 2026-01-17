@@ -22,7 +22,8 @@ export const ProductListItem = <T extends IProduct>({
 	options = [],
 	extra,
 	className,
-	linkEnable = true
+	linkEnable = true,
+	priceKey = 'price'
 }: ProductListItemProps<T>) => {
 	const [height, setHeight] = React.useState('100%');
 	const isMoreThenOne = products.length > 1;
@@ -78,7 +79,7 @@ export const ProductListItem = <T extends IProduct>({
 								<div className={styles.price}>
 									<span>
 										{priceFormat(
-											discountedPrice(product.price, product.discount),
+											discountedPrice(product[priceKey as 'price'] , product.discount),
 											'сом'
 										)}
 									</span>{' '}

@@ -1,0 +1,40 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Возврат подтверждён{% endblock %}
+
+{% block content %}
+<h2>Возврат подтверждён</h2>
+
+<p>
+	Продавец <strong>{{ store_name }}</strong> подтвердил получение
+	возвращённого товара.
+</p>
+
+<div class="info">
+	<p><strong>Номер заказа:</strong> {{ order_id }}</p>
+</div>
+
+<p>
+	Средства будут возвращены тем же способом оплаты, который использовался при
+	оформлении заказа. Срок зачисления зависит от платёжной системы.
+</p>
+
+<div style="text-align: center">
+	<a
+		href="{{ client_url }}/profile/my_purchases?_to={{ order_id }}"
+		class="button"
+	>
+		Перейти к заказу
+	</a>
+</div>
+
+<p>
+	Если у вас возникли вопросы по возврату, пожалуйста, свяжитесь с нашей службой
+	поддержки.
+</p>
+
+<p>
+	С уважением,<br />
+	Команда Halal Market
+</p>
+{% endblock %}

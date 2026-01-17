@@ -37,10 +37,10 @@ function SellerOrdersPage() {
 	return (
 		<main className={s.main}>
 			<SellerPageHead
-				title='Доставки'
+				title='Заказы'
 				endEl={
 					<h4>
-						Количество доставленных товаров: <span>{data?.count}</span>
+						Количество заказов: <span>{data?.count}</span>
 					</h4>
 				}
 			>
@@ -58,8 +58,8 @@ function SellerOrdersPage() {
 						/>
 					) : Number(data?.count) === 0 ? (
 						<State
-							title='Нет доставок'
-							text='Пока что нет доставок на ваши товары. Как только покупатели оставят отзывы, они появятся здесь.'
+							title='Нет заказов'
+							text='Пока что нет заказов на ваши товары. Как только покупатели оставят отзывы, они появятся здесь.'
 						/>
 					) : (
 						<>

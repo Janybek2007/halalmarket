@@ -6,14 +6,17 @@ from .views import (
     ProductListView,
     ProductUpdateView,
     ReviewDeleteView,
+    SellerBalanceView,
     SellerOrderListView,
-    SellerOrderShipView,
     SellerRequestView,
     SellerSetProfileView,
     SellerStoreCreateView,
     SellerStoreDetailView,
+    SellerUpdateOrderItemStatusView,
     StoreReviewResponseView,
     StoreReviewsListView,
+    WithdrawalCreateView,
+    WithdrawalListView,
 )
 
 urlpatterns = [
@@ -32,11 +35,24 @@ urlpatterns = [
     path(
         "seller/set-profile/", SellerSetProfileView.as_view(), name="seller-set-profile"
     ),
-    # Seller endpoints
-    path(
-        "seller/orders/ship/", SellerOrderShipView.as_view(), name="seller-order-ship"
-    ),
+    # Seller order endpoints
     path("seller/orders/", SellerOrderListView.as_view(), name="seller-order-list"),
+    path(
+        "seller/orders/update-status/",
+        SellerUpdateOrderItemStatusView.as_view(),
+        name="seller-order-update-status",
+    ),
+    # Seller balance & withdrawal endpoints
+    path("seller/balance/", SellerBalanceView.as_view(), name="seller-balance"),
+    path(
+        "seller/withdrawals/", WithdrawalListView.as_view(), name="seller-withdrawals"
+    ),
+    path(
+        "seller/withdrawal/create/",
+        WithdrawalCreateView.as_view(),
+        name="seller-withdrawal-create",
+    ),
+    # Seller reviews endpoints
     path("seller/reviews/", StoreReviewsListView.as_view(), name="seller-reviews-list"),
     path(
         "seller/reviews/<int:review_id>/respond/",

@@ -111,6 +111,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "items_in_package",
         ]
         read_only_fields = ["id", "slug", "created_at", "seller"]
+        extra_kwargs = {"id": {"read_only": True}}
 
     def _get_moderation_status(self, status):
         if not status:
@@ -147,6 +148,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return self._get_moderation_status(obj.moderation_type) if obj else None
 
     def create(self, validated_data):
+        validated_data.pop("id", None)
+
         images_files = validated_data.pop("images_files", [])
         seller = self.context.get("seller")
 
@@ -156,9 +159,13 @@ class ProductSerializer(serializers.ModelSerializer):
         product = super().create(validated_data)
 
         for image in images_files:
-            ProductImage.objects.create(product=product, image=image)
+            ProductImage.objects.create(
+                product=product,
+                image=image,
+            )
 
         return product
+
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):

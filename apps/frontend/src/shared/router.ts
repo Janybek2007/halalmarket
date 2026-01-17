@@ -33,6 +33,7 @@ export const RoutePaths = {
 		Settings: '/seller/settings',
 		Policy: '/seller/policy',
 		Promotions: '/seller/promotions',
+		Balance: '/seller/balance',
 		//
 		Request: '/seller/request',
 		SetProfile: '/seller/set-profile'

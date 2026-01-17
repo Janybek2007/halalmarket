@@ -9,6 +9,7 @@ export interface ProductListItemProps<T extends IProduct> {
 	children?: React.ReactNode | ((product: T) => React.ReactNode);
 	checkbox?: Omit<CheckboxProps, 'additional'>;
 	className?: string;
+	priceKey?: string
 	linkEnable?: boolean;
 	options?:
 		| DropdownProps['options']

@@ -68,3 +68,31 @@ class Seller(models.Model):
     def __str__(self):
         return f"{self.user.full_name} - {self.status}"
 
+
+class SellerBalance(models.Model):
+    seller = models.OneToOneField(
+        Seller,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="balance",
+        verbose_name="Продавец",
+    )
+    available_balance = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+        verbose_name="Доступный баланс",
+    )
+    hold_balance = models.DecimalField(
+        max_digits=12, decimal_places=2, default=0, verbose_name="Удерживаемый баланс"
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True, verbose_name="Последнее обновление"
+    )
+
+    class Meta:
+        verbose_name = "Баланс продавца"
+        verbose_name_plural = "Балансы продавцов"
+
+    def __str__(self):
+        return f"Balance for {self.seller}: Available={self.available_balance}, Hold={self.hold_balance}"

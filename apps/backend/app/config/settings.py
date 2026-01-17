@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Основные настройки
 SECRET_KEY = __ENV["SECRET_KEY"]
 DEBUG = __ENV["DEBUG"]
-ALLOWED_HOSTS = __ENV["ALLOWED_HOSTS"]
+ALLOWED_HOSTS = ["*"]
 
 CLIENT_URL = __ENV["CLIENT_URL"]
 API_URL = __ENV["API_URL"]
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "modules.notifications",
     "modules.favorites",
     "modules.promotions",
+    "modules.payment",
 ]
 
 # Middleware
@@ -90,8 +91,8 @@ DATABASES = {
 # Статические и медиа файлы
 STATIC_URL = "/staticfiles/"
 MEDIA_URL = "/media/"
-STATIC_ROOT = BASE_DIR / "static" if __ENV["MODE"] == "local" else "/app/staticfiles"
-MEDIA_ROOT = BASE_DIR / "media" if __ENV["MODE"] == "local" else "/app/media"
+STATIC_ROOT = BASE_DIR / "static" if __ENV["MODE"] == "development" else "/data/staticfiles"
+MEDIA_ROOT = BASE_DIR / "media" if __ENV["MODE"] == "development" else "/data/media"
 
 # FORCE_SCRIPT_NAME = "/~"
 

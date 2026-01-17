@@ -4,7 +4,7 @@
 
 APP_DIR := app
 SET_PYTHONPATH := PYTHONPATH=$(APP_DIR)
-MODULES := users categories products carts orders sellers notifications favorites promotions
+MODULES := users categories products carts orders sellers notifications favorites promotions payment
 
 # ========================
 # Bootstrap / Dependencies

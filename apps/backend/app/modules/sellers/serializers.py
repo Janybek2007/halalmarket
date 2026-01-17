@@ -1,7 +1,7 @@
 from modules.users.models import Token, TokenType
 from rest_framework import serializers
 
-from .models import Seller
+from .models import Seller, SellerInvite
 
 
 class SellerSerializer(serializers.ModelSerializer):

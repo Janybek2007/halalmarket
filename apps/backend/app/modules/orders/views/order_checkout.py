@@ -1,4 +1,8 @@
+from decimal import Decimal
+
+from django.db import transaction
 from modules.carts.models import Cart
+from modules.sellers.services import SellerBalanceService
 from modules.users.permissions import IsUser
 from rest_framework import status
 from rest_framework.response import Response
@@ -7,9 +11,10 @@ from rest_framework.views import APIView
 from ..models import Order, OrderItem
 
 
-class OrderCreateView(APIView):
+class OrderCheckoutView(APIView):
     permission_classes = [IsUser]
 
+    @transaction.atomic
     def post(self, request):
         user = request.user
         cart_ids = request.data.get("cart_ids", [])
@@ -19,7 +24,9 @@ class OrderCreateView(APIView):
                 {"error": "Требуются ID корзин"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        carts = Cart.objects.filter(id__in=cart_ids, user=user)
+        carts = Cart.objects.filter(id__in=cart_ids, user=user).select_related(
+            "product", "product__seller"
+        )
         if len(carts) != len(cart_ids):
             return Response(
                 {"error": "Некоторые корзины не найдены"},
@@ -32,20 +39,33 @@ class OrderCreateView(APIView):
             user=user,
             delivery_address=request.data.get("delivery_address", ""),
             payment_method=request.data.get("payment_method", ""),
+            total_amount=Decimal("0.00"),
         )
 
         created_order_items = []
         sellers = {}
+        total_amount = Decimal("0.00")
 
         for cart in carts:
+            item_total = cart.product.price * cart.quantity
+
             order_item = OrderItem.objects.create(
                 order=order,
                 product=cart.product,
                 quantity=cart.quantity,
                 seller=cart.product.seller,
                 price=cart.product.price,
+                total_amount=item_total,
             )
             created_order_items.append(order_item)
+            total_amount += item_total
+
+            # Зачисление на hold баланс продавца
+            SellerBalanceService.add_to_hold(
+                seller=cart.product.seller,
+                amount=item_total,
+                order_item=order_item,
+            )
 
             seller = cart.product.seller
             if seller and seller.id:
@@ -61,6 +81,10 @@ class OrderCreateView(APIView):
                     }
                 sellers[seller.id]["order_items"].append(order_item)
             cart.delete()
+
+        # Обновляем общую сумму заказа
+        order.total_amount = total_amount
+        order.save()
 
         # Сериализуем заказ для уведомлений
         serialized_order = OrderSerializer(order).data

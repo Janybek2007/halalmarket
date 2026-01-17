@@ -15,11 +15,13 @@ import ProfileSvg from './svg/profile.svg';
 import PromotionsSvg from './svg/promotions.svg';
 import SellersSvg from './svg/sellers.svg';
 import SettingsSvg from './svg/settings.svg';
+import AllCategory from './img/all-category.png'
 
 //
 import Placeholder from './img/placeholder.png';
 
 export const Assets = {
+	AllCategory: AllCategory.src,
 	CarOutlineSvg: CarOutlineSvg.src,
 	MenuSvg: MenuSvg.src,
 	BurgerMenuSvg: BurgerMenuSvg.src,

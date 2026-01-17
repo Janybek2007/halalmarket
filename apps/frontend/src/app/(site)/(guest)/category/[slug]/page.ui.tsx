@@ -17,7 +17,7 @@ export function CategoryPage(props: {
 	const { data: categories } = useQuery({
 		queryKey: ['get-categories-with-parent', props.slug],
 		queryFn: () => CategoriesService.GetCategories({ parent: props.slug }),
-		initialData: props.categories
+		initialData: props.categories.length > 0 ? props.categories : undefined
 	});
 	const parentCategory = categories?.[0]?.parent;
 

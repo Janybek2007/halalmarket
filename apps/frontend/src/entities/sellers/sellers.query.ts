@@ -11,6 +11,8 @@ export class SellersQuery {
 	static QueryKeys = {
 		GetSellersList: (params: TGetSellersParams) => ['sellers-list', params],
 		GetReviews: (params: TGetReviewsParams) => ['sellers-reviews', params],
+		GetSellerBalance: ['seller-balance'],
+		GetSellerWithdrawals: ['seller-withdrawals'],
 		GetStoreProducts: (params: TGetStoreProductsParams) => [
 			'store-products',
 			params
@@ -22,6 +24,20 @@ export class SellersQuery {
 		return queryOptions({
 			queryKey: SellersQuery.QueryKeys.GetSellersList(params),
 			queryFn: () => SellersService.GetSellersList(params)
+		});
+	}
+
+	static GetSellerBalance() {
+		return queryOptions({
+			queryKey: SellersQuery.QueryKeys.GetSellerBalance,
+			queryFn: () => SellersService.GetSellerBalance()
+		});
+	}
+
+	static GetSellerWithdrawals() {
+		return queryOptions({
+			queryKey: SellersQuery.QueryKeys.GetSellerWithdrawals,
+			queryFn: () => SellersService.GetSellerWithdrawals()
 		});
 	}
 

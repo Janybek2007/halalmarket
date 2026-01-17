@@ -9,7 +9,7 @@ SET_PYTHONPATH := PYTHONPATH=$(APP_DIR)
 
 VENV := .venv
 
-MODULES := users categories products carts orders sellers notifications favorites promotions
+MODULES := users categories products carts orders sellers notifications favorites promotions payment
 
 
 # ========================

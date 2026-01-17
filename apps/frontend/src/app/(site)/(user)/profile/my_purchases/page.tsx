@@ -22,7 +22,7 @@ function ProfileMyPurchasesPage() {
 		query: { isLoading },
 		pagination
 	} = usePaginatedQuery(PurchasesQuery.GetPurchasesQuery, {
-		statuses: ['processing', 'shipped'],
+		statuses: ['pending', 'shipped', 'cancellation_requested'],
 		per_pages: 6
 	});
 

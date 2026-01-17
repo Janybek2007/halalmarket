@@ -16,8 +16,8 @@ export const useStoreUpdateMutation = () => {
 	const form = useForm<UpdateStoreDto>({
 		resolver: zodResolver(UpdateStoreSchema),
 		defaultValues: {
-			name: user?.seller?.store_name || '',
-			logo: null
+			store_name: user?.seller?.store_name || '',
+			store_logo: null
 		}
 	});
 	const {
@@ -36,7 +36,7 @@ export const useStoreUpdateMutation = () => {
 	const handleLogoChange = React.useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const file = e.target.files?.[0];
-			if (file) form.setValue('logo', file);
+			if (file) form.setValue('store_logo', file);
 		},
 		[]
 	);

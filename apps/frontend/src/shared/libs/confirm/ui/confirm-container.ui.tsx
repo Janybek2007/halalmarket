@@ -29,10 +29,8 @@ export const ConfirmContainer: React.FC<IProps> = React.memo(
 			try {
 				setError(undefined);
 				await context.confirmCallback?.({ checked });
-				if (!error) {
-					closeConfirm();
-					setError(null);
-				}
+				closeConfirm();
+				setError(null);
 			} catch (err: any) {
 				setError(err);
 			}

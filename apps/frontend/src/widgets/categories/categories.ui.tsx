@@ -19,7 +19,7 @@ const AllCategories: ICategory = {
 	order: 0,
 	slug: 'all',
 	name: 'Все категории',
-	image: '/seo/favicon.png',
+	image: Assets.AllCategory,
 	actions: null
 };
 

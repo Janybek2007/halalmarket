@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { IUser, UserService } from './entities/user';
 import {
-	deleteAuthCookies,
 	GetAccessToken,
 	GetRefreshToken,
 	refreshAccessToken,
@@ -121,12 +120,10 @@ export async function proxy(req: NextRequest) {
 		url.pathname = RoutePaths.Auth.Login;
 		url.searchParams.set('redirect', path);
 		const response = NextResponse.redirect(url);
-		deleteAuthCookies(response);
 		return response;
 	}
 
 	const response = NextResponse.next();
-	deleteAuthCookies(response);
 	return response;
 }
 
