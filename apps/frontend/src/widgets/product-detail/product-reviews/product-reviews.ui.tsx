@@ -86,7 +86,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
 					<State
 						icon='lucide:message-square'
 						title='Нет отзывов'
-						text='Пока что нет отзывов на ваши товары. Как только покупатели оставят отзывы, они появятся здесь.'
+						text='Пока что нет отзывов на этот товар. Как только покупатели оставят отзывы, они появятся здесь.'
 					/>
 				)}
 
