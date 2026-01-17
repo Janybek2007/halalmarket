@@ -192,16 +192,20 @@
 
 @media (max-width: 36em) {
 	// 576px
+	.moreTrigger {
+		font-size: 2rem;
+	}
 	.productItem {
 		--product-item-padding: 0.5rem;
 		--product-item-radius: 1rem;
 		--product-item-gap: 0.5rem;
-		--name-font-size: 1rem;
-		--price-font-size: 1rem;
-		--image-width: 7rem;
-		--image-height: 7.5rem;
+		--name-font-size: 1.15rem;
+		--price-font-size: 1.1rem;
+		--image-width: 8rem;
+		--image-height: 8.5rem;
 		--image-margin: 0.75rem;
-		--date-font-size: 0.75rem;
+		--date-font-size: .9rem;
+		--checkbox-size: 1.6rem;
 		.checkbox {
 			margin: 0.5rem 0;
 		}
@@ -305,6 +309,6 @@
 	}
 
 	.moreTrigger {
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 	}
 }

@@ -116,7 +116,7 @@
 			border-radius: 0.6rem;
 			min-height: 9rem;
 			max-height: 9rem;
-			font-size: 0.75rem;
+			font-size: 1rem;
 		}
 	}
 
@@ -153,7 +153,7 @@
 			line-height: 1.25rem;
 
 			@media (max-width: 36em) {
-				font-size: 0.7rem;
+				font-size: 1rem;
 			}
 		}
 
@@ -253,8 +253,8 @@
 
 		@media (max-width: 36em) {
 			/* 576px */
-			--photo-preview-size: 3.5rem;
-			--photo-preview-height: 4rem;
+			--photo-preview-size: 4.5rem;
+			--photo-preview-height: 5rem;
 		}
 		@media (max-width: 440px) {
 			--photo-preview-size: 3rem;
@@ -330,8 +330,8 @@
 @media (max-width: 36em) {
 	// 576px
 	.reviewSection {
-		--title-font-size: 1.125rem;
-		--star-size: 1.5rem;
+		--title-font-size: 1.25rem;
+		--star-size: 2rem;
 		--comment-padding: 0.75rem;
 		--comment-margin-bottom: 0.875rem;
 		--photo-button-padding: 0.875rem 1rem;

@@ -130,17 +130,22 @@
 @media (max-width: 36em) {
 	// 576px
 	.cartPage {
+		--header-title-font-size: 1.5rem;
+		--header-itemcount-font-size: 1.25rem;
+
 		--cart-padding: 1rem 0;
 		--cart-margin-bottom: 6rem;
 		--content-gap: 2rem;
 		--list-gap: 1rem;
-		--control-btn-size: 1.75rem;
-		--control-btn-font-size: 0.875rem;
-		--quantity-width: 2rem;
+		--control-btn-size: 1.8rem;
+		--control-btn-font-size: 1.25rem;
+		--quantity-width: 2.5rem;
 		--quantity-font-size: 0.875rem;
 		--header-margin-bottom: 1rem;
 		--selectall-margin-bottom: 1rem;
 		--selectall-gap: 0.5rem;
+		--selectall-label-font-size: 1.15rem;
+		--selectall-size: 1.7rem;
 	}
 }
 
