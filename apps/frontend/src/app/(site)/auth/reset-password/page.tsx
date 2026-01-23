@@ -1,8 +1,8 @@
 'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { ResetPasswordForm } from '~/features/auth/reset-password';
 import { RoutePaths } from '~/shared/router';
 
 export default () => {
@@ -12,6 +12,12 @@ export default () => {
 		</Suspense>
 	);
 };
+
+const ResetPasswordForm = dynamic(() =>
+	import('~/features/auth/reset-password').then(m => ({
+		default: m.ResetPasswordForm
+	}))
+);
 
 function ResetPasswordPage() {
 	const token = useSearchParams().get('token');

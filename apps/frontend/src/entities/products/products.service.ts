@@ -42,7 +42,7 @@ export class ProductService {
 	}
 
 	static GetProductsWithCategories(
-		params: TGetProductsParams & {revalidate?: number},
+		params: TGetProductsParams,
 		token: string | null = ''
 	) {
 		return http.get<TGetProductsWithCategoriesResult>('products/', {
@@ -52,8 +52,7 @@ export class ProductService {
 			},
 			headers: {
 				Authorization: `Bearer ${token}`
-			},
-			revalidate: params.revalidate
+			}
 		});
 	}
 }

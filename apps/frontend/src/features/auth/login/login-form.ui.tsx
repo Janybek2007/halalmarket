@@ -2,11 +2,11 @@
 import React from 'react';
 import { FormProvider } from 'react-hook-form';
 import { ErrorList } from '~/shared/components/error-list/error-list.ui';
+import { FormField } from '~/shared/components/form-field/form-field.ui';
 import { useToggle } from '~/shared/hooks';
 import { Button } from '~/shared/ui/button/button.ui';
 import { onIdentifierChange } from '~/shared/utils/on-change';
 import { useLoginMutation } from './login.mutation';
-import { FormField } from '~/shared/components/form-field/form-field.ui'
 
 export const LoginForm = React.memo(() => {
 	const [showPassword, { toggle: toggleShowPassword }] = useToggle(false);

@@ -3,11 +3,11 @@ import React from 'react';
 
 import { ApiMedia } from '~/shared/constants';
 
+import Image from 'next/image';
 import { IProductReview } from '~/entities/products';
 import { Avatar } from '~/shared/ui/avatar/avatar.ui';
 import { Icon } from '~/shared/ui/icon/icon.ui';
 import styles from './styles.module.scss';
-import Image from 'next/image'
 
 interface IReviewItemProps {
 	review: IProductReview;

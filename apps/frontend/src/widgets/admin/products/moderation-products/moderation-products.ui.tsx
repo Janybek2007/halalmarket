@@ -1,6 +1,8 @@
+'use client';
 import React from 'react';
 
-import { ProductListItemv2, TGetProductsListResult } from '~/entities/products';
+import dynamic from 'next/dynamic';
+import { TGetProductsListResult } from '~/entities/products';
 import { ProductDelete } from '~/features/products/admin__delete';
 import { ProductUpdateStatus } from '~/features/products/update-status';
 import { useSize } from '~/shared/hooks';
@@ -9,6 +11,12 @@ import s from './styles.module.scss';
 interface ModerationProductsProps {
 	products: TGetProductsListResult;
 }
+
+const ProductListItemv2 = dynamic(() =>
+	import('~/entities/products').then(m => ({
+		default: m.ProductListItemv2
+	}))
+);
 
 export const ModerationProducts: React.FC<ModerationProductsProps> = ({
 	products

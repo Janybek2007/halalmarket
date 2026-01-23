@@ -61,6 +61,7 @@ const AppHeader: React.FC = () => {
 								)}
 								{['admin'].includes(profile.role) && (
 									<Link
+										prefetch={false}
 										href={RoutePaths.Admin.Products}
 										className={s.avatarLink}
 									>
@@ -122,7 +123,11 @@ const AppHeader: React.FC = () => {
 								)}
 
 								{['user'].includes(profile.role) && (
-									<Link href={RoutePaths.User.Profile} className={s.iconLink}>
+									<Link
+										prefetch={false}
+										href={RoutePaths.User.Profile}
+										className={s.iconLink}
+									>
 										<Avatar
 											src={profile.avatar}
 											alt='profile'
@@ -137,6 +142,7 @@ const AppHeader: React.FC = () => {
 
 								{!['seller', 'admin'].includes(profile.role) && (
 									<Link
+										prefetch={false}
 										href={RoutePaths.User.Cart}
 										className={clsx(s.iconLink, s.cartLink)}
 									>

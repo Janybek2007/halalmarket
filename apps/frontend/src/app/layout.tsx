@@ -1,16 +1,28 @@
 import { Inter, Open_Sans, Roboto } from 'next/font/google';
+import { API_URL } from '~/shared/constants';
 import { $Meta } from '~/shared/libs/seo';
 import { LayoutClient } from './layout.client';
 import './styles';
 
 const inter = Inter({
 	subsets: ['latin'],
-	weight: ['400', '500', '600', '700']
+	weight: ['400', '500', '600', '700'],
+	display: 'swap',
+	preload: true
 });
-const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] });
+
+const roboto = Roboto({
+	subsets: ['latin'],
+	weight: ['400', '500', '700'],
+	display: 'swap',
+	preload: true
+});
+
 const openSans = Open_Sans({
 	subsets: ['latin'],
-	weight: ['300', '400', '500', '600', '700', '800']
+	weight: ['300', '400', '500', '600', '700', '800'],
+	display: 'swap',
+	preload: true
 });
 
 export const metadata = $Meta({});
@@ -27,6 +39,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 					href='https://fonts.gstatic.com'
 					crossOrigin='anonymous'
 				/>
+				<link rel='preconnect' href={API_URL} />
+				<link rel='dns-prefetch' href={API_URL} />
 			</head>
 			<body
 				className={`${inter.className} ${roboto.className} ${openSans.className}}`}

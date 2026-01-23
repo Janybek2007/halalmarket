@@ -1,10 +1,18 @@
+'use client';
 import React from 'react';
 
-import { ProductListItem, TGetProductsListResult } from '~/entities/products';
+import dynamic from 'next/dynamic';
+import { TGetProductsListResult } from '~/entities/products';
 import { ProductDelete } from '~/features/products/admin__delete';
 import { useSize } from '~/shared/hooks';
 import { formatDateCustom } from '~/shared/utils/date';
 import s from './styles.module.scss';
+
+const ProductListItem = dynamic(() =>
+	import('~/entities/products').then(m => ({
+		default: m.ProductListItem
+	}))
+);
 
 interface DeleteProductsProps {
 	products: TGetProductsListResult;

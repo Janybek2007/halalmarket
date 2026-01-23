@@ -23,6 +23,7 @@ export const useLogoutMutation = () => {
 				queryClient.setQueryData(USER_PROFILE_KEY, null);
 				setTimeout(() => {
 					router.push(RoutePaths.Guest.Home);
+					router.refresh();
 				}, 600);
 			}
 		}

@@ -26,11 +26,15 @@ export default function myImageLoader(props: {
 			console.warn('Не удалось распарсить sizes, использую fallback:', sizes);
 		}
 	}
+	const params = new URLSearchParams({
+		w: size.w.toString(),
+		h: size.h.toString(),
+		q: (quality || 85).toString()
+	});
 
 	if (!isMedia) {
-		return fullSrc;
+		return `${fullSrc}?${params}`;
 	}
 
-	const fullUrl = `${IMAGE_URL}${fullSrc}?w=${size.w}&h=${size.h}&q=${quality}`;
-	return fullUrl;
+	return `${IMAGE_URL}${fullSrc}?${params}`;
 }

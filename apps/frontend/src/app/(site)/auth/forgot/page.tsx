@@ -1,8 +1,24 @@
+'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ForgotForm } from '~/features/auth/forgot';
+import { Suspense } from 'react';
 import { RoutePaths } from '~/shared/router';
 
-export default function ForgotPage() {
+export default () => {
+	return (
+		<Suspense>
+			<ForgotPage />
+		</Suspense>
+	);
+};
+
+const ForgotForm = dynamic(() =>
+	import('~/features/auth/forgot').then(m => ({
+		default: m.ForgotForm
+	}))
+);
+
+function ForgotPage() {
 	return (
 		<div className='forms container'>
 			<div data-container>

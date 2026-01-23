@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
 								key={v.path}
 								className={clsx(pathname === v.path && s.active, s.menuItem)}
 							>
-								<Link href={v.path} className={s.menuLink}>
+								<Link prefetch={false} href={v.path} className={s.menuLink}>
 									{v.icon ? (
 										<Icon name={v.icon} c_size={24} />
 									) : (
@@ -101,7 +101,7 @@ const Sidebar: React.FC = () => {
 									key={v.path}
 									className={clsx(pathname === v.path && s.active, s.menuItem)}
 								>
-									<Link href={v.path} className={s.menuLink}>
+									<Link prefetch={false} href={v.path} className={s.menuLink}>
 										<img src={v.img} alt={v.name} />
 										<span>{v.name}</span>
 									</Link>

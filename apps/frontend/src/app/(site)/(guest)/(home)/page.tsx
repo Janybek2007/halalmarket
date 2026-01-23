@@ -2,7 +2,7 @@ import {
 	ProductService,
 	TGetProductsWithCategoriesResult
 } from '~/entities/products';
-import { GetAccessToken } from '~/shared/api/token.server';
+import { GetAccessToken, RemoveTokens } from '~/shared/api/token.server';
 import { $Meta } from '~/shared/libs/seo';
 import { RoutePaths } from '~/shared/router';
 import { HomePage } from './page.ui';
@@ -19,10 +19,15 @@ export default async () => {
 	try {
 		const token = await GetAccessToken();
 		cProducts = await ProductService.GetProductsWithCategories(
-			{ per_pages: 8, revalidate: 60 },
+			{ per_pages: 8 },
 			token
 		);
-	} catch {}
+	} catch {
+		RemoveTokens();
+		cProducts = await ProductService.GetProductsWithCategories({
+			per_pages: 8
+		});
+	}
 
 	return <HomePage cProducts={cProducts} />;
 };

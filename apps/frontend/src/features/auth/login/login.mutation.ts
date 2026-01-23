@@ -38,9 +38,7 @@ export const useLoginMutation = () => {
 				async () => {
 					const r = await mutateAsync(data);
 					if (r?.user_id) {
-						setTimeout(() => {
-							router.push(redirectVal!);
-						}, 300);
+						window.location.reload();
 					}
 				},
 				{ loading: 'Вход...', success: 'Вы успешно вошли в систему' }

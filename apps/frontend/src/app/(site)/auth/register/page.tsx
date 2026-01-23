@@ -1,8 +1,8 @@
 'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { RegisterForm } from '~/features/auth/register';
 import { RoutePaths } from '~/shared/router';
 
 export default () => {
@@ -12,6 +12,12 @@ export default () => {
 		</Suspense>
 	);
 };
+
+const RegisterForm = dynamic(() =>
+	import('~/features/auth/register').then(m => ({
+		default: m.RegisterForm
+	}))
+);
 
 function RegisterPage() {
 	const redirectVal =

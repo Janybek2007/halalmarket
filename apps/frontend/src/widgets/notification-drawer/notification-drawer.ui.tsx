@@ -10,7 +10,7 @@ import { Icon } from '~/shared/ui/icon/icon.ui';
 import { formatDateCustom } from '~/shared/utils/date';
 import s from './styles.module.scss';
 
-export const NotificationDrawer: React.FC = React.memo(() => {
+const NotificationDrawer: React.FC = React.memo(() => {
 	const n = useNotifications();
 	const containerRef = useClickAway<HTMLDivElement>(() => n?.toggleDrawer());
 
@@ -58,6 +58,7 @@ export const NotificationDrawer: React.FC = React.memo(() => {
 										>
 											<Link
 												href={data.link || '#'}
+												prefetch={false}
 												onClick={e => {
 													e.stopPropagation();
 													n?.toggleDrawer();
@@ -114,3 +115,5 @@ export const NotificationDrawer: React.FC = React.memo(() => {
 	);
 });
 NotificationDrawer.displayName = 'NotificationDrawer';
+
+export default NotificationDrawer

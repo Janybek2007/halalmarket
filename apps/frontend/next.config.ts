@@ -5,7 +5,19 @@ const nextConfig: NextConfig = {
 	images: {
 		loaderFile: './src/image_loader.ts'
 	},
-	output: 'standalone'
+	output: 'standalone',
+	compress: true,
+
+	poweredByHeader: false,
+
+	compiler: {
+		removeConsole:
+			process.env.NODE_ENV === 'production'
+				? {
+						exclude: ['error', 'warn']
+					}
+				: false
+	}
 };
 
 export default nextConfig;

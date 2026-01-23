@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-	type ColumnDef,
 	flexRender,
 	getCoreRowModel,
 	getSortedRowModel,
@@ -12,18 +11,7 @@ import React, { useMemo } from 'react';
 import { State } from '~/shared/components/state/state.ui';
 import { Icon } from '../../ui/icon/icon.ui';
 import styles from './styles.module.scss';
-
-export interface TableProps<T extends object> {
-	columns: ColumnDef<T, any>[];
-	data: T[];
-	isLoading?: boolean;
-	emptyNode?: React.ReactNode;
-	className?: string;
-	rowKey?: keyof T | string;
-	maxHeight?: string;
-	search?: string;
-	searchColumn?: keyof T | string;
-}
+import { TableProps } from './table.types';
 
 export function Table<T extends object>({
 	columns,

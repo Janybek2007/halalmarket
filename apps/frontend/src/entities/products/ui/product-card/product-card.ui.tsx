@@ -24,6 +24,7 @@ export const ProductCard: React.FC<{ product: IProduct }> = React.memo(
 
 				<div className={s.content}>
 					<Link
+						prefetch={false}
 						href={RoutePaths.Guest.ProductDetail(product.slug)}
 						className={s.productLink}
 					>

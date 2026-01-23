@@ -1,9 +1,9 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { LoginForm } from '~/features/auth/login';
 import { RoutePaths } from '~/shared/router';
 
 export default () => {
@@ -13,6 +13,12 @@ export default () => {
 		</Suspense>
 	);
 };
+
+const LoginForm = dynamic(() =>
+	import('~/features/auth/login').then(m => ({
+		default: m.LoginForm
+	}))
+);
 
 function LoginPage() {
 	const redirectVal =

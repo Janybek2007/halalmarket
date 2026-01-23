@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { toast } from 'sonner';
 
+import Image from 'next/image';
 import { SellersQuery } from '~/entities/sellers';
 import { Assets } from '~/shared/assets';
 import { ErrorList } from '~/shared/components/error-list/error-list.ui';
@@ -15,7 +16,6 @@ import {
 	usePromotionAddMutation
 } from '../promotion-add.mutation';
 import s from './styles.module.scss';
-import Image from 'next/image'
 
 export const AddPromotionDrawer: React.FC<{ onClose: VoidFunction }> =
 	React.memo(({ onClose }) => {

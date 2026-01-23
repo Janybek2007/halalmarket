@@ -6,6 +6,7 @@ import {
 	type UseQueryResult
 } from '@tanstack/react-query';
 
+import { useSession } from '~/app/providers/session';
 import { useKeepQuery } from '../tanstack';
 import { usePage } from './use-page';
 import { usePagination, type UsePaginationReturn } from './use-pagination';
@@ -37,13 +38,18 @@ type UsePaginatedQuery = <
 
 export const usePaginatedQuery: UsePaginatedQuery = (query, params) => {
 	const pData = usePage({ per_pages: params.per_pages || 3 });
+
 	const { data, ...queryData } = useKeepQuery(
-		query({ ...params, per_pages: pData.per_pages, page: pData.page })
+		query({
+			...params,
+			per_pages: pData.per_pages,
+			page: pData.page,
+		})
 	);
 	const pagination = usePagination({
 		...pData,
 		total: (data as { count: number })?.count || 0,
-		scrollInHandle: params.scrollInHandle
+		scrollInHandle: params.scrollInHandle,
 	});
 
 	return {

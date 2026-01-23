@@ -53,6 +53,7 @@ export const ProductSearch: React.FC<{ className?: string }> = React.memo(
 								href={RoutePaths.Guest.ProductDetail(v.slug)}
 								key={v.slug}
 								onClick={clear}
+								prefetch={false}
 								className={s.productItem}
 							>
 								<Icon name='cuida:search-outline' />

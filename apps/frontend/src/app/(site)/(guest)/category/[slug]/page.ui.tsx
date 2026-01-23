@@ -1,5 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CategoriesService, TGetCategories } from '~/entities/categories';
@@ -7,8 +8,13 @@ import { Assets } from '~/shared/assets';
 import { State } from '~/shared/components/state/state.ui';
 import { ApiMedia } from '~/shared/constants';
 import { RoutePaths } from '~/shared/router';
-import Breadcrumb from '~/shared/ui/breadcrumb/breadcrumb.ui';
 import s from './page.module.scss';
+
+const Breadcrumb = dynamic(() =>
+	import('~/shared/ui/breadcrumb/breadcrumb.ui').then(m => ({
+		default: m.Breadcrumb
+	}))
+);
 
 export function CategoryPage(props: {
 	categories: TGetCategories;
@@ -57,6 +63,7 @@ export function CategoryPage(props: {
 				<div className={s.subcategoriesGrid}>
 					{categories.map(category => (
 						<Link
+							prefetch={false}
 							key={category.id}
 							href={RoutePaths.Guest.ProductsByCategory(category.slug)}
 							className={s.subcategoryCard}

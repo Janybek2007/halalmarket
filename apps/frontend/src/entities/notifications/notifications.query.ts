@@ -11,7 +11,7 @@ export class NotificationsQuery {
 	};
 	static GetNotificationsQuery(params: IGetNotificationsParams) {
 		return queryOptions({
-			queryKey: this.QueryKeys.GetNotifications(params),
+			queryKey: NotificationsQuery.QueryKeys.GetNotifications(params),
 			queryFn: () => NotificationsService.GetNotifications(params)
 		});
 	}

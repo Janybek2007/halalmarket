@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import React from 'react';
 
 import { queryOptions } from '@tanstack/react-query';
+import dynamic from 'next/dynamic';
 import { ProductService, TProductReviewResult } from '~/entities/products';
 import { ReviewItem } from '~/entities/reviews';
-import { Pagination } from '~/shared/components/pagination/pagination.ui';
 import { State } from '~/shared/components/state/state.ui';
 import { usePaginatedQuery } from '~/shared/libs/pagination';
 import { Button } from '~/shared/ui/button/button.ui';
@@ -17,6 +17,16 @@ interface ProductReviewsProps {
 	slug: string;
 	initialReviews: TProductReviewResult | null;
 }
+
+export const Pagination = dynamic(
+	() =>
+		import('~/shared/components/pagination/pagination.ui').then(m => ({
+			default: m.Pagination
+		})),
+	{
+		ssr: false
+	}
+);
 
 export const ProductReviews: React.FC<ProductReviewsProps> = ({
 	average_rating,

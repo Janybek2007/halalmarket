@@ -38,7 +38,12 @@ const AppTabs = React.memo(() => {
 	return (
 		<div id='app-tabs' className={clsx(s.tabs)}>
 			{items.map((v, i) => (
-				<Link key={`${v.href}-${i}-key`} className={s.tab} href={v.href}>
+				<Link
+					prefetch={false}
+					key={`${v.href}-${i}-key`}
+					className={s.tab}
+					href={v.href}
+				>
 					<img src={v.img} alt={v.label} />
 					<span>{v.label}</span>
 				</Link>

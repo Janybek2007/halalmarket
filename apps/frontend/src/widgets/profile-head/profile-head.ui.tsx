@@ -65,6 +65,7 @@ export const ProfileHead: React.FC = React.memo(() => {
 
 						<div className={s.statsContainer}>
 							<Link
+								prefetch={false}
 								href={RoutePaths.User.Orders}
 								className={clsx(
 									s.statCard,
@@ -76,6 +77,7 @@ export const ProfileHead: React.FC = React.memo(() => {
 							</Link>
 
 							<Link
+								prefetch={false}
 								href={RoutePaths.User.MyPurchases}
 								className={clsx(
 									s.statCard,
@@ -93,6 +95,7 @@ export const ProfileHead: React.FC = React.memo(() => {
 							</Link>
 
 							<Link
+								prefetch={false}
 								href={RoutePaths.User.Favorites}
 								className={clsx(
 									s.statCard,
@@ -106,6 +109,7 @@ export const ProfileHead: React.FC = React.memo(() => {
 							</Link>
 							{size.width <= 899 && (
 								<Link
+									prefetch={false}
 									href={RoutePaths.User.Cart}
 									className={clsx(
 										s.statCard,

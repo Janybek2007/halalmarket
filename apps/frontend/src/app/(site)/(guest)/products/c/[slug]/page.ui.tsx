@@ -6,9 +6,15 @@ import { ProductSearch } from '~/shared/components/product-search/product-search
 import { State } from '~/shared/components/state/state.ui';
 import { usePaginatedQuery } from '~/shared/libs/pagination';
 import { BreadcrumbItem } from '~/shared/ui/breadcrumb/breadcrumb.types';
-import Breadcrumb from '~/shared/ui/breadcrumb/breadcrumb.ui';
 import { CategoryProductList } from '~/widgets/category-product-list';
 import s from './page.module.scss';
+import dynamic from 'next/dynamic'
+
+const Breadcrumb = dynamic(() =>
+	import('~/shared/ui/breadcrumb/breadcrumb.ui').then(m => ({
+		default: m.Breadcrumb
+	}))
+);
 
 export function ProductsByCategoryPage(props: {
 	data: TGetProductsResult;

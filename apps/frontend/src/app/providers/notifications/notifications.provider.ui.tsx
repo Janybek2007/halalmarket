@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import useLocalStorageState from 'use-local-storage-state';
 import { NotificationsQuery } from '~/entities/notifications';
 import { useSubscriptionEffect } from '~/features/notifications/subscription';
 import { useToggle } from '~/shared/hooks';
-import { NotificationDrawer } from '~/widgets/notification-drawer';
+import { usePaginatedQuery } from '~/shared/libs/pagination';
+import { DynamicNotificationDrawer } from '~/widgets/notification-drawer';
 import { NotificationsContext } from './notifications.context';
 
 export const NotificationsProvider: React.FC<
@@ -17,8 +17,10 @@ export const NotificationsProvider: React.FC<
 	const [isDrawerOpen, { toggle: toggleDrawer }] = useToggle();
 	const {
 		data: notifications,
-		isLoading,
-	} = useQuery(NotificationsQuery.GetNotificationsQuery({}));
+		query: { isLoading }
+	} = usePaginatedQuery(NotificationsQuery.GetNotificationsQuery, {
+		per_pages: 10
+	});
 
 	useSubscriptionEffect(
 		subscriptionData,
@@ -42,7 +44,7 @@ export const NotificationsProvider: React.FC<
 				unreadCount
 			}}
 		>
-			{isDrawerOpen && <NotificationDrawer />}
+			{isDrawerOpen && <DynamicNotificationDrawer />}
 			{props.children}
 		</NotificationsContext.Provider>
 	);

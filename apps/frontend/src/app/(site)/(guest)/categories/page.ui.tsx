@@ -29,6 +29,7 @@ export function CategoriesPage(props: { categories: TGetCategories }) {
 					<div className={s.categoriesGrid}>
 						{categories?.map(category => (
 							<Link
+								prefetch={false}
 								key={category.id}
 								href={RoutePaths.Guest.Category(category.slug)}
 								className={s.categoryCard}

@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { http } from '~/shared/api/http';
 import { TokenUtils } from '~/shared/api/token.client';
-import { useQueryString } from '~/shared/hooks';
 import { queryClient } from '~/shared/libs/tanstack';
 import { RoutePaths } from '~/shared/router';
 import { AuthResponse } from '../types';
@@ -17,7 +16,6 @@ export const useRegisterMutation = () => {
 		resolver: zodResolver(RegisterSchema)
 	});
 	const router = useRouter();
-	const [redirectVal] = useQueryString('redirect', RoutePaths.Guest.Home);
 
 	const {
 		mutateAsync,
@@ -43,6 +41,7 @@ export const useRegisterMutation = () => {
 					if (r?.user_id) {
 						setTimeout(() => {
 							router.push(RoutePaths.Guest.Home);
+							window.location.reload();
 						}, 500);
 					}
 				},

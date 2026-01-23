@@ -1,3 +1,4 @@
-import { lazy } from 'react';
+'use client';
+import dynamic from 'next/dynamic';
 
-export const AppHeader = lazy(() => import('./header.ui'));
+export const AppHeader = dynamic(() => import('./header.ui'));

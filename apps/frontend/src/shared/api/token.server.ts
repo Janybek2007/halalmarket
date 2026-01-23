@@ -4,6 +4,13 @@ import { AuthResponse } from '~/features/auth/types';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '../constants';
 import { http } from './http';
 
+export async function RemoveTokens(req?: NextRequest) {
+	'use server';
+	const c = (await cookies()) ?? req?.cookies;
+	c.delete(ACCESS_TOKEN_KEY);
+	c.delete(REFRESH_TOKEN_KEY);
+}
+
 export async function GetAccessToken(req?: NextRequest): Promise<string> {
 	'use server';
 	const c = (await cookies()) ?? req?.cookies;
@@ -27,6 +34,10 @@ export function setAuthCookies(
 	}
 }
 
+export function deleteAuthCookies(response: NextResponse) {
+	response.cookies.delete(ACCESS_TOKEN_KEY);
+	response.cookies.delete(REFRESH_TOKEN_KEY);
+}
 
 export async function refreshAccessToken(
 	refreshToken: string

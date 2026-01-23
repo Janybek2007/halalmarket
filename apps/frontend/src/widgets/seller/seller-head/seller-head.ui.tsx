@@ -50,6 +50,7 @@ export const SellerHead: React.FC = React.memo(() => {
 								{ path: RoutePaths.Seller.Settings, label: 'Настройки' }
 							].map(({ path, label }) => (
 								<Link
+									prefetch={false}
 									key={path}
 									href={path}
 									className={`${s.navTab} ${pathname === path ? s.active : ''}`}

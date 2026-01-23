@@ -15,8 +15,7 @@ interface IChangePassword {
 
 export const ChangePassword: React.FC<IChangePassword> = React.memo(
 	({ onClose }) => {
-		const { apiError, form, isPending, onsubmit } =
-			useChangePasswordMutation(onClose);
+		const { apiError, form, onsubmit } = useChangePasswordMutation(onClose);
 		const [showPassword, { toggle: toggleShowPassword }] = useToggle();
 		const errors = form.formState.errors;
 

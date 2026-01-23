@@ -38,6 +38,7 @@ export const Categories: React.FC<CategoriesProps> = React.memo(
 							.map(category => (
 								<Link
 									key={category.id}
+									prefetch={false}
 									href={
 										category.slug === 'all'
 											? RoutePaths.Guest.Categories
